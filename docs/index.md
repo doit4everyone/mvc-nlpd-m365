@@ -37,12 +37,12 @@ Le **MVC** (Minimum Viable de Conformité) est un socle de conformité [nLPD (RS
 
 | # | Guide | Objet principal | Portail | Statut |
 |---|-------|-----------------|---------|--------|
-| 1 | [Microsoft Purview](purview/) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2 — publié |
-| 2 | [Entra ID P1](entra-id-p1/) | Accès conditionnel, MFA, SSPR, break-glass | `entra.microsoft.com` | v3.1 |
-| 3 | [Intune + Defender for Business](intune-defender/) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.1 — validation terrain |
-| 4 | [Copilot Governance](copilot-governance/) | DLP Copilot, DSPM for AI, revue AI | `purview.microsoft.com` | v1.0 |
+| 1 | [Microsoft Purview](purview/index.html) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2 — publié |
+| 2 | [Entra ID P1](entra-id-p1/index.html) | Accès conditionnel, MFA, SSPR, break-glass | `entra.microsoft.com` | v3.1 |
+| 3 | [Intune + Defender for Business](intune-defender/index.html) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.1 — validation terrain |
+| 4 | [Copilot Governance](copilot-governance/index.html) | DLP Copilot, DSPM for AI, revue AI | `purview.microsoft.com` | v1.0 |
 
-L'annexe [AiTM / Cookie Hijacking](aitm-cookie-hijacking/) complète le guide Entra ID P1 avec la détection et la mitigation des attaques adversary-in-the-middle.
+L'annexe [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) complète le guide Entra ID P1 avec la détection et la mitigation des attaques adversary-in-the-middle.
 
 ---
 
