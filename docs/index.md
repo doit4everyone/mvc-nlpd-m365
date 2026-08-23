@@ -26,9 +26,10 @@ lang: fr
 <h1>Bundle MVC nLPD — Microsoft 365 Business Premium</h1>
 <h2>Minimum Viable de Conformité · nLPD RS 235.1 · PME suisses 🇨🇭</h2>
 
-Le **MVC** (Minimum Viable de Conformité) est un socle de conformité [nLPD (RS 235.1)](https://www.fedlex.admin.ch/eli/cc/2022/491/fr) conçu pour les PME suisses équipées de **Microsoft 365 Business Premium** et de **Purview Suite**. Il ne vise pas la perfection technique : il vise la capacité de démontrer une démarche proportionnée et documentée devant le PFPDT.
+La plupart des PME suisses ne sont pas en conformité nLPD, non par manque de volonté, mais parce que les guides disponibles supposent des ressources, des licences et une expertise IT qu'elles n'ont pas.
 
-> **Message clé**
+Ce bundle change ça. Il est conçu pour **Microsoft 365 Business Premium + Purview Suite** — pas E3, pas E5 — et s'installe en quelques sessions de travail, sans consultant permanent. L'objectif n'est pas la perfection technique : c'est la capacité de démontrer devant le [PFPDT](https://www.edoeb.admin.ch/) une démarche **proportionnée, documentée et maintenue**.
+
 > Un MVC déployé et maintenu vaut mieux qu'un projet de conformité parfait qui ne démarre jamais.
 
 ---
@@ -40,9 +41,17 @@ Le **MVC** (Minimum Viable de Conformité) est un socle de conformité [nLPD (RS
 | 1 | [Microsoft Purview](purview/index.html) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2 — publié |
 | 2 | [Entra ID P1](entra-id-p1/index.html) | Accès conditionnel, MFA, SSPR, break-glass | `entra.microsoft.com` | v3.1 |
 | 3 | [Intune + Defender for Business](intune-defender/index.html) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.1 — validation terrain |
-| 4 | [Copilot Governance](copilot-governance/index.html) | DLP Copilot, DSPM for AI, revue AI | `purview.microsoft.com` | v1.0 |
+| 4 | [Copilot Governance](copilot-governance/index.html) | Gouvernance Copilot, DSPM for AI (dashboard), DLP-Protection-Copilot | `purview.microsoft.com` | v1.0 |
 
-L'annexe [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) complète le guide Entra ID P1 avec la détection et la mitigation des attaques adversary-in-the-middle.
+---
+
+## 🔐 Durcissement et sécurité
+
+Documents techniques autonomes publiés en complément du bundle, couvrant des vecteurs d'attaque spécifiques ou des configurations avancées. D'autres annexes seront ajoutées au fil des publications.
+
+| Annexe | Objet | Statut |
+|--------|-------|--------|
+| [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) | Détection et mitigation des attaques adversary-in-the-middle contournant le MFA — incidents, IoC, protection structurelle (WHfB, CAE, FIDO2) | Publication prochaine |
 
 ---
 
@@ -64,7 +73,7 @@ L'annexe [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) complète l
 | Microsoft 365 Business Premium | Oui |
 | Microsoft Purview Suite (add-on) | Oui — environ CHF 15.70 / utilisateur / mois |
 
-Aucune licence E3 ou E5 n'est requise. Les fonctionnalités hors périmètre sont signalées explicitement dans chaque guide.
+Aucune licence E3 ou E5 n'est requise. Les fonctionnalités hors périmètre sont signalées explicitement dans chaque guide. Pour aller plus loin sur la gouvernance IA (blocage Shadow AI, Insider Risk Management, Endpoint DLP, DSPM with policies), ces fonctionnalités requièrent l'add-on **Defender and Purview Suites** et sont documentées dans le [Guide Shadow AI Microsoft 365](https://doit4everyone.github.io/shadow-ai-governance-microsoft-365-nLPD/).
 
 ---
 
