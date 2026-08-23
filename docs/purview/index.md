@@ -23,7 +23,7 @@ lang: fr
   table { width: 100%; display: table; margin: 20px 0; }
 </style>
 
-> [← Retour au bundle MVC nLPD](../)
+> [← Retour au bundle MVC nLPD](../index.html)
 
 <h1>Guide MVC — Microsoft Purview</h1>
 <h2>Minimum Viable de Conformité nLPD pour PME suisses 🇨🇭</h2>
@@ -36,8 +36,8 @@ Ce guide couvre le déploiement et l'exploitation du socle Purview dans le péri
 
 | Document | Destinataire | Objet |
 |----------|-------------|-------|
-| [Procédure de déploiement](procedure-deploiement/) | Consultant / MSP | Mise en place complète en 4 à 6 heures |
-| [Guide d'exploitation](guide-exploitation/) | Responsable IT client | Maintien quotidien et conformité nLPD |
+| [Procédure de déploiement](procedure-deploiement.html) | Consultant / MSP | Mise en place complète en 4 à 6 heures |
+| [Guide d'exploitation](guide-exploitation.html) | Responsable IT client | Maintien quotidien et conformité nLPD |
 
 ---
 
@@ -79,7 +79,7 @@ Ce guide couvre le déploiement et l'exploitation du socle Purview dans le péri
 
 Fiduciaires et comptabilités · Cabinets d'architectes et ingénieurs civils · Études d'avocats et notaires · Agences de communication et marketing · Cabinets médicaux et paramédicaux
 
-Voir [Procédure de déploiement — Annexe F](procedure-deploiement/#annexe-f--adaptations-sectorielles).
+Voir [Procédure de déploiement — Annexe F](procedure-deploiement.html#annexe-f--adaptations-sectorielles).
 
 ---
 
