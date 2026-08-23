@@ -1,0 +1,100 @@
+---
+title: "MVC nLPD — Microsoft 365 Business Premium | DoIt4Everyone"
+description: "Bundle Minimum Viable de Conformité (MVC) nLPD pour PME suisses de 5 à 25 utilisateurs sur Microsoft 365 Business Premium + Purview Suite. Quatre guides de déploiement et d'exploitation."
+lang: fr
+---
+<style>
+  header, footer { display: none !important; }
+  .wrapper {
+    max-width: 900px !important;
+    margin: 0 auto !important;
+    float: none !important;
+    position: relative !important;
+    padding: 40px 20px !important;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-size: 1.1em !important;
+  }
+  section {
+    width: 100% !important;
+    float: none !important;
+    margin: 0 !important;
+  }
+  h1, h2 { text-align: center; }
+  table { width: 100%; display: table; margin: 20px 0; }
+</style>
+
+<h1>Bundle MVC nLPD — Microsoft 365 Business Premium</h1>
+<h2>Minimum Viable de Conformité · nLPD RS 235.1 · PME suisses 🇨🇭</h2>
+
+Le **MVC** (Minimum Viable de Conformité) est un socle de conformité [nLPD (RS 235.1)](https://www.fedlex.admin.ch/eli/cc/2022/491/fr) conçu pour les PME suisses équipées de **Microsoft 365 Business Premium** et de **Purview Suite**. Il ne vise pas la perfection technique : il vise la capacité de démontrer une démarche proportionnée et documentée devant le PFPDT.
+
+> **Message clé**
+> Un MVC déployé et maintenu vaut mieux qu'un projet de conformité parfait qui ne démarre jamais.
+
+---
+
+## 🗂️ Les quatre guides du bundle
+
+| # | Guide | Objet principal | Portail | Statut |
+|---|-------|-----------------|---------|--------|
+| 1 | [Microsoft Purview](purview/) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2 — publié |
+| 2 | [Entra ID P1](entra-id-p1/) | Accès conditionnel, MFA, SSPR, break-glass | `entra.microsoft.com` | v3.1 |
+| 3 | [Intune + Defender for Business](intune-defender/) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.1 — validation terrain |
+| 4 | [Copilot Governance](copilot-governance/) | DLP Copilot, DSPM for AI, revue AI | `purview.microsoft.com` | v1.0 |
+
+L'annexe [AiTM / Cookie Hijacking](aitm-cookie-hijacking/) complète le guide Entra ID P1 avec la détection et la mitigation des attaques adversary-in-the-middle.
+
+---
+
+## 🔢 Séquence de déploiement recommandée
+
+| Session | Guide | Durée |
+|---------|-------|-------|
+| 1 | Purview — Classification + DLP + Rétention | 4–6 h |
+| 2 | Entra ID P1 — Accès conditionnel + MFA + SSPR | 3–4 h |
+| 3 | Intune + Defender — Conformité appareils + ASR | 4–5 h |
+| 4 | Copilot Governance — Gouvernance IA | 2–3 h |
+
+---
+
+## 🏷️ Périmètre de licence
+
+| Licence | Requis |
+|---------|--------|
+| Microsoft 365 Business Premium | Oui |
+| Microsoft Purview Suite (add-on) | Oui — environ CHF 15.70 / utilisateur / mois |
+
+Aucune licence E3 ou E5 n'est requise. Les fonctionnalités hors périmètre sont signalées explicitement dans chaque guide.
+
+---
+
+## 🔗 Cohérence transverse
+
+Les noms de groupes de sécurité et de stratégies d'accès conditionnel sont **identiques d'un guide à l'autre**. Toute modification doit être répercutée dans tous les guides concernés.
+
+| Objet | Nom exact | Créé dans |
+|-------|-----------|-----------|
+| Groupe chiffrement Purview | `GRP-Confidentiel-Purview` | Guide Purview |
+| Groupe Break-glass | `GRP-CA-BreakGlass` | Guide Entra ID P1 |
+| Groupe SSPR | `GRP-SSPR-Utilisateurs` | Guide Entra ID P1 |
+| Groupe Defender | `GRP-Appareils-Defender` | Guide Intune + Defender |
+| Groupe USB | `GRP-USB-Autorises` | Guide Intune + Defender |
+| Stratégie conformité appareils | `CA-08` | Entra ID P1 (Report) → Intune (Enforcement) |
+
+---
+
+## 🇨🇭 Conformité nLPD
+
+| Article | Exigence | Mesure MVC |
+|---------|----------|------------|
+| Art. 8 | Mesures techniques et organisationnelles | Chiffrement RMS, DLP, MFA, conformité appareils |
+| Art. 12 | Registre des activités de traitement | Modèle pré-rempli — Annexe I du guide Purview |
+| Art. 24 | Traçabilité et notification des violations | Journaux d'audit exportables, incidents DLP horodatés |
+
+---
+
+[🏠 Retour au portail principal](https://doit4everyone.github.io/)
+
+---
+
+ℹ️ *Références, structuration et aide à la rédaction assistées par IA, avec validation humaine finale.*

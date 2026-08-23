@@ -1,0 +1,9 @@
+title: "MVC nLPD — Microsoft 365 Business Premium"
+description: "Bundle Minimum Viable de Conformité (MVC) nLPD pour PME suisses de 5 à 25 utilisateurs. Quatre guides de déploiement et d'exploitation sur Microsoft 365 Business Premium + Purview Suite."
+url: "https://doit4everyone.github.io"
+baseurl: "/mvc-nlpd-m365"
+lang: fr
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
