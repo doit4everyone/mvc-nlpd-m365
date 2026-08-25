@@ -1,6 +1,6 @@
 ---
 title: "AiTM / Cookie Hijacking M365 — Détection, mitigation et protection structurelle | DoIt4Everyone"
-description: "Guide technique complet sur les attaques AiTM adversary-in-the-middle contre Microsoft 365. CAE, WHfB, FIDO2, Cloud Kerberos Trust, CA Authentication Strength. Validé terrain sur infra hybride — août 2026."
+description: "Guide technique complet sur les attaques AiTM contre Microsoft 365. CAE, WHfB, FIDO2, Cloud Kerberos Trust, CA Authentication Strength. Validé terrain sur infra hybride — août 2026."
 lang: fr
 ---
 <style>
@@ -14,104 +14,77 @@ lang: fr
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-size: 1.05em !important;
   }
-  section {
-    width: 100% !important;
-    float: none !important;
-    margin: 0 !important;
-  }
-  h1 { text-align: center; font-size: 2em; margin-bottom: 0.2em; }
+  section { width: 100% !important; float: none !important; margin: 0 !important; }
+  h1 { text-align: center; }
   h2 { border-bottom: 2px solid #2E74B5; padding-bottom: 6px; color: #1F3864; margin-top: 2em; }
   h3 { color: #2E74B5; margin-top: 1.5em; }
-  table { width: 100%; display: table; margin: 16px 0; border-collapse: collapse; font-size: 0.95em; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.95em; }
   th { background: #1F3864; color: #fff; padding: 8px 10px; text-align: left; }
   td { padding: 7px 10px; border-bottom: 1px solid #dde4f0; }
   tr:nth-child(even) td { background: #EEF4FB; }
-  .badge { display: inline-block; background: #1F3864; color: #fff; font-size: 0.78em; padding: 2px 8px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
-  .callout { border-left: 4px solid #2E74B5; background: #D6E4F0; padding: 10px 14px; margin: 16px 0; border-radius: 0 4px 4px 0; }
-  .callout-warn { border-left: 4px solid #C55A11; background: #FCE4D6; padding: 10px 14px; margin: 16px 0; border-radius: 0 4px 4px 0; }
-  .callout-ok { border-left: 4px solid #375623; background: #E2EFDA; padding: 10px 14px; margin: 16px 0; border-radius: 0 4px 4px 0; }
-  .callout-red { border-left: 4px solid #C00000; background: #FDECEA; padding: 10px 14px; margin: 16px 0; border-radius: 0 4px 4px 0; }
-  .callout-yellow { border-left: 4px solid #C55A11; background: #FFF2CC; padding: 10px 14px; margin: 16px 0; border-radius: 0 4px 4px 0; }
-  .step { margin: 6px 0 6px 20px; }
-  .step strong { color: #1F3864; }
+  blockquote { border-left: 4px solid #2E74B5; background: #D6E4F0; padding: 10px 14px; margin: 16px 0; border-radius: 0 4px 4px 0; }
+  blockquote p { margin: 4px 0; }
   code { background: #f0f4f8; padding: 2px 5px; border-radius: 3px; font-size: 0.9em; font-family: "SFMono-Regular", Consolas, monospace; }
   pre { background: #f0f4f8; padding: 14px; border-radius: 4px; overflow-x: auto; font-size: 0.88em; line-height: 1.5; }
-  .nav-links { text-align: center; margin: 30px 0 10px; font-size: 0.95em; }
-  .toc { background: #f8f9fa; border: 1px solid #dee2e6; padding: 16px 20px; border-radius: 4px; margin: 20px 0; }
-  .toc ul { margin: 6px 0; padding-left: 20px; }
-  .toc li { margin: 4px 0; }
   .partie-banner { background: #1F3864; color: #fff; text-align: center; padding: 14px 20px; border-radius: 4px; margin: 30px 0 20px; }
-  .partie-banner h2 { color: #fff; border: none; margin: 0 0 4px; font-size: 1.3em; }
-  .partie-banner p { margin: 0; color: #CCDDEE; font-style: italic; font-size: 0.95em; }
-  .validated { color: #375623; font-weight: bold; }
-  .pending { color: #C55A11; font-weight: bold; }
+  .warn { border-left-color: #C55A11 !important; background: #FCE4D6 !important; }
+  .ok { border-left-color: #375623 !important; background: #E2EFDA !important; }
+  .red { border-left-color: #C00000 !important; background: #FDECEA !important; }
+  .yellow { border-left-color: #C55A11 !important; background: #FFF2CC !important; }
+  .purple { border-left-color: #4B0082 !important; background: #EDE7F6 !important; }
 </style>
-
-<div class="nav-links">
 
 [← Retour au bundle MVC nLPD](../)
 
-</div>
-
 # AiTM / Cookie Hijacking M365
 
-<h2 style="text-align:center; border:none; color:#2E74B5; margin-top:0;">Détection · Mitigation · Protection structurelle</h2>
+<p style="text-align:center;color:#2E74B5;font-size:1.3em;font-weight:bold;">Détection · Mitigation · Protection structurelle</p>
 
-<p style="text-align:center; color:#555;">
-Guide technique autonome · Microsoft 365 Business Premium · v1.0 · Août 2026<br>
-Validé terrain sur infrastructure hybride (Entra Connect + AD on-prem + WS2025)
-</p>
+<p style="text-align:center;color:#555;">Guide technique autonome · Microsoft 365 Business Premium · v1.0 · Août 2026<br>Validé terrain sur infrastructure hybride (Entra Connect + AD on-prem + WS2025)</p>
 
 ---
 
-<div class="callout-warn">
-
-**Contexte de publication**
-
-Ce document a été rédigé suite à la divulgation publique de deux incidents majeurs en août 2026.
-
-**Mirage2FA (groupe LinX Coders, 20 août) :** plateforme PhaaS exploitant une technique AiTM par proxy WebSocket contre Microsoft 365. 9 426 comptes ciblés, 4 561 vols de session confirmés.
-
-**CVE-2026-69836 (Microsoft, 21 août) :** vulnérabilité RCE CVSS 10.0 dans Entra ID, exploitation confirmée avant patch, corrigée côté infrastructure Microsoft sans action requise côté client.
-
-**Audience :** consultants IT / MSP et responsables IT internes accompagnant des PME sous M365 Business Premium.
-
-Ce document est indépendant mais complémentaire au [Guide MVC Purview nLPD](https://doit4everyone.github.io/Configuration-Purview-PME-Suisse-nLPD/).
-
-</div>
+<blockquote class="warn">
+<p><strong>Contexte de publication</strong></p>
+<p>Ce document a été rédigé suite à la divulgation publique de deux incidents majeurs en août 2026.</p>
+<p><strong>Mirage2FA (groupe LinX Coders, 20 août) :</strong> plateforme PhaaS exploitant une technique AiTM par proxy WebSocket contre Microsoft 365. 9 426 comptes ciblés, 4 561 vols de session confirmés.</p>
+<p><strong>CVE-2026-69836 (Microsoft, 21 août) :</strong> vulnérabilité RCE CVSS 10.0 dans Entra ID, exploitation confirmée avant patch, corrigée côté infrastructure Microsoft sans action requise côté client.</p>
+<p>Audience : consultants IT / MSP et responsables IT internes accompagnant des PME sous M365 Business Premium.</p>
+<p>Ce document est indépendant mais complémentaire au <a href="https://doit4everyone.github.io/Configuration-Purview-PME-Suisse-nLPD/">Guide MVC Purview nLPD</a>.</p>
+</blockquote>
 
 ---
-
-<div class="toc">
 
 **Table des matières**
 
 **Partie A — Plan B : actionnable immédiatement**
-- [1. Contexte : le MFA ne suffit plus](#1-contexte)
-- [2. CAE : Continuous Access Evaluation](#2-cae)
-- [3. Indicateurs de compromission (IoC)](#3-ioc)
-- [4. Réponse immédiate : alerte SIEM reçue](#4-reponse)
+
+- [1. Contexte : le MFA ne suffit plus](#contexte)
+- [2. CAE : Continuous Access Evaluation](#cae)
+- [3. Indicateurs de compromission (IoC)](#ioc)
+- [4. Réponse immédiate : alerte SIEM reçue](#reponse)
 
 **Partie B — Plan A : protection structurelle**
-- [5. Pourquoi WHfB / FIDO2 rend le rejeu AiTM impossible](#5-whfb)
-- [6. Prérequis et audit préalable](#6-prerequis)
-- [7. Déploiement : Cloud Kerberos Trust et AzureADKerberos](#7-deploiement)
-- [8. Rotation de la clé AzureADKerberos](#8-rotation)
-- [9. Annexe A : FIDO2 hardware pour comptes à privilèges](#9-fido2)
-- [10. Conclusion](#10-conclusion)
-- [11. Annexe B : pourquoi un SIEM est indispensable, même gratuit](#11-siem)
-- [12. Renvois et ressources](#12-renvois)
 
-</div>
+- [5. Pourquoi WHfB / FIDO2 rend le rejeu AiTM impossible](#whfb)
+- [6. Prérequis et audit préalable](#prerequis)
+- [7. Déploiement : Cloud Kerberos Trust et AzureADKerberos](#deploiement)
+- [8. Rotation de la clé AzureADKerberos](#rotation)
+- [9. Annexe A : FIDO2 hardware pour comptes à privilèges](#fido2)
+- [10. Conclusion](#conclusion)
+- [11. Annexe B : pourquoi un SIEM est indispensable, même gratuit](#siem)
+- [12. Renvois et ressources](#renvois)
 
 ---
 
 <div class="partie-banner">
-<h2>PARTIE A · Plan B : actionnable immédiatement</h2>
-<p>CAE · Détection des IoC · SIEM · Réponse immédiate</p>
+<strong>PARTIE A · Plan B : actionnable immédiatement</strong><br>
+<em>CAE · Détection des IoC · SIEM · Réponse immédiate</em>
 </div>
 
-## 1. Contexte : le MFA ne suffit plus {#1-contexte}
+<a name="contexte"></a>
+
+## 1. Contexte : le MFA ne suffit plus
 
 ### 1.1 Qu'est-ce qu'une attaque AiTM ?
 
@@ -119,42 +92,36 @@ Une attaque AiTM (Adversary-in-the-Middle) moderne ne cherche plus à casser le 
 
 Le mécanisme de Mirage2FA illustre parfaitement cette approche :
 
-<div class="step"><strong>1 · Hameçonnage</strong> — L'utilisateur reçoit un lien pointant vers un proxy WebSocket transparent, visuellement identique à login.microsoft.com.</div>
-<div class="step"><strong>2 · Proxy transparent</strong> — Le proxy relaie chaque requête vers Microsoft en temps réel. L'utilisateur voit la vraie page Microsoft et complète son MFA normalement.</div>
-<div class="step"><strong>3 · Interception</strong> — Le proxy capture le cookie de session authentifié. L'attaquant dispose d'un cookie valide.</div>
-<div class="step"><strong>4 · Rejeu</strong> — L'attaquant importe le cookie dans son navigateur et accède à M365 sans credentials ni MFA. Le reset du mot de passe ne suffit pas : le cookie reste valide jusqu'à révocation explicite.</div>
+1. **Hameçonnage** — L'utilisateur reçoit un lien pointant vers un proxy WebSocket transparent, visuellement identique à login.microsoft.com.
+2. **Proxy transparent** — Le proxy relaie chaque requête vers Microsoft en temps réel. L'utilisateur complète son MFA normalement.
+3. **Interception** — Le proxy capture le cookie de session authentifié. L'attaquant dispose d'un cookie valide.
+4. **Rejeu** — L'attaquant importe le cookie dans son navigateur et accède à M365 sans credentials ni MFA. Le reset du mot de passe ne suffit pas : le cookie reste valide jusqu'à révocation explicite.
 
-<div class="callout-red">
-
-**Mirage2FA : chiffres de l'incident (20 août 2026)**
-
-- 9 426 comptes Microsoft 365 ciblés
-- 4 561 vols de session confirmés (~48 % de taux de succès)
-- Vecteur : proxy WebSocket, indétectable par l'utilisateur
-- Contre-mesure insuffisante : reset du mot de passe seul
-
-</div>
+<blockquote class="red">
+<p><strong>Mirage2FA : chiffres de l'incident (20 août 2026)</strong></p>
+<p>9 426 comptes Microsoft 365 ciblés · 4 561 vols de session confirmés (~48 % de taux de succès)<br>
+Vecteur : proxy WebSocket, indétectable par l'utilisateur<br>
+Contre-mesure insuffisante : reset du mot de passe seul</p>
+</blockquote>
 
 ### 1.2 CVE-2026-69836 : quand la vulnérabilité est dans l'infrastructure elle-même
 
-Le 21 août 2026, Microsoft a divulgué CVE-2026-69836, une vulnérabilité de désérialisation de données non fiables dans Entra ID avec un score CVSS de 10.0 et une exploitation confirmée avant le patch. La correction a été déployée côté infrastructure Microsoft : aucune action patch requise côté client.
+Le 21 août 2026, Microsoft a divulgué CVE-2026-69836, une vulnérabilité de désérialisation dans Entra ID avec un score CVSS de 10.0 et une exploitation confirmée avant le patch. La correction a été déployée côté infrastructure Microsoft : aucune action patch requise côté client.
 
 La question critique n'est pas "est-ce corrigé ?" mais "est-ce que quelque chose s'est passé dans mon tenant avant le fix ?"
 
-<div class="callout-yellow">
-
-**Audit rétrospectif recommandé — période précédant le 21 août 2026**
-
-- Nouveaux role assignments Global Admin / Privileged Role Admin
-- Credentials ajoutés sur des service principals existants
-- Modifications de Conditional Access policies
-- Consentements OAuth inhabituels
-- Nouvelles méthodes MFA enregistrées sur des comptes à privilèges
-- Comptes cloud créés hors du processus de synchronisation
-
-**Limite :** si la rétention des logs est à 30 jours (défaut Business Premium sans forwarding externe), les événements antérieurs au 22 juillet 2026 ne sont plus accessibles. → Recommandation permanente : forwarder les logs Entra ID vers Log Analytics.
-
-</div>
+<blockquote class="yellow">
+<p><strong>Audit rétrospectif recommandé — période précédant le 21 août 2026</strong></p>
+<p>· Nouveaux role assignments Global Admin / Privileged Role Admin<br>
+· Credentials ajoutés sur des service principals existants<br>
+· Modifications de Conditional Access policies<br>
+· Consentements OAuth inhabituels<br>
+· Nouvelles méthodes MFA enregistrées sur des comptes à privilèges<br>
+· Comptes cloud créés hors du processus de synchronisation</p>
+<p><strong>Limite :</strong> défaut Business Premium = 30 jours de rétention. Sans forwarding vers Log Analytics, les événements antérieurs au 22 juillet 2026 ne sont plus accessibles.<br>
+→ Recommandation permanente : forwarder les logs Entra ID vers Log Analytics.</p>
+<p>Procédure complète d'audit rétrospectif : voir section 4.4.</p>
+</blockquote>
 
 ### 1.3 Pourquoi le MFA classique ne suffit pas structurellement
 
@@ -171,7 +138,9 @@ Le MFA protège l'authentification mais pas la session qui en résulte. Une fois
 
 ---
 
-## 2. CAE : Continuous Access Evaluation {#2-cae}
+<a name="cae"></a>
+
+## 2. CAE : Continuous Access Evaluation
 
 ### 2.1 Principe, durée de vie des tokens et nuances
 
@@ -182,48 +151,34 @@ CAE modifie deux aspects du cycle de vie des tokens : leur durée de vie et leur
 | Token standard (client non CAE-capable) | 60 à 90 minutes | Révocation manuelle uniquement | Fenêtre d'exploitation ~1h sans détection |
 | Token CAE (client ET ressource CAE-capables) | 20 à 28 heures | Révocable en temps réel via signal serveur | Fenêtre plus longue si non détecté, mais révocable quasi-instantanément si détecté |
 
-<div class="callout-warn">
+<blockquote class="warn">
+<p><strong>Paradoxe CAE vu du côté attaquant</strong></p>
+<p>Un token CAE dure 20 à 28 heures au lieu de 60 à 90 minutes. Pour un attaquant qui vole un token CAE via AiTM, la fenêtre d'exploitation potentielle est donc beaucoup plus longue qu'avec un token standard, si personne ne détecte l'incident.</p>
+<p>Le modèle CAE tient seulement si la détection et la révocation sont rapides. Sans SIEM ni surveillance active, CAE peut être un avantage pour l'attaquant. C'est pour cette raison que la détection (SIEM + Identity Protection) est critique.</p>
+</blockquote>
 
-**Paradoxe CAE vu du côté attaquant**
+Applications M365 supportant CAE côté serveur : Exchange Online, SharePoint Online, OneDrive, Microsoft Teams, MS Graph. Côté client, CAE nécessite un client compatible — validé en lab avec Microsoft Edge sur SharePoint Online. Firefox et l'application web Outlook (outlook.office.com) n'ont pas montré de token CAE dans nos tests.
 
-Un token CAE dure 20 à 28 heures au lieu de 60 à 90 minutes. Pour un attaquant qui vole un token CAE via AiTM, la fenêtre d'exploitation potentielle est donc beaucoup plus longue qu'avec un token standard, si personne ne détecte l'incident.
+<blockquote class="ok">
+<p><strong>CAE : actif par défaut — révocation validée en live (23 août 2026)</strong></p>
+<p>CAE est inclus dans Entra ID P1 et actif par défaut : aucune configuration requise pour l'activer. L'option visible dans Accès conditionnel (Personnaliser l'évaluation de l'accès continu) sert uniquement à le désactiver.</p>
+<p>Validé sur tenant Business Premium :<br>
+· Révocation session active en ~1 minute (myaccount.microsoft.com)<br>
+· ~3 à 4 minutes sur SharePoint Online via Edge (token CAE confirmé Is CAE Token = Oui)</p>
+<p>La révocation fonctionne sur tous les types de tokens (CAE et standard) via "Révoquer les sessions" dans Entra ID.</p>
+</blockquote>
 
-Le modèle CAE tient seulement si la détection et la révocation sont rapides. Sans SIEM ni surveillance active, CAE peut être un avantage pour l'attaquant.
-
-C'est pour cette raison que la détection (SIEM + Identity Protection) est critique : elle conditionne directement l'efficacité de CAE comme contre-mesure.
-
-</div>
-
-Applications M365 supportant CAE côté serveur : Exchange Online, SharePoint Online, OneDrive, Microsoft Teams, MS Graph. Côté client, CAE nécessite un client compatible — validé en lab avec Microsoft Edge sur SharePoint Online. Firefox et l'application web Outlook (outlook.office.com) n'ont pas montré de token CAE dans nos tests (token standard émis).
-
-<div class="callout-ok">
-
-**CAE : actif par défaut — révocation validée en live (23 août 2026)**
-
-CAE est inclus dans Entra ID P1 et actif par défaut : aucune configuration requise pour l'activer. L'option visible dans Accès conditionnel (Personnaliser l'évaluation de l'accès continu) sert uniquement à le désactiver si nécessaire.
-
-- Validé sur tenant Business Premium : révocation session active en ~1 minute (myaccount.microsoft.com)
-- ~3 à 4 minutes sur SharePoint Online via Edge (token CAE confirmé Is CAE Token = Oui)
-- La révocation fonctionne sur tous les types de tokens (CAE et standard) via "Révoquer les sessions" dans Entra ID
-
-</div>
-
-<div class="callout">
-
-**Identity Protection : différence P1 vs P2 (source : Microsoft learn.microsoft.com, juin 2026)**
-
-**Business Premium sans add-on (P1) :**
-- Visibilité partielle Identity Protection : utilisateurs à risque medium/high visibles, sans détails
-- Pas de risk-based Conditional Access (révocation automatique sur détection)
-- Révocation manuelle uniquement après détection via SIEM ou surveillance manuelle
-
-**Business Premium + Defender Suite add-on (P2) :**
-- Identity Protection complet : Impossible Travel, Token anomaly, Unfamiliar sign-in
-- Risk-based Conditional Access : révocation automatique sur détection de risque
-
-Dans les deux cas : la révocation manuelle fonctionne immédiatement via "Révoquer les sessions".
-
-</div>
+<blockquote>
+<p><strong>Identity Protection : différence P1 vs P2 (source : Microsoft learn.microsoft.com, juin 2026)</strong></p>
+<p><strong>Business Premium sans add-on (P1) :</strong><br>
+· Visibilité partielle Identity Protection : utilisateurs à risque medium/high visibles, sans détails<br>
+· Pas de risk-based Conditional Access (révocation automatique sur détection)<br>
+· Révocation manuelle uniquement après détection via SIEM ou surveillance manuelle</p>
+<p><strong>Business Premium + Defender Suite add-on (P2) :</strong><br>
+· Identity Protection complet : Impossible Travel, Token anomaly, Unfamiliar sign-in<br>
+· Risk-based Conditional Access : révocation automatique sur détection de risque</p>
+<p>Dans les deux cas : la révocation manuelle fonctionne immédiatement via "Révoquer les sessions".</p>
+</blockquote>
 
 ### 2.2 Vérifier que CAE n'est pas désactivé sur le tenant
 
@@ -245,28 +200,18 @@ Si l'API `/beta/identity/continuousAccessEvaluationPolicy` retourne 404 : c'est 
 
 **Via le portail :**
 
-Portail : `entra.microsoft.com` → Accès conditionnel → Stratégies
+`entra.microsoft.com` → Accès conditionnel → Stratégies — vérifier qu'aucune policy ne contient Session → Personnaliser l'évaluation de l'accès continu → Désactiver.
 
-Vérifier qu'aucune policy existante ne contient Session → Personnaliser l'évaluation de l'accès continu → Désactiver.
-
-<div class="callout">
-
-**Ce que vous voyez dans l'interface**
-
-Dans Accès conditionnel → Nouvelle stratégie → Session, l'option "Personnaliser l'évaluation de l'accès continu" propose deux sous-options uniquement :
-- Désactiver
-- Appliquer strictement les stratégies de localisation (préversion)
-
-Il n'existe pas d'option "Activer" : CAE est actif par défaut sans aucune action.
-
-</div>
+<blockquote>
+<p><strong>Ce que vous voyez dans l'interface</strong></p>
+<p>Dans Accès conditionnel → Nouvelle stratégie → Session, l'option "Personnaliser l'évaluation de l'accès continu" propose deux sous-options uniquement : Désactiver et Appliquer strictement les stratégies de localisation (préversion). Il n'existe pas d'option "Activer" : CAE est actif par défaut sans aucune action.</p>
+</blockquote>
 
 ### 2.3 Test de révocation
 
-<div class="step"><strong>1 · Ouvrir une session test</strong> — Connecter un compte test sur myaccount.microsoft.com dans une fenêtre de navigation privée.</div>
-<div class="step"><strong>2 · Révoquer les sessions</strong> — entra.microsoft.com → Utilisateurs → [compte test] → Vue d'ensemble → Révoquer les sessions.</div>
-<div class="step"><strong>3 · Confirmer</strong> — Cliquer Oui dans la boîte "Voulez-vous révoquer toutes les sessions de l'utilisateur ?"</div>
-<div class="step"><strong>4 · Chronométrer</strong> — Mesurer le délai avant invalidation de la session myaccount.microsoft.com.</div>
+1. Connecter un compte test sur `myaccount.microsoft.com` dans une fenêtre de navigation privée.
+2. `entra.microsoft.com` → Utilisateurs → [compte test] → Vue d'ensemble → **Révoquer les sessions** → Oui.
+3. Mesurer le délai avant invalidation de la session.
 
 **Résultat validé en live (23 août 2026) :** session invalidée en ~1 minute. Toast de confirmation : "Sessions de connexion révoquées pour [compte]".
 
@@ -274,11 +219,13 @@ Pour un test CAE natif : utiliser SharePoint Online via Edge — token CAE confi
 
 ---
 
-## 3. Indicateurs de compromission (IoC) {#3-ioc}
+<a name="ioc"></a>
+
+## 3. Indicateurs de compromission (IoC)
 
 ### 3.1 Signaux dans Identity Protection (Entra ID P1)
 
-Portail : `entra.microsoft.com` → Identity Protection → Détections de risques
+`entra.microsoft.com` → Identity Protection → Détections de risques
 
 | Signal | Description | Pertinence |
 |---|---|---|
@@ -306,7 +253,7 @@ Ces signaux apparaissent dans les 30 premières minutes suivant un vol de sessio
 
 ### 3.4 Corrélation SIEM : ce que vous voyez selon votre configuration UTMStack
 
-Cette section croise les IoC des deux vecteurs (AiTM / CVE-2026-69836) avec les règles de corrélation UTMStack documentées dans le [Chapitre 11 du lab UTMStack](https://doit4everyone.github.io/utmstack-lab/docs/11-correlations-yaml.html).
+Référence : [Chapitre 11 du lab UTMStack](https://doit4everyone.github.io/utmstack-lab/docs/11-correlations-yaml.html)
 
 **Bloc 1 — Règles opérationnelles sans configuration supplémentaire**
 
@@ -328,62 +275,46 @@ Cette section croise les IoC des deux vecteurs (AiTM / CVE-2026-69836) avec les 
 | M-new-1 : Privileged Role Assigned | `Add member to role.` → Global Admin, Security Admin, etc. | ✅ Validée en live : 22 août 2026 (latence ~7 min) |
 | M-new-2 : Credentials Added to Service Principal | `Add service principal credentials.` → persistance sans MFA | ✅ Validée en live : 22 août 2026 (latence ~4 min) |
 
-<div class="callout">
-
-**M-new-1 et M-new-2 : champs disponibles dans l'alerte UTMStack**
-
-**M-new-1 :** `action = "Add member to role."` · `log.ObjectId` = UPN du compte assigné · `log.ModifiedProperties` : Role.DisplayName · `origin.user` = acteur · latence ~7 min
-
-**M-new-2 :** `action = "Add service principal credentials."` · `log.Target` = nom du service principal · `log.ModifiedProperties` : KeyDescription avec KeyIdentifier · `origin.user` = acteur · latence ~4 min
-
-**Note :** M-new-2 se déclenche uniquement via appel API Graph direct (`addPassword`) ou PowerShell. L'interface graphique Entra ID génère un libellé différent et ne déclenche pas cette règle. Test de déclenchement : `POST https://graph.microsoft.com/v1.0/servicePrincipals/{id}/addPassword` via [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer).
-
-</div>
+<blockquote>
+<p><strong>M-new-1 et M-new-2 : champs disponibles dans l'alerte UTMStack</strong></p>
+<p><strong>M-new-1 :</strong> <code>action = "Add member to role."</code> · <code>log.ObjectId</code> = UPN du compte assigné · <code>log.ModifiedProperties</code> : Role.DisplayName · <code>origin.user</code> = acteur · latence ~7 min</p>
+<p><strong>M-new-2 :</strong> <code>action = "Add service principal credentials."</code> · <code>log.Target</code> = nom du service principal · <code>origin.user</code> = acteur · latence ~4 min</p>
+<p><strong>Note :</strong> M-new-2 se déclenche uniquement via appel API Graph direct (<code>addPassword</code>) ou PowerShell. L'interface graphique Entra ID génère un libellé différent. Test : <code>POST https://graph.microsoft.com/v1.0/servicePrincipals/{id}/addPassword</code> via <a href="https://developer.microsoft.com/en-us/graph/graph-explorer">Graph Explorer</a>.</p>
+</blockquote>
 
 **Bloc 3 — Limites de visibilité**
 
-<div class="callout-red">
+<blockquote class="red">
+<p><strong>Angles morts structurels : indépendants de tout outil ou licence</strong></p>
+<p>· CVE-2026-69836 phase initiale : l'exploitation s'est produite dans l'infrastructure Microsoft. Aucun event n'est généré dans les journaux client. Seules les actions consécutives dans le tenant sont visibles, c'est ce que couvrent M-new-1 et M-new-2.<br>
+· Rétention des logs : défaut Business Premium = 30 jours. Sans forwarding vers Log Analytics, les événements antérieurs au 22 juillet 2026 ne sont plus accessibles.<br>
+→ Recommandation permanente : forwarder les logs Entra ID vers Log Analytics.</p>
+</blockquote>
 
-**Angles morts structurels : indépendants de tout outil ou licence**
-
-- **CVE-2026-69836 phase initiale :** l'exploitation s'est produite dans l'infrastructure Microsoft. Aucun event n'est généré dans les journaux client. Seules les actions consécutives dans le tenant sont visibles, c'est ce que couvrent M-new-1 et M-new-2.
-- **Rétention des logs :** défaut Business Premium = 30 jours. Sans forwarding vers Log Analytics, les événements antérieurs au 22 juillet 2026 ne sont plus accessibles. → Recommandation permanente : forwarder les logs Entra ID vers Log Analytics.
-
-</div>
-
-<div class="callout-yellow">
-
-**Angle mort UTMStack : limitation technique du pipeline ETL v11**
-
-Exfiltration SharePoint : les events FileDownloaded (RecordType 6) ne sont pas collectés. La règle M13 est documentée comme non implémentable (voir Chapitre 11).
-
-Couverture partielle disponible via Microsoft Purview Insider Risk Management (stratégie IRM-Fuites-Données-PME). Nécessite l'add-on Purview Suite, hors périmètre Business Premium seul.
-
-Prérequis légal obligatoire avant activation IRM (art. 26 OLT3 + art. 6 nLPD) :
-- Information préalable des employés dans le règlement du personnel ou la charte IT
-- Anonymisation activée par défaut dans Purview
-- Procédure écrite de levée d'anonymat (voir Annexe G du guide Purview complet)
-
-Référence : [Guide complet Purview 2026, section 8.2](https://doit4everyone.github.io/microsoft-purview-configuration-2026-nLPD/docs/09-fonctionnalites-avancees.html)
-
-</div>
+<blockquote class="yellow">
+<p><strong>Angle mort UTMStack : limitation technique du pipeline ETL v11</strong></p>
+<p>Exfiltration SharePoint : les events FileDownloaded (RecordType 6) ne sont pas collectés. La règle M13 est documentée comme non implémentable (voir Chapitre 11).</p>
+<p>Couverture partielle disponible via Microsoft Purview Insider Risk Management (stratégie IRM-Fuites-Données-PME). Nécessite l'add-on Purview Suite, hors périmètre Business Premium seul.</p>
+<p>Prérequis légal obligatoire avant activation IRM (art. 26 OLT3 + art. 6 nLPD) :<br>
+· Information préalable des employés dans le règlement du personnel ou la charte IT<br>
+· Anonymisation activée par défaut dans Purview<br>
+· Procédure écrite de levée d'anonymat (voir Annexe G du guide Purview complet)</p>
+<p>Référence : <a href="https://doit4everyone.github.io/microsoft-purview-configuration-2026-nLPD/docs/09-fonctionnalites-avancees.html">Guide complet Purview 2026, section 8.2</a></p>
+</blockquote>
 
 ---
 
-## 4. Réponse immédiate : alerte SIEM reçue {#4-reponse}
+<a name="reponse"></a>
 
-<div class="callout-red">
+## 4. Réponse immédiate : alerte SIEM reçue
 
-**Point critique : si le SIEM remonte un IoC AiTM, c'est déjà trop tard pour prévenir le vol**
-
-Le cookie de session est déjà entre les mains de l'attaquant au moment où l'alerte arrive. L'objectif devient de limiter la durée d'exploitation, pas de prévenir le vol.
-
-- **Sans CAE :** après détection (~7 min de latence SIEM), l'attaquant dispose encore de ~53 minutes de cookie valide même après révocation immédiate.
-- **Avec CAE :** la révocation prend effet en quelques minutes. La fenêtre tombe à moins de 10 minutes.
-
-CAE doit être actif AVANT l'incident pour que la réponse soit efficace. Voir section 2.
-
-</div>
+<blockquote class="red">
+<p><strong>Point critique : si le SIEM remonte un IoC AiTM, c'est déjà trop tard pour prévenir le vol</strong></p>
+<p>Le cookie de session est déjà entre les mains de l'attaquant au moment où l'alerte arrive. L'objectif devient de limiter la durée d'exploitation, pas de prévenir le vol.</p>
+<p>· Sans CAE : après détection (~7 min de latence SIEM), l'attaquant dispose encore de ~53 minutes de cookie valide même après révocation immédiate.<br>
+· Avec CAE : la révocation prend effet en quelques minutes. La fenêtre tombe à moins de 10 minutes.</p>
+<p><strong>CAE doit être actif AVANT l'incident pour que la réponse soit efficace. Voir section 2.</strong></p>
+</blockquote>
 
 ### 4.1 Séquence des signaux à surveiller dans le SIEM
 
@@ -393,33 +324,27 @@ CAE doit être actif AVANT l'incident pour que la réponse soit efficace. Voir s
 | Phase 2 : exploitation | T+5 à T+30 min | M2 (OAuth Consent), M12 (External Mailbox Access) | L'attaquant établit sa persistance et commence l'exfiltration. |
 | Phase 3 : persistance longue durée | T+30 min à plusieurs heures | M-new-1 (Role Assigned), M-new-2 (Credentials SPN), M7 (Account Created) | L'attaquant prépare un accès durable, indépendant du cookie. |
 
-<div class="callout-red">
-
-**Règle d'or**
-
-Si vous voyez Phase 2 ou Phase 3 sans avoir vu Phase 1 dans le SIEM, l'attaque initiale a eu lieu en dehors de votre fenêtre de détection. La révocation s'impose immédiatement et les dégâts de Phase 2 sont peut-être déjà faits. Lancer l'audit complet de la section 4.3.
-
-</div>
+<blockquote class="red">
+<p><strong>Règle d'or</strong></p>
+<p>Si vous voyez Phase 2 ou Phase 3 sans avoir vu Phase 1 dans le SIEM, l'attaque initiale a eu lieu en dehors de votre fenêtre de détection. La révocation s'impose immédiatement et les dégâts de Phase 2 sont peut-être déjà faits. Lancer l'audit complet de la section 4.3.</p>
+</blockquote>
 
 ### 4.2 Révocation immédiate des tokens : à faire dans les 2 minutes
 
-<div class="step"><strong>1 · Révoquer toutes les sessions actives</strong> — entra.microsoft.com → Utilisateurs → [compte compromis] → Vue d'ensemble → Révoquer les sessions → Oui</div>
-<div class="step"><strong>2 · Révoquer les refresh tokens</strong> — PowerShell : <code>Revoke-MgUserSignInSession -UserId [UPN]</code></div>
-<div class="step"><strong>3 · Vérifier la propagation CAE</strong> — Si CAE est actif : tester une action SharePoint / Teams sur le compte concerné, la session doit être invalidée en moins de 5 minutes.</div>
+1. **Révoquer toutes les sessions actives** — `entra.microsoft.com` → Utilisateurs → [compte compromis] → Vue d'ensemble → Révoquer les sessions → Oui
+2. **Révoquer les refresh tokens** — PowerShell : `Revoke-MgUserSignInSession -UserId [UPN]`
+3. **Vérifier la propagation CAE** — Si CAE est actif : tester une action SharePoint / Teams sur le compte concerné, la session doit être invalidée en moins de 5 minutes.
 
-<div class="callout-yellow">
-
-**Sans CAE : que faire pendant les ~53 minutes restantes ?**
-
-Alerter immédiatement l'utilisateur concerné de ne plus rien faire sur sa session. Surveiller en temps réel les actions dans Exchange (redirection mail), SharePoint (téléchargements), Teams (messages envoyés) et Entra ID (modifications de configuration). Documenter chaque action observée avec horodatage pour constituer le dossier d'incident.
-
-</div>
+<blockquote class="yellow">
+<p><strong>Sans CAE : que faire pendant les ~53 minutes restantes ?</strong></p>
+<p>Alerter immédiatement l'utilisateur concerné de ne plus rien faire sur sa session. Surveiller en temps réel les actions dans Exchange (redirection mail), SharePoint (téléchargements), Teams (messages envoyés) et Entra ID (modifications de configuration). Documenter chaque action observée avec horodatage pour constituer le dossier d'incident.</p>
+</blockquote>
 
 ### 4.3 Audit des dégâts : à faire dans les 30 minutes
 
-**Logs Entra ID — journaux d'audit**
+**Journaux d'audit Entra ID**
 
-Portail : `entra.microsoft.com` → Journaux d'audit → filtrer sur [date/heure de l'incident] → [compte compromis]
+`entra.microsoft.com` → Journaux d'audit → filtrer sur [date/heure de l'incident] → [compte compromis]
 
 - `Set-InboxRule` ou `New-InboxRule` : règles de redirection mail créées
 - `Add-MailboxPermission` : délégations mailbox ajoutées
@@ -428,11 +353,11 @@ Portail : `entra.microsoft.com` → Journaux d'audit → filtrer sur [date/heure
 - `Add member to role` : role assignments
 - `Add service principal credentials` : credentials SPN ajoutés
 
-**Logs Entra ID — journaux de connexion**
+**Journaux de connexion Entra ID**
 
-Portail : `entra.microsoft.com` → Journaux de connexion → filtrer sur [compte compromis] → période de l'incident
+`entra.microsoft.com` → Journaux de connexion → filtrer sur [compte compromis] → période de l'incident
 
-- IP source inhabituelle, user-agent générique ou malformé, géolocalisation incohérente
+Chercher : IP source inhabituelle, user-agent générique ou malformé, géolocalisation incohérente.
 
 ### 4.4 Audit rétrospectif post-CVE-2026-69836
 
@@ -442,53 +367,45 @@ Si l'audit révèle des actions suspectes dans la fenêtre précédant le 21 ao�
 - `entra.microsoft.com` → Applications d'entreprise → Certificats et secrets → secrets récemment ajoutés
 - `entra.microsoft.com` → Accès conditionnel → vérifier les modifications récentes de policies
 
-<div class="callout" style="border-color:#4B0082; background:#EDE7F6;">
-
-**Constitution de preuves pour notification PFPDT (art. 24 nLPD)**
-
-Si l'audit révèle une compromission effective, eDiscovery Premium permet de rechercher toutes les données potentiellement exposées dans Exchange, SharePoint et Teams et de constituer le dossier de preuve pour la notification au PFPDT.
-
-Nécessite l'add-on Purview Suite, hors périmètre Business Premium seul.
-Référence : [Guide complet Purview 2026, section 8.3](https://doit4everyone.github.io/microsoft-purview-configuration-2026-nLPD/docs/09-fonctionnalites-avancees.html)
-
-</div>
+<blockquote class="purple">
+<p><strong>Constitution de preuves pour notification PFPDT (art. 24 nLPD)</strong></p>
+<p>Si l'audit révèle une compromission effective, eDiscovery Premium permet de rechercher toutes les données potentiellement exposées dans Exchange, SharePoint et Teams et de constituer le dossier de preuve pour la notification au PFPDT.</p>
+<p>Nécessite l'add-on Purview Suite, hors périmètre Business Premium seul.<br>
+Référence : <a href="https://doit4everyone.github.io/microsoft-purview-configuration-2026-nLPD/docs/09-fonctionnalites-avancees.html">Guide complet Purview 2026, section 8.3</a></p>
+</blockquote>
 
 ### 4.5 Séquence de remédiation complète
 
-<div class="callout-red">
+<blockquote class="red">
+<p><strong>Erreur fréquente : réinitialiser le mot de passe en premier</strong></p>
+<p>Le cookie de session reste valide après un reset de mot de passe. La séquence ci-dessous doit être exécutée dans l'ordre indiqué.</p>
+</blockquote>
 
-**Erreur fréquente : réinitialiser le mot de passe en premier**
-
-Le cookie de session reste valide après un reset de mot de passe. La séquence ci-dessous doit être exécutée dans l'ordre indiqué.
-
-</div>
-
-<div class="step"><strong>1</strong> · Révoquer toutes les sessions actives</div>
-<div class="step"><strong>2</strong> · Révoquer les refresh tokens (PowerShell)</div>
-<div class="step"><strong>3</strong> · Auditer les règles de redirection mail (Exchange Admin Center)</div>
-<div class="step"><strong>4</strong> · Auditer les délégations mailbox (Full Access / Send As)</div>
-<div class="step"><strong>5</strong> · Auditer les applications OAuth consenties récemment</div>
-<div class="step"><strong>6</strong> · Auditer les méthodes MFA enregistrées — supprimer tout dispositif non reconnu</div>
-<div class="step"><strong>7</strong> · Réinitialiser le mot de passe — uniquement après les étapes 1 à 6</div>
-<div class="step"><strong>8</strong> · Forcer une re-registration MFA complète</div>
-<div class="step"><strong>9</strong> · Documenter l'incident — horodatage, IP source, user-agent, actions détectées</div>
+1. Révoquer toutes les sessions actives
+2. Révoquer les refresh tokens (PowerShell)
+3. Auditer les règles de redirection mail (Exchange Admin Center)
+4. Auditer les délégations mailbox (Full Access / Send As)
+5. Auditer les applications OAuth consenties récemment
+6. Auditer les méthodes MFA enregistrées — supprimer tout dispositif non reconnu
+7. Réinitialiser le mot de passe — uniquement après les étapes 1 à 6
+8. Forcer une re-registration MFA complète
+9. Documenter l'incident — horodatage, IP source, user-agent, actions détectées
 
 ---
 
 <div class="partie-banner">
-<h2>PARTIE B · Plan A : protection structurelle</h2>
-<p>WHfB par TPM · Cloud Kerberos Trust · Applications legacy · Rotation AzureADKerberos</p>
+<strong>PARTIE B · Plan A : protection structurelle</strong><br>
+<em>WHfB par TPM · Cloud Kerberos Trust · Applications legacy · Rotation AzureADKerberos</em>
 </div>
 
-<div class="callout">
+<blockquote>
+<p><strong>Note de portée</strong></p>
+<p>Cette partie couvre des mesures de durcissement avancées, au-delà du périmètre MVC Business Premium. Audience : consultants IT accompagnant des PME avec postes Hybrid Entra Join ou full cloud. Validation terrain effectuée sur un environnement hybride : Entra Connect + AD on-prem + WS2025.</p>
+</blockquote>
 
-**Note de portée**
+<a name="whfb"></a>
 
-Cette partie couvre des mesures de durcissement avancées, au-delà du périmètre MVC Business Premium. Audience : consultants IT accompagnant des PME avec postes Hybrid Entra Join ou full cloud. Validation terrain effectuée sur un environnement hybride : Entra Connect + AD on-prem + WS2025.
-
-</div>
-
-## 5. Pourquoi WHfB / FIDO2 rend le rejeu AiTM impossible {#5-whfb}
+## 5. Pourquoi WHfB / FIDO2 rend le rejeu AiTM impossible
 
 ### 5.1 Le mécanisme cryptographique
 
@@ -499,13 +416,10 @@ Windows Hello for Business utilise une paire de clés asymétriques générée �
 
 À chaque authentification, Entra ID envoie un challenge signé qui inclut l'origine du site (login.microsoft.com). Le TPM signe {challenge + origine} avec la clé privée. La réponse est vérifiée par Entra ID avec la clé publique.
 
-<div class="callout-ok">
-
-**Pourquoi le rejeu AiTM est impossible avec WHfB / FIDO2**
-
-Le proxy AiTM a une origine différente de login.microsoft.com. Le TPM signe {challenge + origine\_proxy} : la signature est cryptographiquement invalide. Entra ID rejette l'authentification. L'attaquant ne peut pas rejouer, même avec le cookie. Cette protection est structurelle : elle ne dépend pas de la détection ou de la révocation.
-
-</div>
+<blockquote class="ok">
+<p><strong>Pourquoi le rejeu AiTM est impossible avec WHfB / FIDO2</strong></p>
+<p>Le proxy AiTM a une origine différente de login.microsoft.com. Le TPM signe {challenge + origine_proxy} : la signature est cryptographiquement invalide. Entra ID rejette l'authentification. L'attaquant ne peut pas rejouer, même avec le cookie. Cette protection est structurelle : elle ne dépend pas de la détection ou de la révocation.</p>
+</blockquote>
 
 ### 5.2 Comparaison des scénarios de déploiement
 
@@ -516,19 +430,17 @@ Le proxy AiTM a une origine différente de login.microsoft.com. Le TPM signe {ch
 | Hybrid Entra Join | Cloud-only | Non compatible | N/A | Impossible : pas de session Windows possible |
 | AD pur (pas de Entra Join) | AD on-prem uniquement | Hors scope WHfB | Non applicable | N/A |
 
-<div class="callout-yellow">
-
-**Point critique : compte cloud-only sur poste hybride**
-
-Un compte cloud-only (créé directement dans Entra ID, non synchronisé depuis l'AD) ne peut pas ouvrir de session Windows sur un poste Hybrid Entra Join. Windows tente d'authentifier via Kerberos contre l'AD on-prem en premier — le compte n'existe pas dans l'AD, la connexion échoue.
-
-Validé en lab (24 août 2026) : test-m7 (cloud-only) refusé sur poste hybride. Solution : utiliser un compte hybride (synchronisé via Entra Connect) sur les postes hybrides. Les postes full cloud acceptent les deux types de comptes sans restriction.
-
-</div>
+<blockquote class="yellow">
+<p><strong>Point critique : compte cloud-only sur poste hybride</strong></p>
+<p>Un compte cloud-only ne peut pas ouvrir de session Windows sur un poste Hybrid Entra Join. Windows tente d'authentifier via Kerberos contre l'AD on-prem en premier — le compte n'existe pas dans l'AD, la connexion échoue.</p>
+<p>Validé en lab (24 août 2026) : test-m7 (cloud-only) refusé sur poste hybride. Solution : utiliser un compte hybride (synchronisé via Entra Connect) sur les postes hybrides.</p>
+</blockquote>
 
 ---
 
-## 6. Prérequis et audit préalable {#6-prerequis}
+<a name="prerequis"></a>
+
+## 6. Prérequis et audit préalable
 
 ### 6.1 Prérequis techniques
 
@@ -543,23 +455,17 @@ Validé en lab (24 août 2026) : test-m7 (cloud-only) refusé sur poste hybride.
 | Droits Global Admin + Domain Admin | Pour la création de l'objet AzureADKerberos | 📋 Disponibles le temps de l'opération |
 | PowerShell 5.1 | Le module AzureADHybridAuthenticationManagement ne fonctionne pas en PowerShell 7 | 📋 Vérifier via `$PSVersionTable.PSVersion` |
 
-<div class="callout">
+<blockquote>
+<p><strong>Note : TPM firmware vs discret pour postes partagés</strong></p>
+<p>TPM firmware (Intel PTT / AMD fTPM, intégré au CPU) : 7 à 8 slots de clés WHfB. Adapté aux postes mono-utilisateur (cas le plus fréquent en PME 5-25 personnes).</p>
+<p>TPM discret (puce physique séparée) : 32 slots minimum. Recommandé pour les postes partagés avec rotation d'utilisateurs.</p>
+<p>Si le TPM est plein, Windows supprime automatiquement les clés les moins récemment utilisées. L'utilisateur concerné doit re-enrôler WHfB à sa prochaine connexion sur ce poste.</p>
+</blockquote>
 
-**Note : TPM firmware vs discret pour postes partagés**
-
-TPM firmware (Intel PTT / AMD fTPM, intégré au CPU) : 7 à 8 slots de clés WHfB. Adapté aux postes mono-utilisateur (cas le plus fréquent en PME 5-25 personnes).
-
-TPM discret (puce physique séparée) : 32 slots minimum. Recommandé pour les postes partagés avec rotation d'utilisateurs.
-
-Si le TPM est plein, Windows supprime automatiquement les clés les moins récemment utilisées. L'utilisateur concerné doit re-enrôler WHfB à sa prochaine connexion sur ce poste.
-
-</div>
-
-<div class="callout-yellow">
-
-**Vérification préalable : GPO WHfB existantes en environnement hybride**
-
-Les GPO Active Directory WHfB prennent le dessus sur les policies Intune sur les postes hybrides. Vérifier qu'aucune GPO WHfB n'est déjà en place avant le déploiement :
+<blockquote class="yellow">
+<p><strong>Vérification préalable : GPO WHfB existantes en environnement hybride</strong></p>
+<p>Les GPO Active Directory WHfB prennent le dessus sur les policies Intune sur les postes hybrides. Vérifier qu'aucune GPO WHfB n'est déjà en place avant le déploiement :</p>
+</blockquote>
 
 ```powershell
 Get-GPO -All | Where-Object {
@@ -567,15 +473,12 @@ Get-GPO -All | Where-Object {
 }
 ```
 
-Si des GPO WHfB existent : les aligner avec la configuration Intune souhaitée ou les supprimer pour laisser Intune gérer.
-
-</div>
-
 ### 6.2 Audit des applications legacy : étape obligatoire
 
 Avant tout déploiement WHfB, identifier les applications susceptibles de régresser. Un déploiement sans audit peut bloquer des utilisateurs sur des outils métier critiques.
 
 **Méthode d'audit rapide :**
+
 1. Inventaire des apps qui demandent des credentials Windows interactivement
 2. Identification des flux NTLM : Event ID 4624 LogonType 3 + AuthPackage NTLM dans les logs DC
 3. Liste des partages réseau / NAS accessibles via auth Windows
@@ -589,37 +492,30 @@ Avant tout déploiement WHfB, identifier les applications susceptibles de régre
 | Apps demandant mot de passe Windows interactif | Blocage : l'utilisateur ne connaît plus son mot de passe | Migrer vers auth moderne ou maintenir un mot de passe de secours documenté |
 | Applications forçant NTLM | Échec d'authentification ou demande de credentials | Configurer SPN et Kerberos sur le serveur cible |
 | WIA mal configurée (SPN manquant) | Chute en NTLM, échec | Créer les SPN manquants, vérifier l'ordre de négociation |
-| RDP vers serveurs legacy | Demande de mot de passe | Activer Remote Credential Guard ou Restricted Admin mode sur le serveur cible |
-| Apps M365 utilisant protocoles hérités (IMAP, POP3, SMTP AUTH, Exchange ActiveSync legacy) | Blocage si les protocoles hérités ne sont pas déjà bloqués | Déployer une politique Conditional Access bloquant les protocoles hérités pour tous les utilisateurs |
+| RDP vers serveurs legacy | Demande de mot de passe | Activer Remote Credential Guard ou Restricted Admin mode |
+| Apps M365 utilisant protocoles hérités (IMAP, POP3, SMTP AUTH) | Blocage si les protocoles hérités ne sont pas déjà bloqués | Déployer une politique Conditional Access bloquant les protocoles hérités |
 | Credentials Manager Windows | Renouvellement impossible si mot de passe oublié | Documenter la procédure de reset avec assistance IT |
-
-### 6.4 KDClocal : atténuation partielle en cours de déploiement
-
-Microsoft déploie progressivement KDClocal, un mini-KDC Kerberos embarqué dans Windows qui émet des tickets localement sans nécessiter de contact avec un DC. Statut : preview / roadmap selon les tenants (août 2026).
-
-Ce que KDClocal résout partiellement : sessions RDP vers serveurs compatibles Kerberos, scénarios de line-of-sight DC intermittente (télétravail, VPN instable), certains cas WIA avec SPN correct mais DC injoignable. Ce que KDClocal ne résout pas : applications forçant NTLM au niveau protocole, apps demandant un mot de passe interactif, délégation Kerberos cassée côté serveur.
 
 ---
 
-## 7. Déploiement : Cloud Kerberos Trust et AzureADKerberos {#7-deploiement}
+<a name="deploiement"></a>
+
+## 7. Déploiement : Cloud Kerberos Trust et AzureADKerberos
 
 ### 7.1 Création de l'objet AzureADKerberos
 
-<div class="callout">
+<blockquote>
+<p><strong>Ce que fait cet objet</strong></p>
+<p>AzureADKerberos est un objet krbtgt de type RODC virtuel créé dans l'AD et publié dans Entra ID. Il établit un secret partagé entre l'AD on-prem et Entra ID, permettant à Entra ID d'émettre des TGT partiels que les DC on-prem reconnaissent et échangent contre des TGT complets. Résultat : l'utilisateur WHfB accède aux ressources on-prem sans mot de passe, sans PKI.</p>
+</blockquote>
 
-**Ce que fait cet objet**
-
-AzureADKerberos est un objet krbtgt de type RODC virtuel créé dans l'AD et publié dans Entra ID. Il établit un secret partagé entre l'AD on-prem et Entra ID, permettant à Entra ID d'émettre des TGT partiels que les DC on-prem reconnaissent et échangent contre des TGT complets. Résultat : l'utilisateur WHfB accède aux ressources on-prem sans mot de passe, sans PKI.
-
-</div>
-
-<div class="step"><strong>1 · TLS 1.2</strong> — Activer TLS 1.2 pour l'accès à PowerShell Gallery :</div>
+**Étape 1 — TLS 1.2**
 
 ```powershell
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 ```
 
-<div class="step"><strong>2 · Module PowerShell</strong> — Installer le module (PowerShell 5.1 requis, ne fonctionne pas en PowerShell 7) :</div>
+**Étape 2 — Module PowerShell** (PowerShell 5.1 requis, ne fonctionne pas en PowerShell 7)
 
 ```powershell
 Install-Module -Name AzureADHybridAuthenticationManagement -AllowClobber -Force
@@ -628,14 +524,14 @@ Import-Module AzureADHybridAuthenticationManagement
 
 Note : si le message "Required VC++ 2013 x64 Runtimes do not exist" apparaît, le module installe automatiquement le runtime — laisser terminer.
 
-<div class="step"><strong>3 · Variables</strong> — Préparer les credentials :</div>
+**Étape 3 — Variables**
 
 ```powershell
 $domain = $env:USERDNSDOMAIN
 $domainCred = Get-Credential -Message "Domain Admin credentials"
 ```
 
-<div class="step"><strong>4 · Création</strong> — Créer l'objet avec authentification interactive Entra ID :</div>
+**Étape 4 — Création**
 
 ```powershell
 Set-AzureADKerberosServer -Domain $domain `
@@ -645,7 +541,7 @@ Set-AzureADKerberosServer -Domain $domain `
 
 Une fenêtre de connexion Entra ID s'ouvre dans le browser — se connecter avec le compte Global Admin ou Hybrid Identity Admin. Pas de sortie = succès silencieux.
 
-<div class="step"><strong>5 · Vérification</strong> — Contrôler que l'objet est bien créé et synchronisé :</div>
+**Étape 5 — Vérification**
 
 ```powershell
 Get-AzureADKerberosServer -Domain $domain `
@@ -653,95 +549,77 @@ Get-AzureADKerberosServer -Domain $domain `
   -DomainCredential $domainCred
 ```
 
-<div class="callout-ok">
-
-**Sortie attendue après création réussie (validée en lab, 24 août 2026)**
-
-```
+<blockquote class="ok">
+<p><strong>Sortie attendue après création réussie (validée en lab, 24 août 2026)</strong></p>
+<pre>
 Id                 : [numéro unique]
 UserAccount        : CN=krbtgt_AzureAD,CN=Users,DC=[domaine],DC=[ext]
 ComputerAccount    : CN=AzureADKerberos,OU=Domain Controllers,DC=[domaine],DC=[ext]
 DisplayName        : krbtgt_[numéro]
 DomainDnsName      : [domaine.ext]
 KeyVersion         : [numéro]
-KeyUpdatedOn       : [date et heure]
-KeyUpdatedFrom     : [nom du DC]
 CloudKeyVersion    : [même numéro que KeyVersion]  ← synchronisation confirmée
 CloudKeyUpdatedOn  : [même date que KeyUpdatedOn]  ← écart idéalement 0 seconde
 CloudTrustDisplay  : [vide au premier déploiement — normal]
-```
-
-Points à vérifier : `KeyVersion = CloudKeyVersion` et écart `KeyUpdatedOn / CloudKeyUpdatedOn` inférieur à 1h.
-
-</div>
+</pre>
+<p>Points à vérifier : KeyVersion = CloudKeyVersion et écart KeyUpdatedOn / CloudKeyUpdatedOn inférieur à 1h.</p>
+</blockquote>
 
 ### 7.2 Configuration WHfB dans Intune
 
-La configuration WHfB dans Intune se fait en deux étapes distinctes : la policy tenant-wide pour les paramètres généraux WHfB, et un profil Catalogue de paramètres pour le Cloud Kerberos Trust.
-
-<div class="callout-yellow">
-
-**Note importante : ne pas utiliser le profil Protection de compte (Sécurité du point de terminaison)**
-
-Le profil "Protection de compte" sous Sécurité du point de terminaison entre en conflit avec la policy tenant-wide WHfB existante sur tous les tenants. Utiliser uniquement les deux méthodes documentées ci-dessous.
-
-</div>
+<blockquote class="yellow">
+<p><strong>Note importante : ne pas utiliser le profil Protection de compte</strong></p>
+<p>Le profil "Protection de compte" sous Sécurité du point de terminaison entre en conflit avec la policy tenant-wide WHfB existante sur tous les tenants. Utiliser uniquement les deux méthodes documentées ci-dessous.</p>
+</blockquote>
 
 **Étape A : configurer la policy tenant-wide WHfB**
 
-Portail : `intune.microsoft.com` → Appareils → Inscription → Windows → Windows Hello Entreprise
+`intune.microsoft.com` → Appareils → Inscription → Windows → **Windows Hello Entreprise**
 
-Cette policy est présente sur tous les tenants mais en état "Non configuré" par défaut. La configurer avec les paramètres suivants :
+Cette policy est présente sur tous les tenants mais en état "Non configuré" par défaut.
 
 | Paramètre | Valeur recommandée | Remarque |
 |---|---|---|
 | Configurer Windows Hello Entreprise | Activé | Active WHfB sur tous les appareils inscrits |
 | Utiliser un module de plateforme sécurisée (TPM) | Préféré | Préféré = WHfB fonctionne aussi sans TPM. Passer à Obligatoire sur un parc homogène récent. |
 | Longueur minimale du code PIN | 6 | Minimum recommandé |
-| Longueur maximale du code PIN | 127 | Valeur par défaut |
 | Autoriser l'authentification biométrique | Oui | Empreinte, reconnaissance faciale |
 | Utilisez des clés de sécurité pour la connexion | Activé | Active FIDO2 en complément de WHfB |
 
 **Étape B : créer le profil Cloud Kerberos Trust**
 
-Portail : `intune.microsoft.com` → Appareils → Configuration → Créer → Nouvelle stratégie
+`intune.microsoft.com` → Appareils → Configuration → Créer → Nouvelle stratégie
 
-<div class="step"><strong>1 · Plateforme</strong> — Windows 10 et ultérieur</div>
-<div class="step"><strong>2 · Type de profil</strong> — Catalogue de paramètres (pas Modèles)</div>
-<div class="step"><strong>3 · Nom</strong> — WHfB-Cloud-Kerberos-Trust</div>
-<div class="step"><strong>4 · Ajouter des paramètres</strong> — Rechercher "Cloud Trust" → catégorie Windows Hello Entreprise</div>
-<div class="step"><strong>5 · Paramètre</strong> — Utiliser l'approbation cloud pour l'authentification locale → Activé</div>
-<div class="step"><strong>6 · Affectation</strong> — Groupe pilote initial (2 à 3 appareils hybrides non-critiques)</div>
-<div class="step"><strong>7 · Créer</strong> — Vérifier + créer → Créer</div>
+1. Plateforme : Windows 10 et ultérieur
+2. Type de profil : **Catalogue de paramètres** (pas Modèles)
+3. Nom : WHfB-Cloud-Kerberos-Trust
+4. Ajouter des paramètres : rechercher "Cloud Trust" → catégorie Windows Hello Entreprise
+5. Paramètre : **Utiliser l'approbation cloud pour l'authentification locale** → Activé
+6. Affectation : groupe pilote initial (2 à 3 appareils hybrides non-critiques)
+7. Vérifier + créer → Créer
 
-<div class="callout-ok">
-
-**Comportement attendu au premier enrôlement WHfB sur poste hybride (validé en lab, 24 août 2026)**
-
-1. Connexion Windows avec mot de passe → Windows détecte la policy WHfB
-2. Authenticator ou méthode MFA enregistrée demandée pour valider l'identité
-3. Assistant WHfB s'ouvre → création du PIN (6 caractères minimum)
-4. Reboot possible selon le poste — normal lors de l'application initiale des policies
-5. Reconnexion avec le PIN → une fenêtre de connexion Entra ID s'ouvre une seule fois pour créer le PRT (Primary Refresh Token) lié au poste
-6. Connexions suivantes : PIN seul, plus de fenêtre de connexion Microsoft
-
-Note : la policy tenant-wide Intune fonctionne sans GPO sur les postes hybrides. Si une GPO WHfB existe dans l'AD, elle prend le dessus sur Intune — vérifier section 6.1.
-
-</div>
+<blockquote class="ok">
+<p><strong>Comportement attendu au premier enrôlement WHfB sur poste hybride (validé en lab, 24 août 2026)</strong></p>
+<p>1. Connexion Windows avec mot de passe → Windows détecte la policy WHfB<br>
+2. Authenticator ou méthode MFA enregistrée demandée pour valider l'identité<br>
+3. Assistant WHfB s'ouvre → création du PIN (6 caractères minimum)<br>
+4. Reboot possible selon le poste — normal lors de l'application initiale des policies<br>
+5. Reconnexion avec le PIN → une fenêtre de connexion Entra ID s'ouvre une seule fois pour créer le PRT<br>
+6. Connexions suivantes : PIN seul, plus de fenêtre de connexion Microsoft</p>
+<p>Note : la policy tenant-wide Intune fonctionne sans GPO sur les postes hybrides. Si une GPO WHfB existe dans l'AD, elle prend le dessus sur Intune — vérifier section 6.1.</p>
+</blockquote>
 
 ### 7.3 Vérification de l'état WHfB sur le poste
 
-Après enrôlement, vérifier l'état complet du poste depuis une invite de commande administrateur :
+Depuis une invite de commande administrateur :
 
 ```cmd
 dsregcmd /status
 ```
 
-<div class="callout-ok">
-
-**Champs clés à vérifier dans la sortie (validés en lab, 24 août 2026)**
-
-```
+<blockquote class="ok">
+<p><strong>Champs clés à vérifier dans la sortie (validés en lab, 24 août 2026)</strong></p>
+<pre>
 Device State :
   AzureAdJoined : YES  ← poste joint à Entra ID
   DomainJoined  : YES  ← poste joint à l'AD on-prem (hybride)
@@ -758,105 +636,80 @@ SSO State :
 
 Diagnostic :
   KeySignTest : PASSED  ← la clé WHfB signe correctement
-```
+</pre>
+</blockquote>
 
-</div>
-
-<div class="callout-yellow">
-
-**Dépannage : PreReqResult = WillNotProvision**
-
-Si `NgcSet : NO` et `PreReqResult : WillNotProvision` apparaissent, vérifier deux points :
-
-1. **Le compte a-t-il une méthode MFA dans le nouveau système unifié Entra ID ?**
-   Vérifier via : `entra.microsoft.com` → Utilisateurs → [compte] → Méthodes d'authentification
-   Les méthodes legacy (Authenticator enregistré via outlookMobile) peuvent ne pas suffire.
-   Solution : enregistrer une méthode native via `aka.ms/mysecurityinfo` (Authenticator standard ou passkey).
-
-2. **Le compte est-il soumis à une policy MFA active ?**
-   Un compte exclu de toute policy MFA ne peut pas s'enrôler en WHfB.
-   WHfB nécessite une validation d'identité forte lors de l'enrôlement.
-
-</div>
+<blockquote class="yellow">
+<p><strong>Dépannage : PreReqResult = WillNotProvision</strong></p>
+<p>Si <code>NgcSet : NO</code> et <code>PreReqResult : WillNotProvision</code> apparaissent, vérifier deux points :</p>
+<p><strong>1. Le compte a-t-il une méthode MFA dans le nouveau système unifié Entra ID ?</strong><br>
+Vérifier via : <code>entra.microsoft.com</code> → Utilisateurs → [compte] → Méthodes d'authentification<br>
+Les méthodes legacy (Authenticator enregistré via outlookMobile) peuvent ne pas suffire.<br>
+Solution : enregistrer une méthode native via <code>aka.ms/mysecurityinfo</code>.</p>
+<p><strong>2. Le compte est-il soumis à une policy MFA active ?</strong><br>
+Un compte exclu de toute policy MFA ne peut pas s'enrôler en WHfB.<br>
+WHfB nécessite une validation d'identité forte lors de l'enrôlement.</p>
+</blockquote>
 
 ### 7.4 Conditional Access : exiger un MFA résistant au phishing
 
 Une fois WHfB et FIDO2 déployés, créer une Conditional Access policy qui exige exclusivement une méthode résistante au phishing — supprimant le fallback vers SMS ou TOTP.
 
-<div class="callout-ok">
+<blockquote class="ok">
+<p><strong>Périmètre licence : Entra ID P1 — dans le périmètre Business Premium</strong></p>
+<p>La fonctionnalité "Exiger la force de l'authentification" dans Conditional Access nécessite uniquement P1.</p>
+</blockquote>
 
-**Périmètre licence : Entra ID P1 — dans le périmètre Business Premium**
-
-La fonctionnalité "Exiger la force de l'authentification" dans Conditional Access nécessite uniquement P1.
-Source : [Microsoft learn.microsoft.com](https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-strengths)
-
-</div>
-
-**Forces d'authentification disponibles dans l'interface (libellés validés terrain, 24 août 2026) :**
+**Forces disponibles dans l'interface (libellés validés terrain, 24 août 2026) :**
 
 - **Authentification multifacteur :** combinaisons qui répondent à une auth forte (Mot de passe + SMS, etc.)
 - **Authentification multifacteur sans mot de passe :** Microsoft Authenticator, etc.
-- **MFA anti-hameçonnage** (libellé dans la liste : `Phishing-resistant MFA`) : méthodes sans mot de passe sans hameçonnage — FIDO2, WHfB, CBA uniquement
+- **MFA anti-hameçonnage** (libellé dans la liste déroulante : `Phishing-resistant MFA`) : FIDO2, WHfB, CBA uniquement
 
 Note : la liste déroulante affiche "Phishing-resistant MFA" en anglais même en interface française.
 
-<div class="callout-red">
-
-**Prérequis obligatoire avant activation**
-
-Chaque utilisateur soumis à cette policy doit avoir au moins une méthode résistante au phishing enregistrée (WHfB sur son poste ou passkey FIDO2). Sans cela, l'utilisateur sera bloqué.
-
-Recommandation : au minimum deux méthodes enregistrées par utilisateur.
-
-Activer d'abord en mode "Rapport uniquement" et vérifier les logs avant de passer en Activé. Minimum 2 semaines de monitoring en mode Rapport recommandé.
-
-</div>
+<blockquote class="red">
+<p><strong>Prérequis obligatoire avant activation</strong></p>
+<p>Chaque utilisateur soumis à cette policy doit avoir au moins une méthode résistante au phishing enregistrée. Sans cela, l'utilisateur sera bloqué. Activer d'abord en mode "Rapport uniquement" et vérifier les logs avant de passer en Activé. Minimum 2 semaines de monitoring recommandé.</p>
+</blockquote>
 
 **Policy 1 : comptes à privilèges (priorité maximale)**
 
-Portail : `entra.microsoft.com` → Accès conditionnel → Stratégies → Nouvelle stratégie
+`entra.microsoft.com` → Accès conditionnel → Stratégies → Nouvelle stratégie
 
-<div class="step"><strong>1 · Nom</strong> — CA-Phishing-Resistant-Admins</div>
-<div class="step"><strong>2 · Utilisateurs</strong> — Rôles d'annuaire → Administrateur général, Administrateur de rôle privilégié, Administrateur de la sécurité (au minimum)</div>
-<div class="step"><strong>3 · Ressources cibles</strong> — Toutes les ressources (anciennement « Toutes les applications cloud »)</div>
-<div class="step"><strong>4 · Contrôles d'accès → Octroyer</strong> — Accorder l'accès → Exiger la force de l'authentification → Phishing-resistant MFA → Sélectionner</div>
-<div class="step"><strong>5 · Activer</strong> — Rapport uniquement → Créer</div>
+1. Nom : CA-Phishing-Resistant-Admins
+2. Utilisateurs : Rôles d'annuaire → Administrateur général, Administrateur de rôle privilégié, Administrateur de la sécurité (au minimum)
+3. Ressources cibles : Toutes les ressources (anciennement « Toutes les applications cloud »)
+4. Contrôles d'accès → Octroyer : Accorder l'accès → Exiger la force de l'authentification → Phishing-resistant MFA → Sélectionner
+5. Activer : **Rapport uniquement** → Créer
 
-<div class="callout-yellow">
-
-**Avertissement Microsoft lors de la création**
-
-"Ne bloquez pas votre accès ! Cette stratégie affecte le Portail Azure." Ignorable en mode Rapport uniquement — le mode Rapport ne bloque jamais l'accès. À prendre en compte uniquement lors du passage en mode Activé.
-
-</div>
+<blockquote class="yellow">
+<p><strong>Avertissement Microsoft lors de la création</strong></p>
+<p>"Ne bloquez pas votre accès ! Cette stratégie affecte le Portail Azure." Ignorable en mode Rapport uniquement — le mode Rapport ne bloque jamais l'accès.</p>
+</blockquote>
 
 **Policy 2 : tous les utilisateurs (déploiement progressif)**
 
 À déployer uniquement après confirmation que tous les utilisateurs ont enrôlé WHfB ou une passkey.
 
-<div class="step"><strong>1 · Nom</strong> — CA-Phishing-Resistant-AllUsers</div>
-<div class="step"><strong>2 · Utilisateurs</strong> — Tous les utilisateurs — exclure le groupe break-glass</div>
-<div class="step"><strong>3 · Ressources cibles</strong> — Toutes les ressources (ou applications critiques uniquement dans un premier temps)</div>
-<div class="step"><strong>4 · Contrôles d'accès → Octroyer</strong> — Accorder l'accès → Exiger la force de l'authentification → Phishing-resistant MFA → Sélectionner</div>
-<div class="step"><strong>5 · Activer</strong> — Rapport uniquement → minimum 2 semaines de monitoring → passer en Activé</div>
+1. Nom : CA-Phishing-Resistant-AllUsers
+2. Utilisateurs : Tous les utilisateurs — exclure le groupe break-glass
+3. Ressources cibles : Toutes les ressources (ou applications critiques uniquement dans un premier temps)
+4. Contrôles d'accès → Octroyer : Accorder l'accès → Exiger la force de l'authentification → Phishing-resistant MFA → Sélectionner
+5. Activer : Rapport uniquement → minimum 2 semaines de monitoring → passer en Activé
 
-<div class="callout">
+<blockquote>
+<p><strong>Ce que fait la policy en mode Activé — comportement exact</strong></p>
+<p>La policy ne force pas l'enrôlement WHfB automatiquement. Elle exige qu'une méthode résistante au phishing soit utilisée pour s'authentifier.</p>
+<p>· Utilisateur avec WHfB enrôlé : connexion transparente via WHfB, policy satisfaite.<br>
+· Utilisateur avec passkey FIDO2 : connexion via passkey, policy satisfaite.<br>
+· Utilisateur sans méthode résistante au phishing : accès bloqué, redirigé vers <code>aka.ms/mysecurityinfo</code>.</p>
+<p>Les comptes anciens sans méthode résistante enregistrée seront bloqués. Prévoir une campagne d'enrôlement avant le passage en mode Activé.</p>
+</blockquote>
 
-**Ce que fait la policy en mode Activé — comportement exact**
-
-La policy ne force pas l'enrôlement WHfB automatiquement. Elle exige qu'une méthode résistante au phishing soit utilisée pour s'authentifier.
-
-- Utilisateur avec WHfB enrôlé : connexion transparente via WHfB, policy satisfaite.
-- Utilisateur avec passkey FIDO2 : connexion via passkey, policy satisfaite.
-- Utilisateur sans méthode résistante au phishing : accès bloqué, redirigé vers `aka.ms/mysecurityinfo` pour enregistrer WHfB ou une passkey.
-
-Les comptes anciens sans méthode résistante enregistrée seront bloqués. Prévoir une campagne d'enrôlement avant le passage en mode Activé.
-
-</div>
-
-<div class="callout-yellow">
-
-**Audit préalable : identifier les comptes non conformes**
+<blockquote class="yellow">
+<p><strong>Audit préalable : identifier les comptes non conformes</strong></p>
+</blockquote>
 
 ```powershell
 Get-MgUser -All | ForEach-Object {
@@ -870,35 +723,28 @@ Get-MgUser -All | ForEach-Object {
 }
 ```
 
-Les utilisateurs retournés n'ont pas de méthode résistante au phishing et seront bloqués si la policy est activée sans campagne d'enrôlement préalable.
-
-</div>
-
-<div class="callout-yellow">
-
-**Note : retrait SMS et voix prévu septembre 2026**
-
-Microsoft a annoncé le retrait de l'authentification par SMS et par appel vocal à partir de septembre 2026. Si des utilisateurs utilisent encore ces méthodes, planifier la migration vers WHfB ou passkeys avant cette date.
-
-</div>
+<blockquote class="yellow">
+<p><strong>Note : retrait SMS et voix prévu septembre 2026</strong></p>
+<p>Microsoft a annoncé le retrait de l'authentification par SMS et par appel vocal à partir de septembre 2026. Si des utilisateurs utilisent encore ces méthodes, planifier la migration vers WHfB ou passkeys avant cette date.</p>
+</blockquote>
 
 ---
 
-## 8. Rotation de la clé AzureADKerberos {#8-rotation}
+<a name="rotation"></a>
+
+## 8. Rotation de la clé AzureADKerberos
 
 ### 8.1 Pourquoi et à quelle fréquence
-
-L'objet AzureADKerberos contient une clé krbtgt qui signe les TGT partiels. Si cette clé est compromise, un attaquant peut forger des TGT valides. La rotation régulière limite la fenêtre d'exploitation.
 
 | Cadence | Contexte | Remarque |
 |---|---|---|
 | 30 jours | Recommandation Microsoft minimale | Ne pas dépasser |
 | 15 jours | Environnements sensibles | Recommandé en contexte nLPD art. 8 |
-| Immédiatement | Compromission avérée d'un compte Domain Admin | Procédure d'urgence, voir 8.3 |
+| Immédiatement | Compromission avérée d'un compte Domain Admin | Procédure d'urgence |
 
 ### 8.2 Procédure de rotation standard
 
-<div class="step"><strong>1 · Rotation</strong> — Exécuter la rotation de clé :</div>
+**Étape 1 — Rotation**
 
 ```powershell
 Set-AzureADKerberosServer -Domain $domain `
@@ -906,94 +752,84 @@ Set-AzureADKerberosServer -Domain $domain `
   -DomainCredential $domainCred -RotateServerKey
 ```
 
-<div class="step"><strong>2 · Vérification immédiate</strong> — Contrôler la synchronisation : KeyLastRotated et CloudKeyLastSynced doivent être à moins de 1h d'écart.</div>
-<div class="step"><strong>3 · Attente</strong> — Ne pas supprimer l'ancien objet : attendre minimum 10h (durée de vie d'un TGT Kerberos), idéalement 24h.</div>
-<div class="step"><strong>4 · Validation</strong> — Tester une connexion WHfB sur un poste hybride pour confirmer que la rotation n'a pas cassé l'auth.</div>
+**Étape 2 — Vérification immédiate** : KeyLastRotated et CloudKeyLastSynced doivent être à moins de 1h d'écart.
 
-<div class="callout">
+**Étape 3 — Attente** : ne pas supprimer l'ancien objet — attendre minimum 10h (durée de vie d'un TGT Kerberos), idéalement 24h.
 
-**Coordination avec la rotation du compte krbtgt AD**
+**Étape 4 — Validation** : tester une connexion WHfB sur un poste hybride pour confirmer que la rotation n'a pas cassé l'auth.
 
-L'objet AzureADKerberos et le compte krbtgt de l'AD sont deux objets distincts avec des clés indépendantes : leurs rotations sont des opérations séparées.
-
-Rotation krbtgt AD : bonne pratique classique, recommandée tous les 60 à 90 jours, ou immédiatement après tout incident impliquant un accès Domain Admin non autorisé. La rotation krbtgt se fait en deux passes espacées de la durée de vie maximale du ticket Kerberos (10h par défaut) pour éviter de bloquer les sessions actives.
-
-Les deux rotations peuvent être planifiées le même jour mais ne doivent pas être exécutées simultanément. Ordre recommandé : krbtgt AD en premier (double rotation J+0 / J+10h minimum), puis AzureADKerberos après confirmation de stabilité. Espacer d'au moins 10 à 24h entre les deux.
-
-Aligner les deux cycles sur un calendrier mensuel simplifie la gestion et réduit le risque d'oubli.
-
-</div>
+<blockquote>
+<p><strong>Coordination avec la rotation du compte krbtgt AD</strong></p>
+<p>L'objet AzureADKerberos et le compte krbtgt de l'AD sont deux objets distincts avec des clés indépendantes : leurs rotations sont des opérations séparées.</p>
+<p>Rotation krbtgt AD : bonne pratique classique, recommandée tous les 60 à 90 jours, ou immédiatement après tout incident impliquant un accès Domain Admin non autorisé. La rotation krbtgt se fait en deux passes espacées de la durée de vie maximale du ticket Kerberos (10h par défaut) pour éviter de bloquer les sessions actives.</p>
+<p>Ordre recommandé : krbtgt AD en premier (double rotation J+0 / J+10h minimum), puis AzureADKerberos après confirmation de stabilité. Espacer d'au moins 10 à 24h entre les deux. Aligner les deux cycles sur un calendrier mensuel simplifie la gestion et réduit le risque d'oubli.</p>
+</blockquote>
 
 ### 8.3 Automatisation via Azure Automation
 
-Script PowerShell de rotation automatisée à déployer dans un runbook Azure Automation, cadence mensuelle ou selon la politique définie en 8.1.
+Logique du runbook mensuel :
 
-Logique du runbook :
 1. Récupérer les credentials depuis Azure Key Vault (jamais en clair dans le script)
 2. Exécuter `Set-AzureADKerberosServer -RotateServerKey`
 3. Exécuter `Get-AzureADKerberosServer` → vérifier que `CloudKeyLastSynced` est inférieur à 1h
 4. Si écart supérieur à 1h : envoyer une alerte email / Teams → intervention manuelle requise
 5. Logger le résultat dans Log Analytics pour audit trail
 
-Droits requis pour le compte de service : Hybrid Identity Administrator (Entra ID) + droits délégués Domain Admin (via Credential stocké dans Key Vault).
+Droits requis : Hybrid Identity Administrator (Entra ID) + droits délégués Domain Admin (via Credential stocké dans Key Vault).
 
 ---
 
-## 9. Annexe A : FIDO2 hardware pour comptes à privilèges {#9-fido2}
+<a name="fido2"></a>
+
+## 9. Annexe A : FIDO2 hardware pour comptes à privilèges
 
 ### 9.1 Quand préférer une clé physique à WHfB par TPM
-
-WHfB par TPM lie l'authentification forte à un poste spécifique. Pour les comptes à privilèges élevés (Global Admin, Privileged Role Administrator) qui peuvent s'authentifier depuis plusieurs postes, une clé FIDO2 roaming offre la même garantie cryptographique avec une portabilité entre postes.
 
 | Critère | WHfB / TPM | Clé FIDO2 physique |
 |---|---|---|
 | Portabilité | Lié au poste | Portable entre postes |
 | Coût | Zéro (intégré au poste) | 30 à 80 CHF / unité selon modèle |
-| Durée de vie déclarée | Liée au poste (5 à 10 ans) | YubiKey : 5 ans minimum, typiquement 7 à 10 ans. Feitian : 5 ans déclarés. Limite pratique : perte physique ou changement de politique, pas la défaillance matérielle (connecteur USB certifié >10 000 insertions). |
+| Durée de vie déclarée | Liée au poste (5 à 10 ans) | YubiKey : 5 ans minimum, typiquement 7 à 10 ans. Feitian : 5 ans déclarés. Limite pratique : perte physique ou changement de politique (connecteur USB certifié >10 000 insertions). |
 | Déploiement | Via Intune, scalable | Distribution physique, manuelle |
 | Perte / vol | Risque nul (clé dans TPM) | Risque physique : procédure de révocation nécessaire |
 | Comptes recommandés | Tous les utilisateurs standard | Global Admin, break-glass, comptes PIM |
 
 ### 9.2 Activation FIDO2 dans Entra ID
 
-Portail : `entra.microsoft.com` → Méthodes d'authentification → Stratégies → Clé d'accès (FIDO2)
+`entra.microsoft.com` → Méthodes d'authentification → Stratégies → **Clé d'accès (FIDO2)**
 
 Page : **Paramètres de clé d'accès (FIDO2)**
 
-<div class="callout-yellow">
-
-**Important : FIDO2 est désactivé par défaut**
-
-Contrairement à CAE, la méthode "Clé d'accès (FIDO2)" est désactivée par défaut sur tous les tenants. Une activation manuelle est requise.
-
-</div>
+<blockquote class="yellow">
+<p><strong>Important : FIDO2 est désactivé par défaut</strong></p>
+<p>Contrairement à CAE, la méthode "Clé d'accès (FIDO2)" est désactivée par défaut sur tous les tenants. Une activation manuelle est requise.</p>
+</blockquote>
 
 **Onglet "Activer et cibler" :**
 
-<div class="step"><strong>1 · Activer</strong> — Toggle Activer → Activé</div>
-<div class="step"><strong>2 · Inclure</strong> — Onglet Inclure → Tous les utilisateurs (ou groupe spécifique selon la stratégie de déploiement)</div>
-<div class="step"><strong>3 · Exclure</strong> — Onglet Exclure → Ajouter le groupe break-glass</div>
+1. Toggle Activer → **Activé**
+2. Onglet Inclure → Tous les utilisateurs (ou groupe spécifique selon la stratégie de déploiement)
+3. Onglet Exclure → Ajouter le groupe break-glass
 
 **Onglet "Configurer" :**
 
 - Default passkey profile : Types = Device-bound, Synced, Restrictions = Non
-- Pour les comptes à privilèges : créer un profil dédié avec Device-bound uniquement et AAGUIDs spécifiques YubiKey (via Ajouter un profil)
+- Pour les comptes à privilèges : créer un profil dédié avec Device-bound uniquement et AAGUIDs spécifiques YubiKey
 
-<div class="callout">
+<blockquote>
+<p><strong>Note sur Microsoft Authenticator dans les AAGUIDs</strong></p>
+<p>L'interface propose Windows Hello, Microsoft Authenticator et Enter AAGUID comme raccourcis. Microsoft Authenticator = passkey Synced stockée dans l'app mobile, synchronisée via Microsoft. Plus pratique mais légèrement moins robuste qu'une clé Device-bound pour les comptes ultra-sensibles. Pour Global Admin : préférer Device-bound (YubiKey ou TPM) uniquement.</p>
+</blockquote>
 
-**Note sur Microsoft Authenticator dans les AAGUIDs**
-
-L'interface propose Windows Hello, Microsoft Authenticator et Enter AAGUID comme raccourcis. Microsoft Authenticator = passkey Synced stockée dans l'app mobile, synchronisée via Microsoft. Plus pratique mais légèrement moins robuste qu'une clé Device-bound pour les comptes ultra-sensibles. Pour Global Admin : préférer Device-bound (YubiKey ou TPM) uniquement.
-
-</div>
-
-**Enrôlement :** l'utilisateur enrôle sa clé ou passkey via `aka.ms/mysecurityinfo`.
+Enrôlement : l'utilisateur enrôle sa clé ou passkey via `aka.ms/mysecurityinfo`.
 
 ---
 
-## 10. Conclusion : honnêteté intellectuelle sur le niveau de protection {#10-conclusion}
+<a name="conclusion"></a>
 
-Ce document ne rend pas un tenant Microsoft 365 inattaquable. Il déplace le curseur de difficulté pour l'attaquant. La hiérarchie est claire :
+## 10. Conclusion : honnêteté intellectuelle sur le niveau de protection
+
+Ce document ne rend pas un tenant Microsoft 365 inattaquable. Il déplace le curseur de difficulté pour l'attaquant.
 
 | Niveau | Mesure | Ce que ça garantit |
 |---|---|---|
@@ -1006,11 +842,13 @@ Ce document ne rend pas un tenant Microsoft 365 inattaquable. Il déplace le cur
 
 Les autres vecteurs restent actifs indépendamment de WHfB : endpoint compromis (malware, keylogger), ingénierie sociale directe, compromission du DC on-prem. WHfB ferme le vecteur AiTM mais ne remplace pas une posture de sécurité globale.
 
-*Prochaine étape recommandée : déployer CAE (Partie A, vérification en 20 minutes) immédiatement, puis planifier WHfB comme projet de durcissement sur 1 à 2 sessions.*
+*Prochaine étape recommandée : déployer CAE (vérification en 20 minutes) immédiatement, puis planifier WHfB comme projet de durcissement sur 1 à 2 sessions.*
 
 ---
 
-## 11. Annexe B : pourquoi un SIEM est indispensable, même gratuit {#11-siem}
+<a name="siem"></a>
+
+## 11. Annexe B : pourquoi un SIEM est indispensable, même gratuit
 
 ### 11.1 Le problème sans SIEM
 
@@ -1022,30 +860,26 @@ Un SIEM avec des règles de corrélation transforme ces signaux en alertes actio
 
 | SIEM | Points forts | Points faibles | Intégration M365 |
 |---|---|---|---|
-| Wazuh | Très populaire, grande communauté, documentation abondante, agents endpoint Windows/Linux natifs, XDR intégré | Configuration M365 manuelle et complexe, courbe d'apprentissage élevée, ressources serveur importantes | Via module Wazuh Office 365 (API Management Activity), configuration manuelle des règles de corrélation |
-| UTMStack CE | Interface intuitive, intégration O365 native, règles M-series validées en live sur les scénarios AiTM et CVE-2026-69836, lab documenté disponible | Communauté plus petite, moins de ressources en ligne que Wazuh | Native O365 : règles M-series prêtes à importer, validées en production |
-| Graylog | Excellent pour la gestion de logs en volume, interface claire, performant sur de grands parcs | Moins orienté SIEM que les deux autres, corrélation limitée en version CE | Via inputs personnalisés, nécessite développement des règles de corrélation |
+| Wazuh | Très populaire, grande communauté, documentation abondante, agents endpoint natifs, XDR intégré | Configuration M365 manuelle et complexe, courbe d'apprentissage élevée | Via module Wazuh Office 365 (API Management Activity), configuration manuelle des règles |
+| UTMStack CE | Interface intuitive, intégration O365 native, règles M-series validées en live sur les scénarios AiTM et CVE-2026-69836, lab documenté disponible | Communauté plus petite, moins de ressources en ligne | Native O365 : règles M-series prêtes à importer, validées en production |
+| Graylog | Excellent pour la gestion de logs en volume, interface claire | Moins orienté SIEM, corrélation limitée en version CE | Via inputs personnalisés, nécessite développement des règles |
 
 ### 11.3 Recommandation pour une PME M365
 
-Pour une PME de 5 à 25 utilisateurs sous M365 Business Premium, UTMStack CE offre le meilleur rapport déploiement / couverture immédiate pour les scénarios documentés dans ce guide. Les règles M-series couvrent les vecteurs AiTM et CVE-2026-69836 sans développement supplémentaire.
+Pour une PME de 5 à 25 utilisateurs sous M365 Business Premium, UTMStack CE offre le meilleur rapport déploiement / couverture immédiate pour les scénarios documentés dans ce guide.
 
-Wazuh est une excellente alternative si la PME dispose déjà d'un responsable IT à l'aise avec la configuration avancée ou si elle souhaite une couverture endpoint plus large.
-
-<div class="callout-ok">
-
-**Lab UTMStack : règles M365 validées en live**
-
-Le lab UTMStack documenté sur GitHub Pages couvre l'ensemble des règles de corrélation M365 utilisées dans ce guide, avec les YAML prêts à importer, les tests de déclenchement documentés et les champs disponibles dans chaque alerte.
-
-- [Chapitre 11 : règles de corrélation M-series (dont M-new-1 et M-new-2)](https://doit4everyone.github.io/utmstack-lab/docs/11-correlations-yaml.html)
-- [Lab UTMStack complet](https://doit4everyone.github.io/utmstack-lab/)
-
-</div>
+<blockquote class="ok">
+<p><strong>Lab UTMStack : règles M365 validées en live</strong></p>
+<p>Le lab UTMStack documenté sur GitHub Pages couvre l'ensemble des règles de corrélation M365 utilisées dans ce guide, avec les YAML prêts à importer, les tests de déclenchement documentés et les champs disponibles dans chaque alerte.</p>
+<p>· <a href="https://doit4everyone.github.io/utmstack-lab/docs/11-correlations-yaml.html">Chapitre 11 : règles de corrélation M-series (dont M-new-1 et M-new-2)</a><br>
+· <a href="https://doit4everyone.github.io/utmstack-lab/">Lab UTMStack complet</a></p>
+</blockquote>
 
 ---
 
-## 12. Renvois et ressources {#12-renvois}
+<a name="renvois"></a>
+
+## 12. Renvois et ressources
 
 | Document / Ressource | Périmètre licence | Lien |
 |---|---|---|
@@ -1067,11 +901,7 @@ Le lab UTMStack documenté sur GitHub Pages couvre l'ensemble des règles de cor
 
 ---
 
-<div class="nav-links">
-
 [← Retour au bundle MVC nLPD](../) · [🏠 Retour au portail principal](https://doit4everyone.github.io/)
-
-</div>
 
 ---
 
