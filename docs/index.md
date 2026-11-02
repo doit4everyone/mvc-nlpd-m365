@@ -1,5 +1,5 @@
 ---
-title: "MVC nLPD — Microsoft 365 Business Premium | DoIt4Everyone"
+title: "MVC nLPD : Microsoft 365 Business Premium | DoIt4Everyone"
 description: "Bundle Minimum Viable de Conformité (MVC) nLPD pour PME suisses de 5 à 25 utilisateurs sur Microsoft 365 Business Premium + Purview Suite. Quatre guides de déploiement et d'exploitation."
 lang: fr
 ---
@@ -23,12 +23,12 @@ lang: fr
   table { width: 100%; display: table; margin: 20px 0; }
 </style>
 
-<h1>Bundle MVC nLPD — Microsoft 365 Business Premium</h1>
+<h1>Bundle MVC nLPD : Microsoft 365 Business Premium</h1>
 <h2>Minimum Viable de Conformité · nLPD RS 235.1 · PME suisses 🇨🇭</h2>
 
 La plupart des PME suisses ne sont pas en conformité nLPD, non par manque de volonté, mais parce que les guides disponibles supposent des ressources, des licences et une expertise IT qu'elles n'ont pas.
 
-Ce bundle change ça. Il est conçu pour **Microsoft 365 Business Premium + Purview Suite** — pas E3, pas E5 — et s'installe en quelques sessions de travail, sans consultant permanent. L'objectif n'est pas la perfection technique : c'est la capacité de démontrer devant le [PFPDT](https://www.edoeb.admin.ch/) une démarche **proportionnée, documentée et maintenue**.
+Ce bundle change ça. Il est conçu pour **Microsoft 365 Business Premium + Purview Suite** (pas E3, pas E5) et s'installe en quelques sessions de travail, sans consultant permanent. L'objectif n'est pas la perfection technique : c'est la capacité de démontrer devant le [PFPDT](https://www.edoeb.admin.ch/) une démarche **proportionnée, documentée et maintenue**.
 
 > Un MVC déployé et maintenu vaut mieux qu'un projet de conformité parfait qui ne démarre jamais.
 
@@ -38,9 +38,9 @@ Ce bundle change ça. Il est conçu pour **Microsoft 365 Business Premium + Purv
 
 | # | Guide | Objet principal | Portail | Statut |
 |---|-------|-----------------|---------|--------|
-| 1 | [Microsoft Purview](purview/index.html) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2 — publié |
+| 1 | [Microsoft Purview](purview/index.html) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2 · publié |
 | 2 | [Entra ID P1](entra-id-p1/index.html) | Accès conditionnel, MFA, SSPR, break-glass | `entra.microsoft.com` | v3.1 |
-| 3 | [Intune + Defender for Business](intune-defender/index.html) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.1 — validation terrain |
+| 3 | [Intune + Defender for Business](intune-defender/index.html) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.1 · validation terrain |
 | 4 | [Copilot Governance](copilot-governance/index.html) | Gouvernance Copilot, DSPM for AI (dashboard), DLP-Protection-Copilot | `purview.microsoft.com` | v1.0 |
 
 ---
@@ -51,7 +51,7 @@ Documents techniques autonomes publiés en complément du bundle, couvrant des v
 
 | Annexe | Objet | Statut |
 |--------|-------|--------|
-| [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) | Détection et mitigation des attaques adversary-in-the-middle contournant le MFA — incidents, IoC, protection structurelle (WHfB, CAE, FIDO2) | Publication prochaine |
+| [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) | Détection et mitigation des attaques adversary-in-the-middle contournant le MFA : incidents, IoC, protection structurelle (WHfB, CAE, FIDO2) | v1.1 · publié |
 
 ---
 
@@ -59,10 +59,10 @@ Documents techniques autonomes publiés en complément du bundle, couvrant des v
 
 | Session | Guide | Durée |
 |---------|-------|-------|
-| 1 | Purview — Classification + DLP + Rétention | 4–6 h |
-| 2 | Entra ID P1 — Accès conditionnel + MFA + SSPR | 3–4 h |
-| 3 | Intune + Defender — Conformité appareils + ASR | 4–5 h |
-| 4 | Copilot Governance — Gouvernance IA | 2–3 h |
+| 1 | Purview : Classification + DLP + Rétention | 4–6 h |
+| 2 | Entra ID P1 : Accès conditionnel + MFA + SSPR | 3–4 h |
+| 3 | Intune + Defender : Conformité appareils + ASR | 4–5 h |
+| 4 | Copilot Governance : Gouvernance IA | 2–3 h |
 
 ---
 
@@ -71,7 +71,7 @@ Documents techniques autonomes publiés en complément du bundle, couvrant des v
 | Licence | Requis |
 |---------|--------|
 | Microsoft 365 Business Premium | Oui |
-| Microsoft Purview Suite (add-on) | Oui — environ CHF 15.70 / utilisateur / mois |
+| Microsoft Purview Suite (add-on) | Oui, environ CHF 15.70 / utilisateur / mois |
 
 Aucune licence E3 ou E5 n'est requise. Les fonctionnalités hors périmètre sont signalées explicitement dans chaque guide. Pour aller plus loin sur la gouvernance IA (blocage Shadow AI, Insider Risk Management, Endpoint DLP, DSPM with policies), ces fonctionnalités requièrent l'add-on **Defender and Purview Suites** et sont documentées dans le [Guide Shadow AI Microsoft 365](https://doit4everyone.github.io/shadow-ai-governance-microsoft-365-nLPD/).
 
@@ -97,7 +97,7 @@ Les noms de groupes de sécurité et de stratégies d'accès conditionnel sont *
 | Article | Exigence | Mesure MVC |
 |---------|----------|------------|
 | Art. 8 | Mesures techniques et organisationnelles | Chiffrement RMS, DLP, MFA, conformité appareils |
-| Art. 12 | Registre des activités de traitement | Modèle pré-rempli — Annexe I du guide Purview |
+| Art. 12 | Registre des activités de traitement | Modèle pré-rempli, Annexe I du guide Purview |
 | Art. 24 | Traçabilité et notification des violations | Journaux d'audit exportables, incidents DLP horodatés |
 
 ---
