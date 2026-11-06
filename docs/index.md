@@ -38,9 +38,9 @@ Ce bundle change ça. Il est conçu pour **Microsoft 365 Business Premium + Purv
 
 | # | Guide | Objet principal | Portail | Statut |
 |---|-------|-----------------|---------|--------|
-| 1 | [Microsoft Purview](purview/index.html) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2 · publié |
-| 2 | [Entra ID P1](entra-id-p1/index.html) | Accès conditionnel, MFA, SSPR, break-glass | `entra.microsoft.com` | v3.1 |
-| 3 | [Intune + Defender for Business](intune-defender/index.html) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.1 · validation terrain |
+| 1 | [Microsoft Purview](purview/index.html) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2, publié |
+| 2 | [Entra ID P1](entra-id-p1/index.html) | Accès conditionnel, MFA, SSPR, break-glass | `entra.microsoft.com` | v3.4 |
+| 3 | [Intune + Defender for Business](intune-defender/index.html) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.1, validation terrain |
 | 4 | [Copilot Governance](copilot-governance/index.html) | Gouvernance Copilot, DSPM for AI (dashboard), DLP-Protection-Copilot | `purview.microsoft.com` | v1.0 |
 
 ---
@@ -51,7 +51,7 @@ Documents techniques autonomes publiés en complément du bundle, couvrant des v
 
 | Annexe | Objet | Statut |
 |--------|-------|--------|
-| [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) | Détection et mitigation des attaques adversary-in-the-middle contournant le MFA : incidents, IoC, protection structurelle (WHfB, CAE, FIDO2) | v1.1 · publié |
+| [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) | Détection et mitigation des attaques adversary-in-the-middle contournant le MFA : incidents, IoC, protection structurelle (WHfB, CAE, FIDO2) | Publication prochaine |
 
 ---
 
@@ -60,7 +60,7 @@ Documents techniques autonomes publiés en complément du bundle, couvrant des v
 | Session | Guide | Durée |
 |---------|-------|-------|
 | 1 | Purview : Classification + DLP + Rétention | 4–6 h |
-| 2 | Entra ID P1 : Accès conditionnel + MFA + SSPR | 3–4 h |
+| 2 | Entra ID P1 : Accès conditionnel + MFA + SSPR | 2–3 h |
 | 3 | Intune + Defender : Conformité appareils + ASR | 4–5 h |
 | 4 | Copilot Governance : Gouvernance IA | 2–3 h |
 
