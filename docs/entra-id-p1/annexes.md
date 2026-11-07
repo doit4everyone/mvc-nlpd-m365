@@ -75,11 +75,11 @@ lang: fr
 
 | ☐ | Action | Portail / Chemin | nLPD |
 |---|--------|------------------|------|
-| ☐ | Authenticator activé, tous les utilisateurs | Protection → Méthodes d'auth → Authenticator | art. 8 |
-| ☐ | FIDO2/Passkeys activé, synchronisé + lié à l'appareil | Protection → Méthodes d'auth → Passkey | art. 8 |
-| ☐ | SMS activé (secours) | Protection → Méthodes d'auth → SMS | |
-| ☐ | Passe d'accès temporaire activée, usage unique, 1 heure par défaut | Protection → Méthodes d'auth → Passe d'accès temporaire | |
-| ☐ | Campagne d'inscription active (tous les utilisateurs, sauf break-glass) | Protection → Méthodes d'auth → Campagne d'inscription | |
+| ☐ | Authenticator activé, tous les utilisateurs | Entra ID → Méthodes d'auth → Authenticator | art. 8 |
+| ☐ | FIDO2/Passkeys activé, synchronisé + lié à l'appareil | Entra ID → Méthodes d'auth → Passkey | art. 8 |
+| ☐ | SMS activé (secours) | Entra ID → Méthodes d'auth → SMS | |
+| ☐ | Passe d'accès temporaire activée, usage unique, 1 heure par défaut | Entra ID → Méthodes d'auth → Passe d'accès temporaire | |
+| ☐ | Campagne d'inscription active (tous les utilisateurs, sauf break-glass) | Entra ID → Méthodes d'auth → Campagne d'inscription | |
 | ☐ | MFA per-user legacy vérifié (tous en Désactivé) | admin.microsoft.com → Utilisateurs actifs → MFA | |
 
 ### Emplacements nommés
@@ -106,10 +106,10 @@ lang: fr
 
 | ☐ | Action | Portail / Chemin | nLPD |
 |---|--------|------------------|------|
-| ☐ | SSPR activé pour `GRP-SSPR-Utilisateurs` | Protection → Réinit. MDP → Propriétés | art. 8 |
-| ☐ | 2 méthodes configurées (Authenticator, Téléphone, Email) | Protection → Réinit. MDP → Méthodes | art. 8 |
-| ☐ | Notifications utilisateur + admin activées | Protection → Réinit. MDP → Notifications | art. 8 |
-| ☐ | Écriture différée activée (si environnement hybride) | Protection → Réinit. MDP → Intégration locale | art. 8 |
+| ☐ | SSPR activé pour `GRP-SSPR-Utilisateurs` | Entra ID → Réinit. MDP → Propriétés | art. 8 |
+| ☐ | 2 méthodes configurées (Authenticator, Téléphone, Email) | Entra ID → Réinit. MDP → Méthodes | art. 8 |
+| ☐ | Notifications utilisateur + admin activées | Entra ID → Réinit. MDP → Notifications | art. 8 |
+| ☐ | Écriture différée activée (si environnement hybride) | Entra ID → Réinit. MDP → Intégration locale | art. 8 |
 
 ### Tests et validation
 

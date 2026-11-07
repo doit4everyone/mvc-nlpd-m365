@@ -99,9 +99,9 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 | N° | Étape | Action |
 |----|-------|--------|
-| 1 | Compte BG-1 | entra.microsoft.com → Utilisateurs → + Nouvel(le) utilisateur(-trice). Nom : `bga1@[tenant].onmicrosoft.com` (en production, utilisez des noms neutres de type humain, par exemple `prenom.nom@[tenant].onmicrosoft.com`, pour masquer la fonction du compte). Domaine : toujours `@[tenant].onmicrosoft.com` (cloud-only). Méthode MFA : FIDO2 (clé physique stockée en coffre). Pas de licence assignée. Mot de passe de 25 caractères ou plus. |
+| 1 | Compte BG-1 | entra.microsoft.com → Utilisateurs → Tous les utilisateurs → Nouvel(le) utilisateur(-trice) → Créer un utilisateur (onglet Informations de base : Nom d'utilisateur principal, Domaine, Nom d'affichage, Mot de passe). Nom d'utilisateur principal : `bga1@[tenant].onmicrosoft.com` (en production, utilisez des noms neutres de type humain, par exemple `prenom.nom@[tenant].onmicrosoft.com`, pour masquer la fonction du compte). Domaine : toujours `@[tenant].onmicrosoft.com` (cloud-only). Méthode MFA : FIDO2 (clé physique stockée en coffre). Pas de licence assignée. Mot de passe de 25 caractères ou plus. |
 | 2 | Compte BG-2 | Même principe, nom neutre différent. Méthode MFA : Authenticator sur appareil dédié hors réseau. Mot de passe différent de BG-1. |
-| 3 | Groupe break-glass | entra.microsoft.com → Groupes → + Nouveau groupe → Sécurité → Nom : `GRP-CA-BreakGlass` → Membres : bga1 + bga2 → Créer. |
+| 3 | Groupe break-glass | entra.microsoft.com → Groupes → Tous les groupes → Nouveau groupe. Type de groupe : Sécurité. Nom de groupe : `GRP-CA-BreakGlass`. Type d'appartenance : Affecté. Membres : Aucun membre sélectionné (lien) → ajouter bga1 + bga2 → Créer. |
 | 4 | Enregistrement MFA | Enregistrer au moins une méthode MFA forte (FIDO2 ou CBA) sur chaque compte break-glass. Connexion test bga1 dans une fenêtre privée → accès au portail Entra ID. |
 
 > **⚠️ ATTENTION : MFA des portails admin.** Microsoft impose le MFA au niveau des portails admin indépendamment des politiques CA : portails Azure, Entra et Intune depuis octobre 2024 ; centre d'administration Microsoft 365 depuis février 2025 (déploiement progressif) ; Azure CLI, Azure PowerShell, API REST, SDK et outils d'infrastructure as code depuis le 1er octobre 2025 (opérations de création, modification et suppression). Le report possible jusqu'au 1er juillet 2026 est expiré : l'application est désormais effective sur tous les tenants. Les comptes break-glass restent exclus de toutes les CA, mais une invite MFA portail apparaîtra. C'est pourquoi FIDO2 ou CBA doit être enregistré : sans méthode MFA, le compte break-glass ne peut plus accéder aux portails.
@@ -128,7 +128,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 ### 1.1 Activer les méthodes recommandées
 
-**Chemin** : entra.microsoft.com → Protection → Méthodes d'authentification → Stratégies
+**Chemin** : entra.microsoft.com → Entra ID → Méthodes d'authentification → Stratégies
 
 | N° | Étape | Action |
 |----|-------|--------|
@@ -143,7 +143,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 ### 1.2 Passe d'accès temporaire (TAP)
 
-**Chemin** : Protection → Méthodes d'authentification → Stratégies → Passe d'accès temporaire (la page de réglages s'intitule « Paramètres Droit d'accès temporaire »)
+**Chemin** : Entra ID → Méthodes d'authentification → Stratégies → Passe d'accès temporaire (la page de réglages s'intitule « Paramètres Droit d'accès temporaire »)
 
 | N° | Étape | Action |
 |----|-------|--------|
@@ -156,16 +156,16 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 ### 1.3 Points forts d'authentification (Authentication Strength)
 
-**Chemin** : Protection → Méthodes d'authentification → Points forts d'authentification (également accessible par Accès conditionnel → Points forts d'authentification)
+**Chemin** : Entra ID → Méthodes d'authentification → Points forts d'authentification (également accessible par Accès conditionnel → Points forts d'authentification)
 
 | N° | Étape | Action |
 |----|-------|--------|
 | 1 | 3 niveaux intégrés | **Authentification multifacteur (niveau 1)** : combinaisons de méthodes qui répondent à une authentification forte, par exemple mot de passe + SMS. Utilisée par CA-01. **Authentification multifacteur sans mot de passe (niveau 2)** : méthodes sans mot de passe, comme Microsoft Authenticator. **MFA anti-hameçonnage (niveau 3)** : méthodes sans mot de passe résistantes au hameçonnage, comme la clé de sécurité FIDO2. |
-| 2 | Vérification | Confirmer que les 3 niveaux intégrés sont visibles. Aucune création nécessaire sauf besoin spécifique. |
+| 2 | Vérification | Confirmer que les 3 niveaux intégrés (colonne Type : Intégré) sont visibles. Dans la liste, le portail peut les afficher sous leur nom anglais : Multifactor authentication, Passwordless MFA, Phishing-resistant MFA. Le détail d'une force s'ouvre en cliquant sur son nom (« Afficher la force de l'authentification »). Aucune création nécessaire sauf besoin spécifique. |
 
 ### 1.4 Campagne d'inscription
 
-**Chemin** : Protection → Méthodes d'authentification → Campagne d'inscription
+**Chemin** : Entra ID → Méthodes d'authentification → Campagne d'inscription
 
 | N° | Étape | Action |
 |----|-------|--------|
@@ -177,7 +177,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 > **✅ CONSEIL** : envoyez un email aux utilisateurs AVANT l'activation de CA-01 avec le lien d'enregistrement : https://aka.ms/mfasetup. Sans préavis, ils seront bloqués à leur prochaine connexion.
 
-> **⚠️ ATTENTION : CA pendant l'enregistrement.** Depuis juillet 2026 (déploiement annoncé du 6 au 13 juillet 2026), les politiques CA ciblant l'action utilisateur « Inscrire des informations de sécurité » s'appliquent aussi pendant le provisionnement de Windows Hello Entreprise et de macOS Platform SSO. Le MVC ne crée pas de politique sur cette action : aucun impact. Si le client en ajoute une, testez-la en mode Rapport avant application, sous peine de bloquer l'enregistrement des nouveaux collaborateurs.
+> **⚠️ ATTENTION : CA pendant l'enregistrement.** Depuis le 13 juillet 2026 (déploiement du 6 au 13 juillet 2026, avis Microsoft MC1326253), les politiques CA ciblant l'action utilisateur « Inscrire des informations de sécurité » s'appliquent aussi pendant le provisionnement de Windows Hello Entreprise et de macOS Platform SSO. Le MVC ne crée pas de politique sur cette action : aucun impact. Si le client en ajoute une, testez-la en mode Rapport avant application, sous peine de bloquer l'enregistrement des nouveaux collaborateurs.
 
 ---
 
@@ -189,7 +189,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 ### 2.1 Pays autorisés
 
-**Chemin** : entra.microsoft.com → Protection → Accès conditionnel → Emplacements nommés → + Emplacement des pays
+**Chemin** : entra.microsoft.com → Entra ID → Accès conditionnel → Emplacements nommés → + Emplacement des pays
 
 | N° | Étape | Action |
 |----|-------|--------|
@@ -280,7 +280,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 > **🇨🇭 nLPD art. 8 al. 1 : protection contre le vol de session post-MFA.** Les attaques AiTM contournent le MFA en interceptant le cookie de session. Token Protection lie cryptographiquement le token au TPM de l'appareil, rendant un cookie volé inutilisable depuis un autre appareil. Prérequis : WHfB doit être actif sur les postes (configuré via MVC Intune) pour que la liaison TPM soit opérationnelle. Pour le contexte de l'attaque : [annexe AiTM / Cookie Hijacking](../aitm-cookie-hijacking/index.html).
 
 > **⚠️ ATTENTION : conditions réelles pour une PME cloud-only (périmètre MVC).**
-> Token Protection supporte les applications natives (Outlook, Teams, OneDrive, Word, Excel, PowerPoint, OneNote, Edge pour la connexion au profil uniquement, etc.) sur Windows, avec Exchange Online, SharePoint Online et Teams comme ressources. Les applications web dans un navigateur ne sont pas supportées. Côté Apple (macOS 14+, iOS/iPadOS 16+), la documentation Microsoft est incohérente sur le statut (disponibilité générale dans un tableau, « préversion » dans une autre section) et exige un appareil géré par MDM avec le plug-in Microsoft Enterprise SSO : ne pas activer en Application sans test. Les applications natives Mail et Calendrier d'Apple ne supportent pas Token Protection : les utilisateurs seraient bloqués.
+> Token Protection supporte les applications natives (Outlook, Teams, OneDrive, Word, Excel, PowerPoint, OneNote, Edge pour la connexion au profil uniquement, etc.) sur Windows, avec Exchange Online, SharePoint Online et Teams comme ressources. Dans un navigateur, seule une préversion limitée existe (Windows et macOS, pour certaines applications web qui accèdent à Azure Resource Manager) : les applications web courantes ne sont pas protégées, et rien n'est supporté dans un navigateur sur iOS/iPadOS. Côté Apple (macOS 14+, iOS/iPadOS 16+), la page de documentation Microsoft consultée le 7 novembre 2026 reste incohérente : son tableau indique la disponibilité générale pour les applications natives, alors qu'une autre section parle de « préversion ». Les appareils doivent être gérés par MDM, avec le plug-in Microsoft Enterprise SSO (ou Platform SSO sur macOS) ; les appareils Apple non gérés ne sont pas supportés. Ne pas activer en Application sans test. Les applications natives Mail et Calendrier d'Apple ne supportent pas Token Protection : les utilisateurs seraient bloqués.
 > Types d'enregistrement Windows non supportés (accès bloqué, code `signInSessionStatusCode` 1003 dans les journaux) : appareils déployés par inscription en masse (bulk enrollment), Windows Autopilot en mode self-deploying, Cloud PC Windows 365 joints à Entra, hôtes de session Azure Virtual Desktop joints à Entra. Excluez-les avec un filtre d'appareil.
 > En environnement hybride (Hybrid Entra Join + AD on-prem), le Cloud Kerberos Trust est requis en plus : hors périmètre MVC, voir l'[annexe AiTM](../aitm-cookie-hijacking/index.html) §6.
 > Dans une PME suisse, la majorité des accès passe par navigateur ou appareils Apple : Token Protection ne protège pas ces vecteurs.
@@ -384,7 +384,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 ### 10.1 Activer SSPR
 
-**Chemin** : entra.microsoft.com → Protection → Réinitialisation du mot de passe → Propriétés
+**Chemin** : entra.microsoft.com → Entra ID → Réinitialisation de mot de passe → Propriétés
 
 | N° | Étape | Action |
 |----|-------|--------|
@@ -394,16 +394,16 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 ### 10.2 Méthodes et notifications
 
-**Chemin** : Réinitialisation du mot de passe → Méthodes d'authentification
+**Chemin** : Réinitialisation de mot de passe → Méthodes d'authentification
 
 | N° | Étape | Action |
 |----|-------|--------|
 | 1 | Nombre de méthodes requises | 2 |
 | 2 | Méthodes | Activer : Notification d'application mobile, Téléphone mobile, E-mail. Ne pas activer « Questions de sécurité » : le portail annonce leur mise hors service en mars 2027. |
 | 3 | Enregistrer | Cliquer Enregistrer. |
-| 4 | Notifications | Réinitialisation du mot de passe → Notifications → Notifier les utilisateurs lors de la réinitialisation : Oui. Notifier les admins : Oui. |
+| 4 | Notifications | Réinitialisation de mot de passe → Notifications. « Notifier les utilisateurs lors des réinitialisations de mot de passe ? » : Oui. « Notifier tous les administrateurs quand d'autres administrateurs réinitialisent leur mot de passe ? » : Oui (la valeur par défaut observée est Non). Enregistrer. |
 
-> **ℹ️ INFO : environnement hybride.** En environnement AD on-prem avec Entra Connect : Réinitialisation du mot de passe → Intégration locale → Écriture différée : Oui. Sans cette option, le mot de passe est réinitialisé dans le cloud mais pas dans l'AD local.
+> **ℹ️ INFO : environnement hybride.** En environnement AD on-prem avec Entra Connect : Réinitialisation de mot de passe → Intégration locale → cocher « Activer la réécriture du mot de passe pour les utilisateurs synchronisés ». La page affiche aussi l'état de l'agent de synchronisation Microsoft Entra Connect (« Configuration terminée » attendu) et la case « Voulez-vous autoriser les utilisateurs à déverrouiller les comptes sans réinitialiser leur mot de passe ? ». Sans la réécriture, le mot de passe est réinitialisé dans le cloud mais pas dans l'AD local.
 
 > **✅ CONSEIL : test.** https://aka.ms/sspr → réinitialisation avec 2 méthodes → succès → notification reçue → connexion avec le nouveau mot de passe.
 
@@ -432,9 +432,9 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | ☐ | Deux comptes break-glass créés (bga1 + bga2, méthodes différentes) | entra.microsoft.com → Utilisateurs | |
 | ☐ | Groupe `GRP-CA-BreakGlass` créé (bga1 + bga2) | entra.microsoft.com → Groupes | |
 | ☐ | Security Defaults désactivé | entra.microsoft.com → Propriétés | |
-| ☐ | Authenticator + FIDO2 + SMS activés | Protection → Méthodes d'auth | art. 8 |
-| ☐ | Passe d'accès temporaire activée (usage unique, 1 h par défaut) | Protection → Méthodes → Passe d'accès temporaire | |
-| ☐ | Campagne d'inscription active (tous les utilisateurs, sauf break-glass) | Protection → Méthodes → Campagne d'inscription | |
+| ☐ | Authenticator + FIDO2 + SMS activés | Entra ID → Méthodes d'auth | art. 8 |
+| ☐ | Passe d'accès temporaire activée (usage unique, 1 h par défaut) | Entra ID → Méthodes → Passe d'accès temporaire | |
+| ☐ | Campagne d'inscription active (tous les utilisateurs, sauf break-glass) | Entra ID → Méthodes → Campagne d'inscription | |
 | ☐ | Emplacement `Pays-Autorises-[Client]` créé | CA → Emplacements nommés | art. 8 |
 | ☐ | CA-01 MFA : Application (après 7 j de rapport) | CA → Stratégies → CA-01 | art. 8 |
 | ☐ | CA-02 Auth héritée : Application directe | CA → Stratégies → CA-02 | art. 8 |
@@ -443,7 +443,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | ☐ | CA-05 Session limitée : Application | CA → Stratégies → CA-05 | art. 8 |
 | ☐ | CA-06 Hors horaires : Rapport uniquement | CA → Stratégies → CA-06 | art. 8 |
 | ☐ | CA-08 Appareil conforme : Rapport uniquement (Application après MVC Intune) | CA → Stratégies → CA-08 | art. 8 |
-| ☐ | SSPR activé pour `GRP-SSPR-Utilisateurs` (2 méthodes) | Protection → Réinit. MDP | art. 8 |
+| ☐ | SSPR activé pour `GRP-SSPR-Utilisateurs` (2 méthodes) | Entra ID → Réinit. MDP | art. 8 |
 | ☐ | Test T1 MFA déclenché validé | Navigation privée | |
 | ☐ | Test T2 Break-glass non bloqué validé | Connexion bga1 | |
 | ☐ | Test T3 Auth héritée bloquée validé | Client IMAP | |
