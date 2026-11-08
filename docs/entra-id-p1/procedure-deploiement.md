@@ -353,7 +353,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | 6 | Activer une stratégie | Rapport uniquement → 7 jours → puis Activé. |
 | 7 | Créer | Cliquer Créer. |
 
-> **✅ CONSEIL : test en trois cas.** (1) Appareil géré et conforme : accès normal. (2) Appareil inscrit mais non conforme : accès web limité. (3) Appareil personnel non géré, navigateur : accès web limité, sans téléchargement, impression ni synchronisation ; la modification dans le navigateur reste possible sauf si elle a été interdite (`-AllowEditing $false`). Les liens de partage anonymes ne dépendent pas de cette politique : à documenter séparément dans la politique de partage du client.
+> **✅ CONSEIL : test.** Voir T5 (Partie 11), quatre cas. Décision par défaut du MVC : **lecture seule** sur appareil non géré (accès web limité + `-AllowEditing $false`). Si le client choisit de garder la modification dans le navigateur, documentez cette dérogation et adaptez le résultat attendu de T5. Les liens « Anyone » ne dépendent pas de cette politique : à documenter séparément dans la politique de partage du client.
 
 ---
 
