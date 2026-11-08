@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Intune + Defender for Business : Annexes</h1>
-<h2>MVC nLPD · Appareils et menaces · v3.3</h2>
+<h2>MVC nLPD · Appareils et menaces · v3.4</h2>
 
 > [← Retour au guide Intune + Defender](index.html) · [← Retour à la procédure de déploiement](procedure-deploiement.html)
 
@@ -105,7 +105,7 @@ lang: fr
 |---|--------|------------------|------|
 | ☐ | SmartScreen : Blocage | Intune → Profils de configuration | |
 | ☐ | Enhanced Phishing Protection (Windows 11) | Intune → Profils de configuration | art. 8 |
-| ☐ | Filtrage de contenu web, exceptions documentées | security.microsoft.com → Paramètres | |
+| ☐ | Filtrage de contenu web : politique unique, exceptions documentées | security.microsoft.com → Paramètres | |
 | ☐ | AIR : Centre d'actions suivi | security.microsoft.com → Centre d'actions | art. 8 |
 | ☐ | Gestion des vulnérabilités : recommandations critiques traitées | security.microsoft.com → Vulnérabilités | art. 8 |
 
@@ -144,7 +144,7 @@ lang: fr
 
 ## Annexe C : Références nLPD, mesures techniques couvertes {#annexe-c}
 
-Ce tableau peut servir de pièce justificative lors d'un audit du PFPDT. Référence : **nLPD RS 235.1**, en vigueur depuis le 1er septembre 2023. Délai d'annonce d'une violation : **« dès que possible »** (pas de délai fixe de 72 heures comme dans le RGPD). Autorité : **PFPDT**.
+Ce tableau peut servir de pièce justificative lors d'un audit du PFPDT. Référence : **nLPD RS 235.1**, en vigueur depuis le 1er septembre 2023. Délai d'annonce d'une violation : **« dès que possible »** (pas de délai fixe de 72 heures comme dans le RGPD). Autorité : **PFPDT**. Ces mesures techniques contribuent à la sécurité des données au sens de la nLPD ; elles ne garantissent pas à elles seules la conformité de l'entreprise.
 
 | Article nLPD | Obligation | Mesure technique déployée | Section |
 |--------------|------------|---------------------------|---------|
@@ -172,8 +172,8 @@ Ce tableau peut servir de pièce justificative lors d'un audit du PFPDT. Référ
 | **PME générique** | Aucun | MVC tel quel. |
 | **Fiduciaire / comptabilité** | Logiciels comptables anciens (Banana, Sage) bloqués par ASR | Repérer les faux positifs en mode Audit, ajouter des exclusions documentées. |
 | **Cabinet médical** | Données médicales très sensibles | Device Control : blocage total. Score de risque Defender : « Aucun risque » exigé. Safe Attachments : vérifier que le délai de livraison dynamique est acceptable. |
-| **Avocats / notaires** | Confidentialité maximale | Device Control : blocage total. Filtrage web : bloquer les stockages cloud personnels (Dropbox, WeTransfer). Enhanced Phishing Protection activée. |
-| **Agence de communication** | Appareils personnels, réseaux sociaux métier | Device Control assoupli pour les postes créatifs. Filtrage web : exclure les réseaux sociaux. |
+| **Avocats / notaires** | Confidentialité maximale | Device Control : blocage total. Filtrage web : politique unique pour toute l'organisation ; le blocage de services précis (Dropbox, WeTransfer) n'est pas couvert par les catégories relevées, à valider. Enhanced Phishing Protection activée. |
+| **Agence de communication** | Appareils personnels, réseaux sociaux métier | Device Control assoupli pour les postes créatifs. Filtrage web : ne pas bloquer la catégorie « Réseaux sociaux » (la politique est unique pour toute l'organisation). |
 | **Architecture / ingénierie** | Fichiers volumineux (plans, BIM) | Safe Attachments : valider avec le client la tolérance au délai pour les gros fichiers. |
 
 ---

@@ -40,7 +40,7 @@ Ce bundle change ça. Il est conçu pour **Microsoft 365 Business Premium + Purv
 |---|-------|-----------------|---------|--------|
 | 1 | [Microsoft Purview](purview/index.html) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2, publié |
 | 2 | [Entra ID P1](entra-id-p1/index.html) | Accès conditionnel, MFA, SSPR, break-glass (Parties 0 à 3 = étape 0, avant Purview) | `entra.microsoft.com` | v3.5 |
-| 3 | [Intune + Defender for Business](intune-defender/index.html) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.3, libellés relevés sur le portail, validation terrain en cours |
+| 3 | [Intune + Defender for Business](intune-defender/index.html) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.4, libellés relevés sur le portail, validation terrain en cours |
 | 4 | [Copilot Governance](copilot-governance/index.html) | Gouvernance Copilot, DSPM for AI (dashboard), DLP-Protection-Copilot | `purview.microsoft.com` | v1.0 |
 
 ---

@@ -24,11 +24,11 @@ lang: fr
 </style>
 
 <h1>Intune + Defender for Business : Appareils et menaces</h1>
-<h2>Minimum Viable de Conformité · nLPD RS 235.1 · v3.3</h2>
+<h2>Minimum Viable de Conformité · nLPD RS 235.1 · v3.4</h2>
 
 > [← Retour au bundle MVC nLPD](../index.html)
 
-> **ℹ️ INFO : statut.** Chemins et libellés relevés sur le portail. Les valeurs marquées « à confirmer » et les tests sur appareils réels restent à valider lors de la validation terrain.
+> **ℹ️ INFO : statut. Procédure publiée, validation terrain en cours.** Chemins et libellés relevés sur le portail. Les valeurs marquées « à confirmer » et les tests sur appareils réels restent à valider lors de la validation terrain.
 
 Ce guide déploie la couche **appareils et menaces** du bundle : inscription et chiffrement des appareils, protection des postes, conformité, protection de la messagerie. La nLPD art. 8 exige des mesures techniques adaptées au risque : un poste non géré ou non chiffré est un point faible que ni les identités ni les données ne compensent seules.
 
@@ -38,7 +38,7 @@ Ce guide déploie la couche **appareils et menaces** du bundle : inscription et 
 | **Portails** | `intune.microsoft.com` et `security.microsoft.com` |
 | **Durée** | 4 à 5 heures de travail technique (hors périodes d'observation) |
 | **Prérequis** | Étape 0 du guide Entra ID P1 (Parties 0 à 3) et CA-02 déployées |
-| **Version** | 3.3 |
+| **Version** | 3.4 |
 
 ---
 
@@ -80,8 +80,8 @@ Ce guide déploie la couche **appareils et menaces** du bundle : inscription et 
 
 | Format | Fichier |
 |--------|---------|
-| Word (.docx) | [MVC-nLPD_03-Intune-Defender_Procedure_v3.3.docx]({{ '/downloads/docx/MVC-nLPD_03-Intune-Defender_Procedure_v3.3.docx' | relative_url }}) |
-| PDF | [MVC-nLPD_03-Intune-Defender_Procedure_v3.3.pdf]({{ '/downloads/pdf/MVC-nLPD_03-Intune-Defender_Procedure_v3.3.pdf' | relative_url }}) |
+| Word (.docx) | [MVC-nLPD_03-Intune-Defender_Procedure_v3.4.docx]({{ '/downloads/docx/MVC-nLPD_03-Intune-Defender_Procedure_v3.4.docx' | relative_url }}) |
+| PDF | [MVC-nLPD_03-Intune-Defender_Procedure_v3.4.pdf]({{ '/downloads/pdf/MVC-nLPD_03-Intune-Defender_Procedure_v3.4.pdf' | relative_url }}) |
 
 ---
 

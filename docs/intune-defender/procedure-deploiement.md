@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Intune + Defender for Business : Procédure de déploiement</h1>
-<h2>MVC nLPD · Appareils et menaces · v3.3 (squelette, captures terrain à venir)</h2>
+<h2>MVC nLPD · Appareils et menaces · v3.4</h2>
 
 > [← Retour au guide Intune + Defender](index.html) · [← Retour au bundle MVC nLPD](../index.html)
 
@@ -105,7 +105,7 @@ Ces trois groupes ciblent les politiques de ce guide. Une politique Windows ne d
 | 1 | Chemin | entra.microsoft.com → Groupes → Tous les groupes → Nouveau groupe. Dans le formulaire : Type de groupe : Sécurité. |
 | 2 | Groupe Windows | Nom de groupe : `GRP-Appareils-Windows`. Type d'appartenance : Appareil dynamique (les choix sont Affecté, Utilisateur dynamique, Appareil dynamique). Membres d'appareil dynamique → Ajouter une requête dynamique → onglet Configurer les règles → Syntaxe de la règle → Modifier : `(device.deviceOSType -eq "Windows") and (device.deviceManagementAppId -eq "0000000a-0000-0000-c000-000000000000")` → Enregistrer → Créer. Cette règle ne retient que les appareils Windows gérés par Intune (voir l'encadré ci-dessous : la règle `deviceOSType` seule inclut aussi les serveurs). |
 | 3 | Groupe iOS | Nom de groupe : `GRP-Appareils-iOS`. Même procédure. La valeur de `deviceOSType` pour iPhone et iPad n'a pas pu être relevée (aucun appareil iOS dans le tenant d'essai) : à confirmer avec un appareil iOS inscrit, puis écrire la règle. |
-| 4 | Groupe Android | Nom de groupe : `GRP-Appareils-Android`. Même procédure, règle : `(device.deviceOSType -eq "Android")`. |
+| 4 | Groupe Android | Nom de groupe : `GRP-Appareils-Android`. Même procédure, règle : `(device.deviceOSType -eq "Android")`. Un filtre complémentaire sur l'inscription Intune (comme pour Windows) est à ajouter après vérification de la propriété sur un appareil Android réel : sa valeur n'est pas documentée ici. |
 | 5 | Vérification | Après inscription d'un appareil de test par plateforme, vérifier qu'il apparaît dans le bon groupe et uniquement celui-là. |
 
 > **ℹ️ INFO : libellés vérifiés le 8 novembre 2026** sur le centre d'administration Entra (formulaire « Nouveau groupe », page « Règles d'adhésion dynamiques »). Valeurs de `deviceOSType` observées dans la liste des appareils : « Windows » et « Android ». Le générateur de règles propose les propriétés `deviceOSType`, `deviceOSVersion`, `deviceOwnership`, `enrollmentProfileName`, `managementType`, entre autres.
@@ -439,12 +439,12 @@ Ces trois groupes ciblent les politiques de ce guide. Une politique Windows ne d
 | N° | Étape | Action |
 |----|-------|--------|
 | C1 | Objectif | Bloquer des catégories de sites sur tous les navigateurs via Defender. Les catégories proposées sont des catégories de contenu (adulte, bande passante, responsabilité légale, loisir, sans catégorie). Les sites de phishing et de logiciels malveillants ne figurent pas dans cette liste : ils relèvent de SmartScreen (§5.1) et de la protection réseau (§4.6). |
-| C2 | Limite Defender for Business | La granularité d'affectation est plus limitée qu'avec Defender for Endpoint Plan 2. Prévoir une politique globale et des exceptions documentées. À confirmer sur le tenant. |
+| C2 | Limite Defender for Business | Selon la documentation Microsoft de Defender for Business, une seule politique de filtrage de contenu web s'applique à l'organisation, sans ciblage par appareil. Ne promettez donc pas de segmentation par groupe d'appareils. L'écran relevé propose pourtant des « Groupes d'ordinateurs » (étape 4) : cet écart est à confirmer sur un tenant Business Premium seul. |
 | C3 | Méthode | 1. Une politique globale. 2. Une période d'observation (rapport) avant blocage des catégories non critiques. 3. Sélection des catégories à bloquer validée par la direction. 4. Exceptions documentées dans le registre. |
 | 1 | Chemin | security.microsoft.com → Paramètres → Points de terminaison → section « Règles » → « Filtrage du contenu web ». Le bouton « Ajouter une stratégie » se trouve dans le menu « Autres actions » (« … ») au-dessus de la liste. |
 | 2 | Général | Assistant « Ajouter une stratégie », onglet « Général » : « Nom de la stratégie » (par exemple `WCF-[Nom du client]`) → Suivant. |
 | 3 | Catégories bloquées | Onglet « Catégories bloquées » : aucune case n'est cochée par défaut. Groupes proposés : « Contenu pour adultes » (Sectes, Jeux de hasard, Nudité, Pornographie/Caractère sexuel, Éducation sexuelle, De mauvais goût, Violence), « Bande passante élevée » (Sites de téléchargement, Partage d'images, P2P, Diffusion en continu et téléchargements), « Responsabilité légale » (Images d'enfants maltraités, Activité criminelle, Piratage, Haine et intolérance, Drogue illégale, Logiciel illégal, Triche scolaire, Automutilation, Armes), « Loisir » (Conversation, Jeux, Messagerie instantanée, Réseaux professionnels, Messagerie web, Réseaux sociaux), « Sans catégorie » (Domaines immobilisés, Domaines récemment enregistrés). Chaque groupe a une case « Sélectionner tout ». |
-| 4 | Portée | Onglet « Étendue » : « Groupes d'ordinateurs » → « Sélectionner tout » est coché par défaut (la politique s'applique alors à tous les appareils). Décocher et choisir des groupes pour restreindre. → Suivant. |
+| 4 | Portée | Onglet « Étendue » : « Groupes d'ordinateurs » → « Sélectionner tout » est coché par défaut (la politique s'applique alors à tous les appareils). Laisser « Sélectionner tout » : le guide ne recommande pas de restreindre la portée (voir C2). → Suivant. |
 | 5 | Validation | Onglet « Récapitulatif » : relire le nom, les catégories et la portée, puis enregistrer. |
 | 6 | Rapport | security.microsoft.com → Rapports → Protection web : URL bloquées par catégorie et par appareil. À confirmer lors de la première politique active. |
 
@@ -523,7 +523,7 @@ Deux options, complémentaires. Le choix dépend de la licence du client et du b
 
 ### Option B : Remote Help (Intune)
 
-> **⚠️ ATTENTION : licence à vérifier.** Remote Help n'est pas couvert par Intune Plan 1 seul. Selon le tenant, il nécessite une licence complémentaire (add-on Remote Help, Intune Plan 2 ou Intune Suite). Vérifiez les licences effectives sur la page officielle Microsoft et auprès du revendeur avant de proposer cette option. Les prix ne figurent pas dans ce guide.
+> **⚠️ ATTENTION : licence à vérifier.** Remote Help n'est pas couvert par Intune Plan 1 seul. Selon le tenant, il nécessite une licence complémentaire (add-on Remote Help, Intune Plan 2 ou Intune Suite). Vérifiez les licences effectives sur la page officielle Microsoft et auprès du revendeur avant de proposer cette option. Les deux participants à une session (technicien et utilisateur aidé) doivent être couverts par la licence nécessaire. Les prix ne figurent pas dans ce guide.
 
 | N° | Étape | Action |
 |----|-------|--------|
@@ -583,7 +583,7 @@ Deux options, complémentaires. Le choix dépend de la licence du client et du b
 | N° | Étape | Action |
 |----|-------|--------|
 | C1 | Critères | Android 9 est trop ancien comme niveau minimal pour un socle de sécurité actuel. Version minimale : proposition Android 12, à valider sur le parc client et sur la documentation Intune. Code de verrouillage de 6 chiffres minimum. Root non détecté. |
-| C2 | Intégrité de l'appareil | Choisir le niveau de vérification Play Integrity (de base, appareil, fort). Une échéance relative au niveau « fort » (Strong Integrity) a été annoncée au 31 octobre 2026 : à confirmer sur la documentation Microsoft et Google, puis tester sur les modèles du client avant d'exiger le niveau fort. |
+| C2 | Intégrité de l'appareil | Choisir le niveau de vérification Play Integrity (de base, appareil, fort). Pour Android 13 et ultérieur, le niveau « fort » (Strong Integrity) exige notamment des mises à jour de sécurité de moins de 12 mois (règle Google, appliquée par Intune). La date d'application côté Intune est à confirmer dans le centre de messages Microsoft du client. Vérifier la conformité actuelle des modèles du client avant d'exiger ce niveau, et ne pas l'imposer d'office aux appareils personnels (BYOD). |
 | 1 | Chemin | Appareils → Conformité → Stratégies → Créer une stratégie → Plateforme : « Android Enterprise » → Type de profil : « Profil professionnel complètement managé, dédié et appartenant à l'entreprise » ou « Profil de travail personnel ». La plateforme « Administrateur(-trice) d'appareil Android » existe encore dans la liste, mais un bandeau de la page rappelle la fin du support de ce mode depuis le 31 décembre 2024 : ne pas l'utiliser. Nom par exemple `CONF-Android-[Nom du client]`. |
 | 2 | Paramètres | Pour « Profil de travail personnel » : quatre sections, « Microsoft Defender for Endpoint », « Intégrité de l'appareil », « Propriétés de l'appareil », « Sécurité système ». Le type « Profil professionnel complètement managé… » n'a pas été ouvert. |
 | 3 | Intégrité | « Appareils rootés » → Bloquer. « Exiger que l'appareil se situe au niveau de menace d'appareil ou en dessous ». Groupe « Google Play Protect » : « Google Play Services est configuré », « Fournisseur de sécurité à jour » (Exiger), « Jouer le verdict d'intégrité » : « Non configuré », « Vérifier l'intégrité de base » ou « Vérifier l'intégrité de base et l'intégrité de l'appareil ». Aucun niveau « fort » n'est proposé dans ce type de profil. |
@@ -597,10 +597,10 @@ Deux options, complémentaires. Le choix dépend de la licence du client et du b
 
 | N° | Étape | Action |
 |----|-------|--------|
-| C1 | Séquence recommandée | J+0 : e-mail automatique à l'utilisateur. J+3 : appareil marqué non conforme, donc bloqué par CA-08 une fois CA-08 en Application. J+14 : e-mail d'escalade au responsable. J+30 : ajout de l'appareil à la liste des appareils à retirer. |
+| C1 | Séquence recommandée | J+0 : e-mail automatique à l'utilisateur. J+3 : appareil marqué non conforme, donc bloqué par CA-08 une fois CA-08 en Application (à condition que la première action soit bien reportée à 3 jours : voir l'étape 2 ; sinon le blocage est immédiat). J+14 : e-mail d'escalade au responsable. J+30 : ajout de l'appareil à la liste des appareils à retirer. |
 | C2 | Le retrait n'est pas automatique | L'ajout à la liste des appareils à retirer ne retire pas l'appareil. Un administrateur doit valider explicitement le retrait. Pour les appareils personnels (BYOD), documentez cette validation avant de supprimer des données d'entreprise. |
 | 1 | Modèle de message | Avant l'action e-mail : Appareils → Conformité → « Notifications » → « Créer une notification » (modèles de messages de notification : colonnes « Nom d'affichage » et « Dernière modification »). Nom par exemple `NOTIF-NonConformite-[Nom du client]`. La liste est vide à l'état d'origine. |
-| 2 | Configurer | Dans l'assistant de chaque stratégie, onglet « Actions en cas de non-conformité » : tableau « Action », « Planification (jours après la non-conformité) », « Modèle de message », « Destinataires supplémentaires ». La première ligne « Marquer l'appareil comme non conforme » est préremplie sur « Immédiatement ». Ajouter une ligne : « Envoyer un e-mail à l'utilisateur final » ou « Ajouter un appareil à la liste des mises hors service », avec le nombre de jours. La possibilité de reporter la première ligne à 3 jours (délai de grâce de C3) n'a pas été testée. |
+| 2 | Configurer | Dans l'assistant de chaque stratégie, onglet « Actions en cas de non-conformité » : tableau « Action », « Planification (jours après la non-conformité) », « Modèle de message », « Destinataires supplémentaires ». La première ligne « Marquer l'appareil comme non conforme » est préremplie sur « Immédiatement ». Ajouter une ligne : « Envoyer un e-mail à l'utilisateur final » ou « Ajouter un appareil à la liste des mises hors service », avec le nombre de jours. Tant que cette première ligne reste sur « Immédiatement », un appareil non conforme est bloqué par CA-08 sans délai. La possibilité de la reporter à 3 jours (délai de grâce de C3) n'a pas été testée : à valider avant d'annoncer le blocage à J+3 au client. |
 | 3 | Valider le retrait | Appareils → Conformité → « Mettre hors service les appareils non conformes » : liste des appareils ajoutés à la liste de retrait (colonnes « Nom de l'appareil », « État de conformité », « Système d'exploitation »…, boutons « Actualiser », « Exporter », « Colonnes »). Vide à l'état d'origine (« Aucun appareil non conforme au retrait trouvé »). Le bouton de retrait qui apparaît à la sélection d'un appareil n'a pas été observé : à relever sur un appareil réel. |
 
 > **ℹ️ INFO : relevé du 8 novembre 2026.** Le libellé du portail est « Ajouter un appareil à la liste des mises hors service ». L'action ne retire pas l'appareil : elle l'inscrit dans la liste ci-dessus, d'où l'étape 3.
@@ -620,6 +620,8 @@ Deux options, complémentaires. Le choix dépend de la licence du client et du b
 | 4 | Code PIN | Libellés présents : « Longueur minimale du code PIN », « Longueur maximale du code PIN », « Lettres minuscules dans le code PIN », « Lettres majuscules dans le code PIN », « Caractères spéciaux dans le code PIN » (Autorisé, Obligatoire ou Non autorisé), « Expiration du code confidentiel (en jours) », « Conserver l'historique des codes confidentiels ». Valeur de départ proposée : longueur minimale de 6, expiration « Jamais » (le PIN est lié à l'appareil, son changement périodique n'est pas recommandé). À ajuster selon la politique du client. `[nLPD art. 8]` |
 | 5 | Biométrie et connexion | « Autoriser l'authentification biométrique » → Oui si le matériel le permet. Autres libellés du volet : « Utiliser la détection d'usurpation avancée, si disponible », « Autoriser la connexion par téléphone », « Activer la sécurité de connexion renforcée », « Utiliser des clés de sécurité pour la connexion ». |
 | 6 | Enregistrer | Enregistrer. |
+
+> **⚠️ ATTENTION : décision à l'échelle du tenant.** Ce paramètre s'applique à « Tous les utilisateurs » et à tous les appareils. Avant de l'activer, vérifier l'impact sur les utilisateurs et les appareils déjà inscrits, et prévenir les utilisateurs.
 
 > **ℹ️ INFO** : relevé en lecture seule sur le portail. Le moment où un poste déjà inscrit propose Windows Hello et la présence d'un éventuel réglage de récupération du code PIN entre « Conserver l'historique des codes confidentiels » et « Autoriser l'authentification biométrique » sont à confirmer lors de la validation terrain. La valeur de départ de l'étape 4 est une recommandation du guide, pas une valeur imposée par Microsoft.
 
@@ -817,7 +819,7 @@ CA-04 et CA-08 ont été créées en mode Rapport dans le guide Entra ID P1 (Par
 | ☐ | Règles ASR en Blocage après période d'audit | Intune → Réduction de la surface d'attaque | art. 8 |
 | ☐ | Windows LAPS actif, lecture limitée, revue des consultations planifiée | Entra ID → Appareils | art. 8 |
 | ☐ | SmartScreen et Enhanced Phishing Protection (Windows 11) | Intune → Profils de configuration | art. 8 |
-| ☐ | Filtrage de contenu web configuré, exceptions documentées | Defender XDR → Paramètres | art. 8 |
+| ☐ | Filtrage de contenu web configuré (politique unique), exceptions documentées | Defender XDR → Paramètres | art. 8 |
 | ☐ | AIR : Centre d'actions suivi, responsable désigné | Defender XDR → Centre d'actions | art. 8 |
 | ☐ | Gestion des vulnérabilités : recommandations critiques traitées | Defender XDR → Vulnérabilités | art. 8 |
 | ☐ | Conformité Windows, iOS et Android déployées | Intune → Conformité | art. 8 |
