@@ -89,7 +89,9 @@ Les noms de groupes de sécurité et de stratégies d'accès conditionnel sont *
 | Groupe chiffrement Purview | `GRP-Confidentiel-Purview` | Guide Purview |
 | Groupe Break-glass | `GRP-CA-BreakGlass` | Guide Entra ID P1 |
 | Groupe SSPR | `GRP-SSPR-Utilisateurs` | Guide Entra ID P1 |
-| Groupe Defender | `GRP-Appareils-Defender` | Guide Intune + Defender |
+| Groupe appareils Windows | `GRP-Appareils-Windows` | Guide Intune + Defender |
+| Groupe appareils iOS | `GRP-Appareils-iOS` | Guide Intune + Defender |
+| Groupe appareils Android | `GRP-Appareils-Android` | Guide Intune + Defender |
 | Groupe USB | `GRP-USB-Autorises` | Guide Intune + Defender |
 | Stratégie conformité appareils | `CA-08` | Entra ID P1 (Report) → Intune (Enforcement) |
 
