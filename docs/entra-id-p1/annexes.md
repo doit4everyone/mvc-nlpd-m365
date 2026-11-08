@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Entra ID P1 : Annexes</h1>
-<h2>MVC nLPD · Identité et accès · v3.4</h2>
+<h2>MVC nLPD · Identité et accès · v3.5</h2>
 
 > [← Retour au guide Entra ID P1](index.html) · [← Procédure de déploiement](procedure-deploiement.html)
 
@@ -57,7 +57,7 @@ lang: fr
 | **PFPDT** | Préposé fédéral à la protection des données et à la transparence, autorité de contrôle suisse. |
 | **SSPR** | Self-Service Password Reset. Réinitialisation autonome et auditée du mot de passe sans helpdesk. |
 | **TAP (Temporary Access Pass, « Passe d'accès temporaire »)** | Code temporaire à usage unique pour enregistrer le premier facteur MFA lors de l'onboarding. |
-| **Token Protection** | Fonctionnalité CA P1 liant les tokens d'accès à l'appareil émetteur. Bloque le rejeu de tokens volés. |
+| **Token Protection** | Fonctionnalité CA P1 liant les jetons de session à l'appareil émetteur. Réduit le risque de rejeu de jetons volés sur les plateformes et applications compatibles. |
 
 ---
 
@@ -67,7 +67,8 @@ lang: fr
 
 | ☐ | Action | Portail / Chemin | nLPD |
 |---|--------|------------------|------|
-| ☐ | Deux comptes break-glass créés (bga1 + bga2) | entra.microsoft.com → Utilisateurs | |
+| ☐ | Deux comptes break-glass créés (bga1 + bga2), Administrateur général permanent, FIDO2 | entra.microsoft.com → Utilisateurs | |
+| ☐ | Alerte sur toute connexion break-glass en place, test tous les 90 jours | Azure Monitor, SIEM ou revue des journaux | |
 | ☐ | Groupe `GRP-CA-BreakGlass` créé | entra.microsoft.com → Groupes | |
 | ☐ | Security Defaults désactivé | entra.microsoft.com → Propriétés → Paramètres de sécurité | |
 
@@ -76,8 +77,8 @@ lang: fr
 | ☐ | Action | Portail / Chemin | nLPD |
 |---|--------|------------------|------|
 | ☐ | Authenticator activé, tous les utilisateurs | Entra ID → Méthodes d'auth → Authenticator | art. 8 |
-| ☐ | FIDO2/Passkeys activé, synchronisé + lié à l'appareil | Entra ID → Méthodes d'auth → Passkey | art. 8 |
-| ☐ | SMS activé (secours) | Entra ID → Méthodes d'auth → SMS | |
+| ☐ | FIDO2/Passkeys activé : liés à l'appareil (Authenticator, clés physiques) ; synchronisés non autorisés pour les administrateurs | Entra ID → Méthodes d'auth → Passkey | art. 8 |
+| ☐ | SMS : optionnel et transitoire | Entra ID → Méthodes d'auth → SMS | |
 | ☐ | Passe d'accès temporaire activée, usage unique, 1 heure par défaut | Entra ID → Méthodes d'auth → Passe d'accès temporaire | |
 | ☐ | Campagne d'inscription active (tous les utilisateurs, sauf break-glass) | Entra ID → Méthodes d'auth → Campagne d'inscription | |
 | ☐ | MFA per-user legacy vérifié (tous en Désactivé) | admin.microsoft.com → Utilisateurs actifs → MFA | |
@@ -87,19 +88,20 @@ lang: fr
 | ☐ | Action | Portail / Chemin | nLPD |
 |---|--------|------------------|------|
 | ☐ | Emplacement `Pays-Autorises-[Client]` créé (CH + pays voisins) | CA → Emplacements nommés | art. 8 |
-| ☐ | Emplacement `Bureau-[Client]` créé si IP fixe disponible | CA → Emplacements nommés | |
+| ☐ | Emplacement `Bureau-[Client]` créé si IP fixe disponible (optionnel, non référencé par les politiques) | CA → Emplacements nommés | |
 
 ### Politiques d'accès conditionnel
 
 | ☐ | Action | Portail / Chemin | nLPD |
 |---|--------|------------------|------|
 | ☐ | CA-01 MFA tous utilisateurs : Application (après 7 j de rapport) | CA → Stratégies → CA-01 | art. 8 |
-| ☐ | CA-02 Blocage auth héritée : Application directe | CA → Stratégies → CA-02 | art. 8 |
+| ☐ | CA-02 Blocage auth héritée : Application (après 7 à 14 j de rapport et inventaire) | CA → Stratégies → CA-02 | art. 8 |
+| ☐ | CA-09 MFA anti-hameçonnage administrateurs : Application (après 7 j de rapport et clés d'accès enregistrées) | CA → Stratégies → CA-09 | art. 8 |
 | ☐ | CA-03 Filtrage géographique : Application (après 14 j de rapport) | CA → Stratégies → CA-03 | art. 8 |
 | ☐ | CA-04 Token Protection : Rapport uniquement (Application après MVC Intune) | CA → Stratégies → CA-04 | art. 8 |
 | ☐ | CA-05 Session limitée : Application | CA → Stratégies → CA-05 | art. 8 |
-| ☐ | Prérequis CA-05 : SharePoint Admin → accès limité au web actif | admin.sharepoint.com → Stratégies → Partage | art. 8 |
-| ☐ | CA-06 Hors horaires : Rapport uniquement | CA → Stratégies → CA-06 | art. 8 |
+| ☐ | Prérequis CA-05 : SharePoint Admin → accès limité au web actif | admin.sharepoint.com → Stratégies → Contrôle d'accès → Appareils non gérés | art. 8 |
+| ☐ | CA-06 Hors horaires (expérimental, optionnel) : Rapport uniquement | CA → Stratégies → CA-06 | art. 8 |
 | ☐ | CA-08 Appareil conforme : Rapport uniquement (Application après MVC Intune) | CA → Stratégies → CA-08 | art. 8 |
 
 ### SSPR
@@ -107,7 +109,7 @@ lang: fr
 | ☐ | Action | Portail / Chemin | nLPD |
 |---|--------|------------------|------|
 | ☐ | SSPR activé pour `GRP-SSPR-Utilisateurs` | Entra ID → Réinit. MDP → Propriétés | art. 8 |
-| ☐ | 2 méthodes configurées (Authenticator, Téléphone, Email) | Entra ID → Réinit. MDP → Méthodes | art. 8 |
+| ☐ | 2 méthodes configurées (Authenticator, E-mail ; téléphone transitoire, retrait SMS et voix Microsoft : 1er février 2027 pour les utilisateurs standards, 1er juillet 2027 pour les administrateurs généraux et externes, avec transition SSPR de 50 jours) | Entra ID → Réinit. MDP → Méthodes | art. 8 |
 | ☐ | Notifications utilisateur + admin activées | Entra ID → Réinit. MDP → Notifications | art. 8 |
 | ☐ | Écriture différée activée (si environnement hybride) | Entra ID → Réinit. MDP → Intégration locale | art. 8 |
 
@@ -118,9 +120,11 @@ lang: fr
 | ☐ | T1 MFA déclenché sur compte utilisateur standard | Navigation privée → connexion | |
 | ☐ | T2 Break-glass non bloqué par CA-01 | Connexion bga1 et bga2 | |
 | ☐ | T3 Auth héritée bloquée (CA-02) | Client IMAP ou Outlook ancien | |
+| ☐ | T4 Pays bloqué (CA-03) | VPN | |
 | ☐ | T5 Session limitée SharePoint (CA-05) | Appareil non géré → SharePoint | |
 | ☐ | T6 SSPR fonctionnel | https://aka.ms/sspr | |
-| ☐ | Journaux de connexion, colonnes CA visibles | entra.microsoft.com → Surveillance | |
+| ☐ | T7 Journaux de connexion, colonnes CA visibles | entra.microsoft.com → Surveillance | |
+| ☐ | T8 à T10 en Rapport (CA-04, CA-08, CA-06) ; T11 (CA-09) en Rapport puis en Application | Journaux de connexion | |
 
 ---
 
@@ -132,16 +136,17 @@ Ce tableau peut être utilisé comme pièce justificative lors d'un audit PFPDT.
 |--------------|------------|---------------------------|---------|
 | **art. 8 al. 1** | Mesures techniques adaptées au risque : contrôle des accès | MFA obligatoire via CA-01 (Authentication Strength niveau 1) | Partie 3 |
 | **art. 8 al. 1** | Fermer les vecteurs de contournement | Blocage authentification héritée (IMAP, POP3, SMTP) via CA-02 | Partie 4 |
-| **art. 8 al. 1** | Réduction de la surface d'attaque géographique | Filtrage géographique : blocage des pays non autorisés via CA-03 | Partie 5 |
-| **art. 8 al. 1** | Protection contre le vol de session post-MFA | Token Protection : tokens liés à l'appareil via CA-04 | Partie 6 |
+| **art. 8 al. 1** | Réduction de la surface d'attaque géographique | Filtrage géographique : restrictions géographiques définies par l'entreprise via CA-03 | Partie 5 |
+| **art. 8 al. 1** | Réduction du risque de rejeu de jetons de session | Token Protection (plateformes et applications compatibles) via CA-04 | Partie 6 |
 | **art. 8 al. 1** | Contrôle des accès depuis appareils non gérés | Session restreinte SharePoint/OneDrive via CA-05 | Partie 7 |
-| **art. 8 al. 1** | Réduction de la surface d'attaque temporelle | Blocage ou signalement des connexions hors horaires via CA-06 | Partie 8 |
+| **art. 8 al. 1** | Détection des connexions inhabituelles (mesure complémentaire expérimentale) | Signalement des connexions hors horaires via CA-06 (Rapport) | Partie 8 |
+| **art. 8 al. 1** | Protection des comptes à privilèges | MFA anti-hameçonnage pour les administrateurs via CA-09 | §3.2 |
 | **art. 8 al. 1** | Contrôle d'accès par état de sécurité de l'appareil | CA-08 Exiger un appareil conforme (Rapport, puis Application après MVC Intune) | Partie 9 |
-| **art. 8 al. 1** | Traçabilité des réinitialisations de mots de passe | SSPR : réinitialisation auditée, 2 méthodes requises | Partie 10 |
+| **art. 8 al. 1** | Sécurité et traçabilité des opérations de gestion des identités | SSPR : réinitialisation auditée, 2 méthodes requises (le SSPR et ses journaux y contribuent, sans que la loi les prescrive nommément) | Partie 10 |
 | **art. 8 al. 1** | Authentification forte : résistance au phishing | FIDO2/Passkeys + Authentication Strength | Partie 1 |
-| **art. 8 al. 1** | Continuité d'accès sécurisée | Deux comptes break-glass avec méthodes différentes | §0.2 |
-| **art. 8 al. 2** | Intégrité des sessions : prévention de la compromission | CAE (Continuous Access Evaluation) : révocation en temps réel | Partie 3 (natif) |
-| **art. 24** | Détection des compromissions de compte | Journaux de connexion Entra ID consultables et blocages CA détectés par le SIEM (règles UTMStack M14 et M3) | Parties 8 et 11 (T7) |
+| **art. 8 al. 1** | Continuité d'accès sécurisée | Deux comptes break-glass (FIDO2, Administrateur général permanent, alerte de connexion) | §0.2 |
+| **art. 8 al. 2** | Éviter les violations de la sécurité des données (la loi ne prescrit pas de mesure nommée) | CAE (Continuous Access Evaluation) contribue à cette finalité : révocation en temps réel | Partie 3 (natif) |
+| **art. 24** | Annonce des violations de la sécurité des données au PFPDT (et aux personnes concernées si nécessaire) | Les journaux de connexion Entra ID et les alertes du SIEM (par exemple règles UTMStack M14 et M3) facilitent la détection et la documentation d'un incident, mais l'obligation d'annonce reste organisationnelle | Parties 0, 8 et 11 (T7) |
 
 ---
 
@@ -150,12 +155,13 @@ Ce tableau peut être utilisé comme pièce justificative lors d'un audit PFPDT.
 | Politique | Lic. | Cible | Condition | Action |
 |-----------|------|-------|-----------|--------|
 | **CA-01-MFA-Tous-Utilisateurs** | P1 | Tous (sauf BG) | Toutes ressources | MFA niveau 1 |
-| **CA-02-Blocage-Auth-Heritee** | P1 | Tous | Auth héritée | Bloquer |
-| **CA-03-Blocage-Pays-Non-Autorises** | P1 | Tous | Hors pays autorisés | Bloquer |
-| **CA-04-Token-Protection** | P1 | Pilote Direction | Exchange + SharePoint | Session liée à l'appareil |
+| **CA-02-Blocage-Auth-Heritee** | P1 | Tous (sauf BG) | Auth héritée | Bloquer |
+| **CA-03-Blocage-Pays-Non-Autorises** | P1 | Tous (sauf BG) | Hors pays autorisés | Bloquer |
+| **CA-04-Token-Protection-Windows** | P1 | Pilote Direction + admins (sauf BG) | Exchange + SharePoint + Teams, Windows, applications natives | Session liée à l'appareil |
 | **CA-05-Session-Limitee** | P1 | Tous | SPO + appareils non gérés | Accès web uniquement |
-| **CA-06-Blocage-Hors-Horaires** | P1 | Tous (sauf BG) | Hors heures ouvrables (via Graph API) | Bloquer (Rapport au départ) |
+| **CA-06-Hors-Horaires-Experimental** | P1 | Tous (sauf BG) | Hors heures ouvrables (via Graph beta, expérimental) | Rapport uniquement ; blocage optionnel |
 | **CA-08-Exiger-Appareil-Conforme** | P1 | Tous (sauf BG) | Toutes ressources | Appareil conforme |
+| **CA-09-MFA-Phishing-Resistant-Administrateurs** | P1 | Rôles d'administration (sauf BG) | Toutes ressources | MFA anti-hameçonnage |
 
 > **ℹ️ INFO** : CA-04 et CA-08 restent en mode Rapport uniquement jusqu'au déploiement du MVC Intune + Defender. C'est dans le guide Intune + Defender qu'ils passent en Application. CA-06 est créée en mode Rapport ; son passage en Application est une décision du client après revue des journaux. Il n'existe pas de politique CA-07 dans le MVC.
 
@@ -179,13 +185,13 @@ Les adaptations ci-dessous s'appliquent en supplément du MVC standard. Le reste
 
 | Point | POC (test) | Production (recommandé) |
 |-------|------------|-------------------------|
-| **Comptes break-glass** | 1 compte admin testé | 2 comptes avec méthodes différentes, mots de passe hors ligne |
+| **Comptes break-glass** | 1 compte admin testé | 2 comptes cloud-only, FIDO2, Administrateur général permanent, alerte de connexion |
 | **Méthodes MFA** | Authenticator + SMS | Authenticator (priorité) + FIDO2 pour Direction et admins |
 | **CA-01 mode** | Rapport 7 jours puis Application | Application après validation sur un groupe pilote |
 | **CA-03 mode** | Rapport 14 jours puis Application | Application après revue des journaux de connexion |
 | **CA-04 Token Protection** | Rapport (Intune non déployé) | Application après déploiement MVC Intune + Defender |
 | **SSPR écriture différée** | Optionnelle (cloud-only) | Obligatoire en environnement hybride AD |
-| **Test break-glass** | Manuel lors du déploiement | Trimestriel, documenté dans le registre de sécurité |
+| **Test break-glass** | Manuel lors du déploiement | Tous les 90 jours et à chaque changement de personnel, documenté dans le registre de sécurité |
 | **Alertes connexions suspectes** | Vérification manuelle hebdomadaire | Alertes automatisées (SIEM, MDCA ou Sentinel) |
 
 ---
