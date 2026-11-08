@@ -34,7 +34,7 @@ Ce guide déploie la couche **identité et accès** du bundle : comptes de secou
 |---|---|
 | **Licence** | Microsoft 365 Business Premium (Entra ID P1 inclus) |
 | **Portail** | `entra.microsoft.com` |
-| **Durée** | 2 à 3 heures de travail technique (hors périodes en mode Rapport de 7 à 14 jours) |
+| **Durée** | 2 h 30 à 3 h 30 de travail technique (hors périodes en mode Rapport de 7 à 14 jours) |
 | **Prérequis** | Aucun pour l'étape 0 (Parties 0 à 3). Suite du guide (Parties 4 à 10) après le MVC Purview (ou au minimum Audit actif) |
 | **Version** | 3.5 |
 

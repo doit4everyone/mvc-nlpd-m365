@@ -56,7 +56,7 @@ lang: fr
 Ce guide déploie la couche **identité et accès** du bundle MVC nLPD. Il est découpé en deux temps dans le déploiement du bundle :
 
 - **Étape 0, avant Purview (Parties 0 à 3)** : prérequis, comptes break-glass, méthodes d'authentification, emplacements nommés, MFA pour tous (CA-01) et MFA anti-hameçonnage pour les administrateurs (CA-09). Environ 1 h 30 à 2 h de travail technique.
-- **Suite, après Purview (Parties 4 à 10)** : CA-02 à CA-08 et SSPR, avant ou en parallèle du guide Intune + Defender.
+- **Suite, après Purview (Parties 4 à 10)** : CA-02 à CA-08 et SSPR, avant ou en parallèle du guide Intune + Defender. Environ 1 h à 1 h 30 de travail technique. Total du guide : 2 h 30 à 3 h 30.
 
 > **ℹ️ INFO : durée.** Les durées indiquées sont du temps de travail technique. Les périodes en mode Rapport (7 à 14 jours selon la politique) sont du temps calendaire : prévoyez-les dans le planning du client.
 
@@ -342,11 +342,13 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 | N° | Étape | Action |
 |----|-------|--------|
-| C1 | Prérequis SharePoint | Centre d'administration SharePoint → Stratégies → Contrôle d'accès → Appareils non gérés → Autoriser un accès limité au web uniquement (libellé exact à confirmer sur le portail ; la page de documentation Microsoft « control access from unmanaged devices » fait foi). Dans le même écran, vérifier si une option de lecture seule ou de restriction de téléchargement existe ; elle n'est pas documentée ici. Ce paramètre doit être actif pour que CA-05 soit efficace. Par défaut, il autorise la consultation **et la modification** dans le navigateur ; il bloque téléchargement, impression, synchronisation et applications de bureau. Pour interdire aussi la modification des fichiers Office dans le navigateur : `Set-SPOTenant -ConditionalAccessPolicy AllowLimitedAccess -AllowEditing $false`. Pour un site entièrement en lecture seule : paramètre `-ReadOnlyForUnmanagedDevices $true` (documenté par Microsoft pour un site avec `Set-SPOSite`; vérifier la portée dans le tenant). **Attention** : activer l'option depuis le centre d'administration SharePoint désactive les politiques créées auparavant depuis cette page et crée une politique pour tous les utilisateurs ; les personnalisations ne sont pas reprises. Les liens « Anyone » ne sont pas concernés. Délai d'effet : jusqu'à 24 heures. |
+| C1 | Prérequis SharePoint : accès limité | Centre d'administration SharePoint → Stratégies → Contrôle d'accès → Appareils non gérés → Autoriser un accès limité au web uniquement (libellé exact à confirmer sur le portail). Ce paramètre doit être actif pour que CA-05 soit efficace. Il bloque téléchargement, impression, synchronisation et applications de bureau, mais **autorise par défaut la consultation et la modification dans le navigateur**. |
+| C2 | Prérequis SharePoint : lecture seule (obligatoire) | L'objectif de CA-05 est la lecture seule : interdisez la modification dans le navigateur avec PowerShell (SharePoint Online Management Shell) : `Set-SPOTenant -ConditionalAccessPolicy AllowLimitedAccess -AllowEditing $false`. Pour rendre en plus un site entièrement non modifiable, paramètre `-ReadOnlyForUnmanagedDevices $true` (documenté par Microsoft pour un site avec `Set-SPOSite` ; vérifier la portée dans le tenant). |
+| C3 | Précautions | Activer l'option depuis le centre d'administration SharePoint désactive les politiques créées auparavant depuis cette page et crée une politique pour tous les utilisateurs ; les personnalisations ne sont pas reprises. Délai d'effet : jusqu'à 24 heures. Les liens « Anyone » ne sont pas concernés. |
 | 1 | Nom | `CA-05-Session-Limitee-Appareils-Non-Geres` |
 | 2 | Utilisateurs | Inclure : Tous les utilisateurs. Exclure : `GRP-CA-BreakGlass`. |
 | 3 | Ressources cibles | Office 365 SharePoint Online. |
-| 4 | Conditions → Filtre pour les appareils | Configurer : Oui → Inclure les appareils filtrés dans la stratégie → Syntaxe de la règle → Modifier : `device.isCompliant -ne True AND device.trustType -ne "ServerAD"` (« -ne True » couvre aussi les appareils sans état de conformité, par exemple non inscrits). La seconde condition exclut volontairement tous les appareils joints hybrides (`ServerAD`), même non conformes : ils sont traités comme gérés. Retirez cette condition si le client veut aussi restreindre les appareils hybrides non conformes. |
+| 4 | Conditions → Filtre pour les appareils | Configurer : Oui → Inclure les appareils filtrés dans la stratégie → Syntaxe de la règle → Modifier : `device.isCompliant -ne True AND device.trustType -ne "ServerAD"` (« -ne True » couvre aussi les appareils sans état de conformité, par exemple non inscrits). La seconde condition exclut volontairement tous les appareils joints hybrides (`ServerAD`), même non conformes : choix de périmètre fondé sur le traitement des appareils hybrides dans le contrôle SharePoint. Cette exclusion ne prouve pas que l'appareil est géré ou conforme dans Intune. Retirez cette condition si le client veut aussi restreindre les appareils hybrides non conformes. |
 | 5 | Session | Contrôles d'accès → Session → cocher : Utiliser les restrictions appliquées par l'application. |
 | 6 | Activer une stratégie | Rapport uniquement → 7 jours → puis Activé. |
 | 7 | Créer | Cliquer Créer. |
@@ -454,10 +456,10 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | Test | Scénario | Résultat attendu |
 |------|----------|------------------|
 | **T1** | MFA déclenché (CA-01) | Navigation privée → connexion utilisateur standard → invite MFA → connexion réussie après MFA. |
-| **T2** | Break-glass non bloqué | Connexion bga1 → invite MFA portail (normale depuis 2025) mais pas de blocage CA-01 (compte exclu). FIDO2 ou Authenticator requis pour passer le MFA portail. Connexion bga2 → idem. |
+| **T2** | Break-glass non bloqué | Connexion bga1 → invite MFA portail (normale depuis 2025) mais pas de blocage CA-01 (compte exclu). FIDO2 ou CBA, selon la méthode enregistrée sur le compte, requis pour passer le MFA portail. Connexion bga2 → idem. |
 | **T3** | Auth héritée bloquée (CA-02) | Client IMAP ou Outlook 2010 → erreur « Accès bloqué par les politiques d'accès conditionnel ». |
 | **T4** | Pays bloqué (CA-03) | VPN vers un serveur hors `Pays-Autorises-[Client]` → connexion bloquée. |
-| **T5** | Session limitée (CA-05) | Appareil non géré → SharePoint → accès en lecture seule, pas de téléchargement. |
+| **T5** | Session limitée (CA-05) | Quatre cas : (1) appareil géré et conforme → accès normal ; (2) appareil inscrit non conforme → accès web limité ; (3) appareil personnel non géré, navigateur → consultation seule : pas de téléchargement, d'impression ni de synchronisation, bouton de modification absent ou désactivé (après `-AllowEditing $false`) ; (4) appareil joint hybride non inscrit dans Intune → comportement documenté selon la décision sur `ServerAD`. |
 | **T6** | SSPR | https://aka.ms/sspr → 2 méthodes → nouveau mot de passe → notification reçue. |
 | **T7** | Journaux de connexion | entra.microsoft.com → Surveillance → Journaux de connexion → politiques CA visibles dans la colonne « Résultat de la politique CA ». |
 | **T8** | Token Protection (CA-04) | Poste Windows du groupe pilote, Outlook, OneDrive et Teams (application native) → journaux de connexion → CA-04 en Rapport : succès attendu. Vérifier qu'aucun échec ne concerne une application ou un appareil non supporté avant passage en Application. |
@@ -483,7 +485,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | ☐ | CA-09 MFA anti-hameçonnage administrateurs : Application (après 7 j de rapport et clés d'accès enregistrées) | CA → Stratégies → CA-09 | art. 8 |
 | ☐ | CA-03 Filtrage géo : Application (après 14 j de rapport) | CA → Stratégies → CA-03 | art. 8 |
 | ☐ | CA-04 Token Protection : Rapport uniquement (Application après MVC Intune) | CA → Stratégies → CA-04 | art. 8 |
-| ☐ | CA-05 Session limitée : Application | CA → Stratégies → CA-05 | art. 8 |
+| ☐ | CA-05 Session limitée : Application (après `-AllowEditing $false` et 7 j de rapport) | CA → Stratégies → CA-05 | art. 8 |
 | ☐ | CA-06 Hors horaires (expérimental, optionnel) : Rapport uniquement | CA → Stratégies → CA-06 | art. 8 |
 | ☐ | CA-08 Appareil conforme : Rapport uniquement (Application après MVC Intune) | CA → Stratégies → CA-08 | art. 8 |
 | ☐ | SSPR activé pour `GRP-SSPR-Utilisateurs` (2 méthodes) | Entra ID → Réinit. MDP | art. 8 |
@@ -491,7 +493,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | ☐ | Test T2 Break-glass non bloqué validé | Connexion bga1 | |
 | ☐ | Test T3 Auth héritée bloquée validé | Client IMAP | |
 | ☐ | Test T4 Pays bloqué validé | VPN | art. 8 |
-| ☐ | Test T5 Session limitée validé (trois cas) | Appareil non géré | art. 8 |
+| ☐ | Test T5 Session limitée validé (quatre cas, lecture seule comprise) | Appareil non géré | art. 8 |
 | ☐ | Test T6 SSPR fonctionnel validé | https://aka.ms/sspr | |
 | ☐ | Test T7 Journaux de connexion consultés | Surveillance → Journaux de connexion | |
 | ☐ | Tests T8 à T10 validés en Rapport (CA-04, CA-08, CA-06) ; T11 (CA-09) validé en Rapport puis en Application | Journaux de connexion | |

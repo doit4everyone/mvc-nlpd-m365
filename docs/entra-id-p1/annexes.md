@@ -43,16 +43,16 @@ lang: fr
 
 | Terme | Définition |
 |-------|------------|
-| **AiTM (Adversary-in-the-Middle)** | Attaque interceptant la session après un MFA réussi en volant le cookie de session. Token Protection (CA-04) bloque cette attaque. Voir l'[annexe AiTM](../aitm-cookie-hijacking/index.html). |
+| **AiTM (Adversary-in-the-Middle)** | Attaque interceptant la session après un MFA réussi en volant le cookie de session. Token Protection (CA-04) réduit le risque de rejeu des jetons sur les plateformes et applications compatibles (applications natives, pas les navigateurs classiques) ; ce n'est pas une protection universelle. Voir l'[annexe AiTM](../aitm-cookie-hijacking/index.html). |
 | **Authentication Strength** | Fonctionnalité CA P1 définissant le niveau minimal de méthode d'authentification requis. 3 niveaux intégrés : Authentification multifacteur, Authentification multifacteur sans mot de passe, MFA anti-hameçonnage. |
-| **Break-glass** | Comptes admin d'urgence exclus de toutes les politiques CA. Utilisés uniquement si le tenant est verrouillé. Deux comptes recommandés avec des méthodes différentes. Doivent avoir FIDO2 ou CBA enregistré (MFA des portails admin obligatoire depuis 2025). Noms neutres recommandés en production. |
-| **CAE (Continuous Access Evaluation)** | Révocation des sessions M365 en temps réel si un changement est détecté (désactivation de compte, IP suspecte). |
+| **Break-glass** | Comptes admin d'urgence exclus de toutes les politiques CA. Utilisés uniquement si le tenant est verrouillé. Deux comptes recommandés : FIDO2 pour BG-1, CBA (ou à défaut une seconde clé FIDO2 indépendante) pour BG-2. Doivent avoir FIDO2 ou CBA enregistré (MFA des portails admin obligatoire depuis 2025). Noms neutres recommandés en production. |
+| **CAE (Continuous Access Evaluation)** | Évaluation et révocation en quasi-temps réel des sessions pour les événements et services pris en charge (désactivation de compte, changement d'IP) ; une latence allant jusqu'à 15 minutes peut être observée. |
 | **Credential stuffing** | Attaque automatisée testant des millions de paires identifiant/mot de passe volés sur d'autres services. |
 | **Contrôles personnalisés / MFA externe** | Les « Contrôles personnalisés » CA (MFA tiers) sont remplacés par MFA externe (External MFA). Depuis septembre 2026, il n'est plus possible d'ajouter ou de modifier des contrôles personnalisés ; le retrait complet est prévu début 2027 (source : documentation Microsoft Learn). Non utilisés dans le MVC : à vérifier si le client a un fournisseur MFA tiers. |
 | **Emplacement nommé** | Zone géographique (pays) ou plage IP définie dans Entra ID, utilisée comme condition dans les politiques CA. |
 | **Entra Connect / Cloud Sync** | Outil de synchronisation entre l'Active Directory local et Entra ID. Requis en environnement hybride. Microsoft encourage Entra Cloud Sync (agent léger cloud-natif). Pour Entra Connect Sync, la version 2.6.84.0 ou supérieure avec l'authentification basée sur une application est obligatoire avant le 7 avril 2027, sans quoi la synchronisation s'arrête (échéance précédemment annoncée au 30 septembre 2026, avec la version 2.5.79.0, puis repoussée). |
 | **FIDO2 / Passkey** | Standard cryptographique pour l'authentification sans mot de passe. Résistant au phishing car lié à l'URL de destination. |
-| **MFA** | Multi-Factor Authentication. Exige deux facteurs : mot de passe + téléphone (ou biométrie). |
+| **MFA** | Multi-Factor Authentication. Combinaison d'au moins deux facteurs d'authentification distincts. Certaines méthodes (FIDO2, Windows Hello) sont sans mot de passe et résistantes au hameçonnage. |
 | **Mode Rapport uniquement** | Les politiques CA sont évaluées mais n'appliquent aucun contrôle. Permet de tester l'impact avant activation. |
 | **PFPDT** | Préposé fédéral à la protection des données et à la transparence, autorité de contrôle suisse. |
 | **SSPR** | Self-Service Password Reset. Réinitialisation autonome et auditée du mot de passe sans helpdesk. |
@@ -67,7 +67,7 @@ lang: fr
 
 | ☐ | Action | Portail / Chemin | nLPD |
 |---|--------|------------------|------|
-| ☐ | Deux comptes break-glass créés (bga1 + bga2), Administrateur général permanent, FIDO2 | entra.microsoft.com → Utilisateurs | |
+| ☐ | Deux comptes break-glass créés (bga1 + bga2), Administrateur général permanent, FIDO2 (BG-1) et CBA ou seconde clé FIDO2 (BG-2) | entra.microsoft.com → Utilisateurs | |
 | ☐ | Alerte sur toute connexion break-glass en place, test tous les 90 jours | Azure Monitor, SIEM ou revue des journaux | |
 | ☐ | Groupe `GRP-CA-BreakGlass` créé | entra.microsoft.com → Groupes | |
 | ☐ | Security Defaults désactivé | entra.microsoft.com → Propriétés → Paramètres de sécurité | |
@@ -100,7 +100,7 @@ lang: fr
 | ☐ | CA-03 Filtrage géographique : Application (après 14 j de rapport) | CA → Stratégies → CA-03 | art. 8 |
 | ☐ | CA-04 Token Protection : Rapport uniquement (Application après MVC Intune) | CA → Stratégies → CA-04 | art. 8 |
 | ☐ | CA-05 Session limitée : Application | CA → Stratégies → CA-05 | art. 8 |
-| ☐ | Prérequis CA-05 : SharePoint Admin → accès limité au web actif | admin.sharepoint.com → Stratégies → Contrôle d'accès → Appareils non gérés | art. 8 |
+| ☐ | Prérequis CA-05 : SharePoint Admin → accès limité au web actif et modification interdite (`-AllowEditing $false`) | admin.sharepoint.com → Stratégies → Contrôle d'accès → Appareils non gérés | art. 8 |
 | ☐ | CA-06 Hors horaires (expérimental, optionnel) : Rapport uniquement | CA → Stratégies → CA-06 | art. 8 |
 | ☐ | CA-08 Appareil conforme : Rapport uniquement (Application après MVC Intune) | CA → Stratégies → CA-08 | art. 8 |
 
@@ -121,7 +121,7 @@ lang: fr
 | ☐ | T2 Break-glass non bloqué par CA-01 | Connexion bga1 et bga2 | |
 | ☐ | T3 Auth héritée bloquée (CA-02) | Client IMAP ou Outlook ancien | |
 | ☐ | T4 Pays bloqué (CA-03) | VPN | |
-| ☐ | T5 Session limitée SharePoint (CA-05) | Appareil non géré → SharePoint | |
+| ☐ | T5 Session limitée SharePoint (CA-05), quatre cas dont lecture seule | Appareil non géré → SharePoint | |
 | ☐ | T6 SSPR fonctionnel | https://aka.ms/sspr | |
 | ☐ | T7 Journaux de connexion, colonnes CA visibles | entra.microsoft.com → Surveillance | |
 | ☐ | T8 à T10 en Rapport (CA-04, CA-08, CA-06) ; T11 (CA-09) en Rapport puis en Application | Journaux de connexion | |
@@ -158,7 +158,7 @@ Ce tableau peut être utilisé comme pièce justificative lors d'un audit PFPDT.
 | **CA-02-Blocage-Auth-Heritee** | P1 | Tous (sauf BG) | Auth héritée | Bloquer |
 | **CA-03-Blocage-Pays-Non-Autorises** | P1 | Tous (sauf BG) | Hors pays autorisés | Bloquer |
 | **CA-04-Token-Protection-Windows** | P1 | Pilote Direction + admins (sauf BG) | Exchange + SharePoint + Teams, Windows, applications natives | Session liée à l'appareil |
-| **CA-05-Session-Limitee** | P1 | Tous | SPO + appareils non gérés | Accès web uniquement |
+| **CA-05-Session-Limitee** | P1 | Tous (sauf BG) | SPO + appareils non gérés | Accès web limité, lecture seule |
 | **CA-06-Hors-Horaires-Experimental** | P1 | Tous (sauf BG) | Hors heures ouvrables (via Graph beta, expérimental) | Rapport uniquement ; blocage optionnel |
 | **CA-08-Exiger-Appareil-Conforme** | P1 | Tous (sauf BG) | Toutes ressources | Appareil conforme |
 | **CA-09-MFA-Phishing-Resistant-Administrateurs** | P1 | Rôles d'administration (sauf BG) | Toutes ressources | MFA anti-hameçonnage |

@@ -51,7 +51,7 @@ Documents techniques autonomes publiés en complément du bundle, couvrant des v
 
 | Annexe | Objet | Statut |
 |--------|-------|--------|
-| [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) | Détection et mitigation des attaques adversary-in-the-middle contournant le MFA : incidents, IoC, protection structurelle (WHfB, CAE, FIDO2) | Publication prochaine |
+| [AiTM / Cookie Hijacking](aitm-cookie-hijacking/index.html) | Détection et mitigation des attaques adversary-in-the-middle contournant le MFA : incidents, IoC, protection structurelle (WHfB, CAE, FIDO2) | Publié, v1.1 |
 
 ---
 
