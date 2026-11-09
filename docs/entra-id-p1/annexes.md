@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Entra ID P1 : Annexes</h1>
-<h2>MVC nLPD · Identité et accès · v3.5</h2>
+<h2>MVC nLPD · Identité et accès · v3.6</h2>
 
 > [← Retour au guide Entra ID P1](index.html) · [← Procédure de déploiement](procedure-deploiement.html)
 
@@ -123,7 +123,7 @@ lang: fr
 | ☐ | T4 Pays bloqué (CA-03) | VPN | |
 | ☐ | T5 Session limitée SharePoint (CA-05), quatre cas dont lecture seule | Appareil non géré → SharePoint | |
 | ☐ | T6 SSPR fonctionnel | https://aka.ms/sspr | |
-| ☐ | T7 Journaux de connexion, colonnes CA visibles | entra.microsoft.com → Surveillance | |
+| ☐ | T7 Journaux de connexion, onglets « Accès conditionnel » et « Rapport uniquement » visibles dans le détail | entra.microsoft.com → Surveillance | |
 | ☐ | T8 à T10 en Rapport (CA-04, CA-08, CA-06) ; T11 (CA-09) en Rapport puis en Application | Journaux de connexion | |
 
 ---

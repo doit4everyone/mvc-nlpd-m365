@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Entra ID P1 : Procédure de déploiement</h1>
-<h2>MVC nLPD · Identité et accès · v3.5</h2>
+<h2>MVC nLPD · Identité et accès · v3.6</h2>
 
 > [← Retour au guide Entra ID P1](index.html) · [← Retour au bundle MVC nLPD](../index.html)
 
@@ -392,9 +392,9 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 }
 ```
 
-> **✅ CONSEIL : test en Rapport.** Journaux de connexion → filtrer sur CA-06 → colonne « Résultat CA ». Tester avec un compte **non exclu** (un compte exclu affiche « non appliquée ») : une connexion le week-end ou après 19h00 doit apparaître « Rapport - Échec » ; une connexion en heure ouvrable ne doit pas être signalée. Les heures des journaux sont en UTC.
+> **✅ CONSEIL : test en Rapport.** Journaux de connexion → ouvrir la connexion du compte de test → onglet « Rapport uniquement » (selon la largeur de la fenêtre, il se cache derrière le menu « ··· » à droite des onglets) → ligne `CA-06-Hors-Horaires-Experimental`, colonne « Résultat ». L'onglet « Accès conditionnel » ne liste que les stratégies actives : une stratégie en Rapport n'y apparaît pas. Tester avec un compte **non exclu** : une connexion le week-end ou après 19h00 doit afficher « Rapport uniquement : échec » ; une connexion en heure ouvrable doit afficher « Rapport uniquement : non appliqué » (validé sur le terrain, cas hors horaires et cas en horaire). Les heures des journaux sont en UTC.
 
-> **✅ CONSEIL : SIEM (UTMStack).** En mode Rapport, la politique ne bloque rien : la règle UTMStack M14 (Sign-In Blocked by Conditional Access Policy) ne se déclenchera qu'après passage en Application. En Rapport, exploitez les journaux de connexion (résultat « Rapport - Échec »). Une fois en Application, corréler M14 avec M3 (Impossible Travel) si le blocage coïncide avec un pays inhabituel.
+> **✅ CONSEIL : SIEM (UTMStack).** En mode Rapport, la politique ne bloque rien : la règle UTMStack M14 (Sign-In Blocked by Conditional Access Policy) ne se déclenchera qu'après passage en Application. En Rapport, exploitez les journaux de connexion (onglet « Rapport uniquement » du détail, résultat « Rapport uniquement : échec »). Une fois en Application, corréler M14 avec M3 (Impossible Travel) si le blocage coïncide avec un pays inhabituel.
 
 ---
 
@@ -411,8 +411,10 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | 2 | Utilisateurs → Inclure | Tous les utilisateurs. |
 | 3 | Utilisateurs → Exclure | `GRP-CA-BreakGlass`. |
 | 4 | Ressources cibles | Toutes les ressources (anciennement « Toutes les applications cloud »). |
-| 5 | Contrôles d'accès → Octroyer | Accorder l'accès → cocher « Exiger que l'appareil soit marqué comme conforme » → Sélectionner. |
-| 6 | Activer une stratégie | Rapport uniquement → Créer. Passer en Application après déploiement Intune (voir MVC Intune + Defender, Partie 12). |
+| 5 | Contrôles d'accès → Octroyer | Accorder l'accès → cocher « Exiger que l'appareil soit marqué comme conforme » → Sélectionner. Un encadré orange « Ne bloquez pas votre accès ! Assurez-vous que votre appareil est conforme » s'affiche : il est informatif, le mode Rapport uniquement ne bloque personne. |
+| 6 | Activer une stratégie | Rapport uniquement. Deux avertissements apparaissent sous le sélecteur. (a) Plateformes : laisser « Exclure les plateformes d'appareils macOS, iOS, Android et Linux de cette stratégie » (choix par défaut, évite des invites de certificat d'appareil en mode Rapport). (b) Compte courant : choisir « Je comprends que mon compte sera affecté par cette stratégie. Continuer malgré tout. » pour que votre compte apparaisse dans le rapport. → Créer. Passer en Application après déploiement Intune (voir MVC Intune + Defender, Partie 12). |
+
+> **ℹ️ INFO** : avec l'exclusion par défaut des plateformes mobiles et macOS, CA-08 ne rapporte que sur Windows. Pour évaluer aussi iOS et Android au moment du passage en Application, modifier la politique et choisir « Passez à la configuration sélectionnée ». Les utilisateurs mobiles peuvent alors recevoir des invites lors de la vérification de conformité.
 
 ---
 
@@ -463,8 +465,8 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | **T6** | SSPR | https://aka.ms/sspr → 2 méthodes → nouveau mot de passe → notification reçue. |
 | **T7** | Journaux de connexion | entra.microsoft.com → Surveillance → Journaux de connexion → politiques CA visibles dans la colonne « Résultat de la politique CA ». |
 | **T8** | Token Protection (CA-04) | Poste Windows du groupe pilote, Outlook, OneDrive et Teams (application native) → journaux de connexion → CA-04 en Rapport : succès attendu. Vérifier qu'aucun échec ne concerne une application ou un appareil non supporté avant passage en Application. |
-| **T9** | Appareil conforme (CA-08) | Appareil non conforme ou non inscrit → CA-08 apparaît « Rapport - Échec » ; appareil conforme → « Rapport - Succès ». |
-| **T10** | Hors horaires (CA-06) | Compte non exclu, connexion en heures ouvrables → non signalée ; connexion le soir ou le week-end → « Rapport - Échec ». |
+| **T9** | Appareil conforme (CA-08) | Appareil non conforme ou non inscrit → CA-08 apparaît « Rapport uniquement : échec » (onglet « Rapport uniquement » du détail de la connexion) ; appareil conforme → « Rapport uniquement : réussite ». |
+| **T10** | Hors horaires (CA-06) | Compte non exclu, connexion en heures ouvrables → « Rapport uniquement : non appliqué » ; connexion le soir ou le week-end → « Rapport uniquement : échec » (onglet « Rapport uniquement » du détail de la connexion). |
 | **T11** | Administrateurs (CA-09) | En Rapport : administrateur avec clé d'accès enregistrée → succès ; sans clé d'accès → échec, à corriger. Puis après passage en Application : connexion administrateur avec clé d'accès réussie. |
 
 ---

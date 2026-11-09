@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Entra ID P1 : Identité et accès</h1>
-<h2>Minimum Viable de Conformité · nLPD RS 235.1 · v3.5</h2>
+<h2>Minimum Viable de Conformité · nLPD RS 235.1 · v3.6</h2>
 
 > [← Retour au bundle MVC nLPD](../index.html)
 
@@ -36,7 +36,7 @@ Ce guide déploie la couche **identité et accès** du bundle : comptes de secou
 | **Portail** | `entra.microsoft.com` |
 | **Durée** | 2 h 30 à 3 h 30 de travail technique (hors périodes en mode Rapport de 7 à 14 jours) |
 | **Prérequis** | Aucun pour l'étape 0 (Parties 0 à 3). Suite du guide (Parties 4 à 10) après le MVC Purview (ou au minimum Audit actif) |
-| **Version** | 3.5 |
+| **Version** | 3.6 |
 
 ---
 
@@ -91,8 +91,8 @@ Les **Parties 0 à 3** de ce guide (prérequis, break-glass, méthodes d'authent
 
 | Format | Fichier |
 |--------|---------|
-| Word (.docx) | [MVC-nLPD_02-Entra-ID-P1_Procedure_v3.5.docx]({{ '/downloads/docx/MVC-nLPD_02-Entra-ID-P1_Procedure_v3.5.docx' | relative_url }}) |
-| PDF | [MVC-nLPD_02-Entra-ID-P1_Procedure_v3.5.pdf]({{ '/downloads/pdf/MVC-nLPD_02-Entra-ID-P1_Procedure_v3.5.pdf' | relative_url }}) |
+| Word (.docx) | [MVC-nLPD_02-Entra-ID-P1_Procedure_v3.6.docx]({{ '/downloads/docx/MVC-nLPD_02-Entra-ID-P1_Procedure_v3.6.docx' | relative_url }}) |
+| PDF | [MVC-nLPD_02-Entra-ID-P1_Procedure_v3.6.pdf]({{ '/downloads/pdf/MVC-nLPD_02-Entra-ID-P1_Procedure_v3.6.pdf' | relative_url }}) |
 
 ---
 
