@@ -1,6 +1,6 @@
 ---
 title: "Guide MVC Microsoft Purview (nLPD Suisse) | DoIt4Everyone"
-description: "Guide MVC Microsoft Purview pour PME suisses — classification, étiquetage de sensibilité, DLP Exchange, rétention automatique, break-glass RMS. Conformité nLPD en 4 à 6 heures."
+description: "Guide MVC Microsoft Purview pour PME suisses, classification, étiquetage de sensibilité, DLP Exchange, rétention automatique, break-glass RMS. Conformité nLPD en 4 à 6 heures."
 lang: fr
 ---
 <style>
@@ -25,7 +25,7 @@ lang: fr
 
 > [← Retour au bundle MVC nLPD](../index.html)
 
-<h1>Guide MVC — Microsoft Purview</h1>
+<h1>Guide MVC : Microsoft Purview</h1>
 <h2>Minimum Viable de Conformité nLPD pour PME suisses 🇨🇭</h2>
 
 Ce guide couvre le déploiement et l'exploitation du socle Purview dans le périmètre **Business Premium + Purview Suite**. Il se compose de deux documents complémentaires.
@@ -47,7 +47,7 @@ Ce guide couvre le déploiement et l'exploitation du socle Purview dans le péri
 |--------|------------------|
 | MFA (tous les comptes) | Première barrière contre la compromission de compte |
 | Blocage partage externe SharePoint | Fermeture du vecteur de fuite via liens SharePoint |
-| Audit (traçabilité PFPDT) | Journal de toutes les actions sur les données — 1 an |
+| Audit (traçabilité PFPDT) | Journal de toutes les actions sur les données, 1 an |
 | 2 étiquettes (Interne + Confidentiel) | Classification + chiffrement AES-256 des données sensibles |
 | Auto-labelling service | Détection et étiquetage automatique des fichiers SharePoint existants |
 | DLP Exchange | Détection et traçabilité des envois de données sensibles |
@@ -68,10 +68,10 @@ Ce guide couvre le déploiement et l'exploitation du socle Purview dans le péri
 
 ## 📥 Téléchargements
 
-- [Procédure de déploiement — Word (.docx)]({{ '/downloads/docx/MVC-nLPD_01-Purview_Procedure_v1.2.docx' | relative_url }})
-- [Guide d'exploitation client — Word (.docx)]({{ '/downloads/docx/MVC-nLPD_01-Purview_Exploitation_v1.2.docx' | relative_url }})
-- [Procédure de déploiement — PDF]({{ '/downloads/pdf/MVC-nLPD_01-Purview_Procedure_v1.2.pdf' | relative_url }})
-- [Guide d'exploitation client — PDF]({{ '/downloads/pdf/MVC-nLPD_01-Purview_Exploitation_v1.2.pdf' | relative_url }})
+- [Procédure de déploiement, Word (.docx)]({{ '/downloads/docx/MVC-nLPD_01-Purview_Procedure_v1.2.docx' | relative_url }})
+- [Guide d'exploitation client, Word (.docx)]({{ '/downloads/docx/MVC-nLPD_01-Purview_Exploitation_v1.2.docx' | relative_url }})
+- [Procédure de déploiement, PDF]({{ '/downloads/pdf/MVC-nLPD_01-Purview_Procedure_v1.2.pdf' | relative_url }})
+- [Guide d'exploitation client, PDF]({{ '/downloads/pdf/MVC-nLPD_01-Purview_Exploitation_v1.2.pdf' | relative_url }})
 
 ---
 
@@ -79,7 +79,7 @@ Ce guide couvre le déploiement et l'exploitation du socle Purview dans le péri
 
 Fiduciaires et comptabilités · Cabinets d'architectes et ingénieurs civils · Études d'avocats et notaires · Agences de communication et marketing · Cabinets médicaux et paramédicaux
 
-Voir [Procédure de déploiement — Annexe F](procedure-deploiement.html#annexe-f--adaptations-sectorielles).
+Voir [Procédure de déploiement, Annexe F](procedure-deploiement.html#annexe-f--adaptations-sectorielles).
 
 ---
 

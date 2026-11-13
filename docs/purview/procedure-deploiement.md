@@ -25,15 +25,15 @@ lang: fr
 
 > [← Retour au guide Purview](../)
 
-<h1>Procédure de déploiement MVC — Microsoft Purview</h1>
+<h1>Procédure de déploiement MVC : Microsoft Purview</h1>
 <h2>Guide consultant · Version 1.2 · Durée : 4 à 6 heures</h2>
 
 | Champ | Valeur |
 |-------|--------|
 | Licence | Microsoft 365 Business Premium + Purview Suite |
-| Tenant | `[tenant].onmicrosoft.com` — à remplacer |
-| Client | `[Nom du client]` — à remplacer |
-| Version | 1.2 — 2026 |
+| Tenant | `[tenant].onmicrosoft.com` : à remplacer |
+| Client | `[Nom du client]` : à remplacer |
+| Version | 1.2, 2026 |
 
 ---
 
@@ -69,7 +69,7 @@ lang: fr
 
 ## Préface
 
-> **⚠️ ATTENTION — Personnalisation obligatoire**
+> **⚠️ ATTENTION : Personnalisation obligatoire**
 > Remplacez `[domaine]`, `[tenant]` et `[tenant].sharepoint.com` par les informations réelles du client. L'Annexe I est pré-remplie pour Axonix SA (POC demo.ch) ; adaptez-la au client avant remise.
 
 Ce guide est conçu pour un consultant qui installe une protection Minimum Viable de Conformité (MVC) dans une PME suisse de 5 à 25 personnes. Objectif : une session de 4 à 6 heures, client autonome à la fin.
@@ -89,7 +89,7 @@ Ce guide est conçu pour un consultant qui installe une protection Minimum Viabl
 | Rétention automatique | Conservation 10 ans des données RH et Finances (CO art. 958f) |
 | Break-glass RMS | Accès de secours aux fichiers chiffrés en cas d'urgence |
 
-> **ℹ️ INFO — Hors périmètre MVC**
+> **ℹ️ INFO : Hors périmètre MVC**
 > IRM, Endpoint DLP, Managed Environments, eDiscovery, Communication Compliance, DSPM for AI. Ces fonctionnalités peuvent être déployées progressivement après le socle MVC.
 
 ---
@@ -157,7 +157,7 @@ New-MgBetaDirectorySetting -BodyParameter @{ templateId = $t.Id; values = @(@{ n
 
 ### 0.6 Activer le MFA sur tous les comptes
 
-> **🚨 IMPORTANT — Priorité absolue**
+> **🚨 IMPORTANT : Priorité absolue**
 > Sans MFA, Purview est un château de cartes. Un mot de passe volé donne accès à toutes les données sensibles.
 
 | N° | Étape | Action |
@@ -186,7 +186,7 @@ Cette étape ferme le principal vecteur de fuite non surveillé : les liens Shar
 
 ## Partie 1 : Activer l'audit
 
-> **🚨 IMPORTANT — À faire AVANT les étiquettes**
+> **🚨 IMPORTANT : À faire AVANT les étiquettes**
 > Sans audit actif, vous n'avez aucune trace en cas d'incident nLPD.
 
 ```powershell
@@ -260,7 +260,7 @@ Détecte les données médicales RH (arrêts maladie, certificats, incapacité d
 
 #### Étiquette 2 : 2 - Confidentiel (avec chiffrement AES-256)
 
-> **ℹ️ INFO — Groupes mail-enabled requis pour le chiffrement RMS**
+> **ℹ️ INFO : Groupes mail-enabled requis pour le chiffrement RMS**
 > Azure Rights Management exige que les groupes assignés aient une adresse email. En tenant cloud pur (sans AD on-prem) :
 > ```powershell
 > Connect-ExchangeOnline
@@ -276,15 +276,15 @@ Détecte les données médicales RH (arrêts maladie, certificats, incapacité d
 | 3 | Page 2 : Étendue | Cochez : Fichiers et autres ressources de données, Emails, Réunions → Suivant |
 | 4 | Page 3 : Protection | Sélectionnez **Contrôler l'accès** + Appliquer le marquage de contenu → Suivant |
 | 5 | Contrôle d'accès | Configurer les paramètres \| Attribuer maintenant \| Expiration : Jamais \| Hors connexion : 30 jours \| + Attribuer des autorisations → ajoutez (1) `GRP-Confidentiel-Purview`, (2) `admin@[domaine]`, (3) Tous les utilisateurs authentifiés \| Niveau : **Éditeur (Co-auteur)** → Enregistrer |
-| 6 | Marquage | Filigrane : CONFIDENTIEL (40, diagonal, rouge) \| En-tête : CONFIDENTIEL — Usage interne uniquement \| Pied : Document protégé nLPD, Ne pas diffuser → Suivant |
+| 6 | Marquage | Filigrane : CONFIDENTIEL (40, diagonal, rouge) \| En-tête : CONFIDENTIEL, Usage interne uniquement \| Pied : Document protégé nLPD, Ne pas diffuser → Suivant |
 | 7 | Auto-labelling client | Activez le toggle → + Ajouter une condition → Le contenu contient \| Groupe : `Donnees-Sensibles` \| Opérateur : OU \| Ajoutez : AVS-Suisse-PME (min 1, Moyen) + IBAN (min 1, Élevé) + Medical-RH-Suisse (min 2, Moyen) → Ajouter → Suivant |
 | 8 | Finaliser | Pages suivantes par défaut → Créer une étiquette → Ne créez pas encore de stratégie → Terminer. |
 | ⚠️ | Propagation | Attendez 15 à 30 minutes avant de configurer la DLP et l'auto-labelling service. |
 
-> **⚠️ ATTENTION — Deux mécanismes d'auto-labelling distincts**
+> **⚠️ ATTENTION : Deux mécanismes d'auto-labelling distincts**
 > L'étape 7 configure l'auto-labelling **côté client** (ouverture dans Word ou Outlook). Les fichiers déjà présents dans SharePoint ne sont pas couverts. La section 2.4 configure l'auto-labelling **côté service**. Les deux mécanismes sont complémentaires.
 
-> **ℹ️ INFO — Accès des destinataires externes**
+> **ℹ️ INFO : Accès des destinataires externes**
 > Destinataire avec compte Microsoft → déchiffrement automatique. Destinataire sans compte Microsoft (Gmail, AFC, caisse AVS) → code à usage unique par email, valable 15 minutes, saisi dans le navigateur. Informez le client de cette friction potentielle avant la mise en production.
 
 ### 2.3 Publier les étiquettes
@@ -318,24 +318,24 @@ Détecte les données médicales RH (arrêts maladie, certificats, incapacité d
 
 ### 2.5 Break-glass RMS (accès de secours aux fichiers chiffrés)
 
-> **🚨 IMPORTANT — Obligatoire avant mise en production**
+> **🚨 IMPORTANT : Obligatoire avant mise en production**
 > Sans compte Break-glass configuré, un départ conflictuel ou une corruption du tenant peut entraîner une perte irréversible des données chiffrées.
 
-**Étape 1 — Installer le module et se connecter (Windows PowerShell 5.1 uniquement) :**
+**Étape 1 : Installer le module et se connecter (Windows PowerShell 5.1 uniquement) :**
 
 ```powershell
 Install-Module -Name AIPService -Force
 Connect-AipService
 ```
 
-**Étape 2 — Activer la fonctionnalité Super User et désigner le compte de secours :**
+**Étape 2 : Activer la fonctionnalité Super User et désigner le compte de secours :**
 
 ```powershell
 Enable-AipServiceSuperUserFeature
 Add-AipServiceSuperUser -EmailAddress admin@[domaine]
 ```
 
-**Étape 3 — Vérifier et désactiver après configuration :**
+**Étape 3 : Vérifier et désactiver après configuration :**
 
 ```powershell
 Get-AipServiceSuperUser
@@ -352,7 +352,7 @@ Disable-AipServiceSuperUserFeature
 > **ℹ️ INFO**
 > Dans ce MVC, l'email est le seul canal légitime d'envoi de données vers l'extérieur (SharePoint est bloqué). Les deux règles partent en simulation 2 à 4 semaines avant activation.
 
-> **⚠️ ATTENTION — Prérequis**
+> **⚠️ ATTENTION : Prérequis**
 > Les SIT (section 2.1) doivent être créés et propagés (30 minutes) avant de créer cette politique.
 
 ### 3.1 Créer la politique DLP-PME-Surveillance
@@ -532,7 +532,7 @@ Dans SharePoint, tentez de partager un fichier avec une adresse externe. Le part
 
 ## Annexe C : Mots-clés pour les SIT personnalisés
 
-> **ℹ️ INFO — Astuce copier-coller**
+> **ℹ️ INFO : Astuce copier-coller**
 > Copiez les mots-clés dans un document Word vierge, Ctrl+H : Rechercher « / » → Remplacer par `^p`. Vous obtenez la liste prête à coller dans Purview, un mot-clé par ligne.
 
 ### C.1 : AVS-Suisse-PME
@@ -583,26 +583,26 @@ Niveau de confiance : Moyen | min : 2
 
 ### F.1 : PME générique (MVC tel quel)
 
-> **✅ CONSEIL** — Aucune adaptation requise. Déployez le MVC tel quel.
+> **✅ CONSEIL** : Aucune adaptation requise. Déployez le MVC tel quel.
 
 ### F.2 : Fiduciaire et comptabilité
 
 Points de rupture : chiffrement RMS vers AFC et banques (ces institutions refusent les flux OTP Microsoft), rétention globale SharePoint (viole le principe de minimisation nLPD art. 6).
 
-**Adaptation 1 — Étiquette 3 - Externe-Fiduciaire**
+**Adaptation 1 : Étiquette 3 - Externe-Fiduciaire**
 
 | Paramètre | Configuration |
 |-----------|---------------|
 | Nom | `3 - Externe-Fiduciaire` |
 | Chiffrement RMS | Aucun |
-| Marquage visuel | Filigrane : CONFIDENTIEL — USAGE EXTERNE AUTORISÉ \| En-tête : Transmission autorisée nLPD |
+| Marquage visuel | Filigrane : CONFIDENTIEL, USAGE EXTERNE AUTORISÉ \| En-tête : Transmission autorisée nLPD |
 | Usage | Bilans, déclarations fiscales, décomptes TVA, documents bancaires |
 
-**Adaptation 2 — Affiner la rétention**
+**Adaptation 2 : Affiner la rétention**
 
 Purview → Stratégies de rétention → modifiez `Retention-RH-10ans` et `Retention-Finances-10ans` → Condition : appliquer uniquement aux éléments portant les étiquettes `2 - Confidentiel` et `3 - Externe-Fiduciaire`.
 
-**Option — SIT IDE/UID**
+**Option : SIT IDE/UID**
 
 | Paramètre | Valeur |
 |-----------|--------|
@@ -613,7 +613,7 @@ Purview → Stratégies de rétention → modifiez `Retention-RH-10ans` et `Rete
 
 ### F.3 : Cabinet d'architectes et ingénieurs civils
 
-> **⚠️ ATTENTION** — Ne pas appliquer la section 0.7 (blocage tenant SharePoint) pour ce secteur.
+> **⚠️ ATTENTION** : Ne pas appliquer la section 0.7 (blocage tenant SharePoint) pour ce secteur.
 
 | N° | Étape | Action |
 |----|-------|--------|
@@ -625,41 +625,41 @@ Purview → Stratégies de rétention → modifiez `Retention-RH-10ans` et `Rete
 
 ### F.4 : Étude d'avocats et notaires
 
-**Adaptation — Étiquette 3 - Juridique-Externe (sans chiffrement RMS)**
+**Adaptation : Étiquette 3 - Juridique-Externe (sans chiffrement RMS)**
 
 | Paramètre | Configuration |
 |-----------|---------------|
 | Nom | `3 - Juridique-Externe` |
 | Chiffrement RMS | Aucun |
-| Marquage visuel | Filigrane : CONFIDENTIEL — TRANSMISSION AUTORISÉE \| En-tête : Document juridique — Destinataire unique |
+| Marquage visuel | Filigrane : CONFIDENTIEL, TRANSMISSION AUTORISÉE \| En-tête : Document juridique, Destinataire unique |
 | Usage | Pièces de procédure, actes notariés, correspondance inter-cabinets, transmissions aux greffes |
 
-> **✅ CONSEIL** — Pour les transmissions via Justitia.swiss : utilisez le portail directement. Réservez l'étiquette `3 - Juridique-Externe` aux transmissions par email.
+> **✅ CONSEIL** : Pour les transmissions via Justitia.swiss : utilisez le portail directement. Réservez l'étiquette `3 - Juridique-Externe` aux transmissions par email.
 
 ### F.5 : Agence de communication et marketing
 
-**Adaptation 1 — Exclure les sites créatifs de l'auto-labelling service**
+**Adaptation 1 : Exclure les sites créatifs de l'auto-labelling service**
 
 Dans `Auto-Label-Confidentiel` → Emplacements → Sites SharePoint → saisissez uniquement les URLs des sites RH et Finances. Excluez les sites créatifs (Projets, BAT, Assets).
 
-**Adaptation 2 — Exclure les comptes créatifs de la DLP Exchange**
+**Adaptation 2 : Exclure les comptes créatifs de la DLP Exchange**
 
 Dans `DLP-PME-Surveillance` → Emplacements → Courrier Exchange → Exclure → ajoutez les comptes des créatifs et chargés de projet.
 
-> **⚠️ ATTENTION** — Compensez par une charte informatique signée interdisant l'envoi de données personnelles depuis les comptes créatifs. Documentez ce choix dans le registre des activités (Annexe I).
+> **⚠️ ATTENTION** : Compensez par une charte informatique signée interdisant l'envoi de données personnelles depuis les comptes créatifs. Documentez ce choix dans le registre des activités (Annexe I).
 
 ### F.6 : Cabinet médical et paramédical
 
-**Adaptation — Étiquette 3 - Patient-Externe (sans chiffrement RMS)**
+**Adaptation : Étiquette 3 - Patient-Externe (sans chiffrement RMS)**
 
 | Paramètre | Configuration |
 |-----------|---------------|
 | Nom | `3 - Patient-Externe` |
 | Chiffrement RMS | Aucun |
-| Marquage visuel | En-tête : Document médical personnel — Confidentiel \| Pied : Ne pas transmettre à des tiers |
+| Marquage visuel | En-tête : Document médical personnel, Confidentiel \| Pied : Ne pas transmettre à des tiers |
 | Usage | Résultats d'analyses, ordonnances, rappels de consultation, factures patients |
 
-> **✅ CONSEIL** — Flux HIN : pour les échanges interprofessionnels (médecin → hôpital), utilisez HIN Mail directement. Le MVC Purview couvre les données internes et les communications patients uniquement.
+> **✅ CONSEIL** : Flux HIN : pour les échanges interprofessionnels (médecin → hôpital), utilisez HIN Mail directement. Le MVC Purview couvre les données internes et les communications patients uniquement.
 
 ### F.7 : Synthèse des adaptations
 
@@ -676,7 +676,7 @@ Dans `DLP-PME-Surveillance` → Emplacements → Courrier Exchange → Exclure �
 
 ## Annexe I : Registre des activités de traitement (art. 12 nLPD)
 
-> **⚠️ ATTENTION — Exemple pré-rempli**
+> **⚠️ ATTENTION : Exemple pré-rempli**
 > Remplacez Axonix SA, demo.ch et admin@demo.ch par les données réelles du client.
 
 **Informations générales de l'organisation**
@@ -690,7 +690,7 @@ Dans `DLP-PME-Surveillance` → Emplacements → Courrier Exchange → Exclure �
 
 **Activité 1 : Gestion des ressources humaines et de la paie**
 
-| Champ | Valeur — Axonix SA |
+| Champ | Valeur : Axonix SA |
 |-------|-------------------|
 | Finalité | Administrer les contrats de travail, calculer et verser les salaires, gérer les absences. |
 | Personnes concernées | Employés actifs et anciens employés. |
@@ -702,7 +702,7 @@ Dans `DLP-PME-Surveillance` → Emplacements → Courrier Exchange → Exclure �
 
 **Activité 2 : Comptabilité et gestion financière**
 
-| Champ | Valeur — Axonix SA |
+| Champ | Valeur : Axonix SA |
 |-------|-------------------|
 | Finalité | Tenir la comptabilité, gérer paiements fournisseurs et encaissements clients. |
 | Personnes concernées | Fournisseurs, clients (contacts de facturation), employés (notes de frais). |
@@ -714,7 +714,7 @@ Dans `DLP-PME-Surveillance` → Emplacements → Courrier Exchange → Exclure �
 
 **Activité 3 : Gestion de la relation client**
 
-| Champ | Valeur — Axonix SA |
+| Champ | Valeur : Axonix SA |
 |-------|-------------------|
 | Finalité | Exécuter les contrats de prestation, suivi commercial, facturation. |
 | Personnes concernées | Contacts clients (personnes physiques, contexte B2B principalement). |

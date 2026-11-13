@@ -1,6 +1,6 @@
 ---
 title: "Guide MVC Copilot Governance (nLPD Suisse) | DoIt4Everyone"
-description: "Guide MVC Copilot Governance pour PME suisses — DLP Copilot, DSPM for AI, revue AI. Conformité nLPD."
+description: "Guide MVC Copilot Governance pour PME suisses, DLP Copilot, DSPM for AI, revue AI. Conformité nLPD."
 lang: fr
 ---
 <style>
@@ -25,10 +25,10 @@ lang: fr
 
 > [← Retour au bundle MVC nLPD](../)
 
-<h1>Guide MVC — Copilot Governance</h1>
+<h1>Guide MVC : Copilot Governance</h1>
 <h2>DLP Copilot · DSPM for AI · Revue AI · Version 1.0</h2>
 
-**Statut : v1.0 — en cours de production**
+**Statut : v1.0, en cours de production**
 
 Ce guide est en cours de production. La version .docx est disponible en téléchargement.
 
