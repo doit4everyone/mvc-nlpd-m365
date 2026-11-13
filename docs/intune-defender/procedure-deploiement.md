@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Intune + Defender for Business : Procédure de déploiement</h1>
-<h2>MVC nLPD · Appareils et menaces · v3.5</h2>
+<h2>MVC nLPD · Appareils et menaces · v3.6</h2>
 
 > [← Retour au guide Intune + Defender](index.html) · [← Retour au bundle MVC nLPD](../index.html)
 
@@ -481,12 +481,16 @@ Ces trois groupes ciblent les politiques de ce guide. Une politique Windows ne d
 | C2 | Cas d'usage | Logiciel métier bloqué par une règle ASR. Faux positif de l'antivirus. Problème réseau lié à Network Protection. |
 | 1 | Ouvrir la fiche | security.microsoft.com → Ressources → Appareils → cliquer sur le nom du poste. |
 | 2 | Activer | Fiche de l'appareil → menu « … » en haut à droite → « Activer le mode de dépannage ». Un panneau « Activer le mode de dépannage pour ce périphérique » s'ouvre : il rappelle que les administrateurs locaux pourront modifier les configurations verrouillées et que le mode dure 4 heures. Bouton « Envoyer » pour confirmer. |
-| 3 | Durée | 4 heures, d'après le panneau. |
+| 3 | Durée | 4 heures par séance, d'après le panneau. La documentation Microsoft limite aussi chaque appareil à 8 heures cumulées, quota remis à zéro 24 heures après la première activation. L'activation peut prendre jusqu'à 15 minutes. |
 | 4 | Données de diagnostic | Les journaux générés pendant le mode de dépannage restent accessibles selon la stratégie de rétention de l'organisation. Ils peuvent être collectés avec « Collecter le package d'enquêtes » (même menu « … » de la fiche). |
 
 > **⚠️ ATTENTION : audit.** L'activation du mode de dépannage est journalisée. Documentez toujours le motif.
 
 > **ℹ️ INFO : relevé du 8 novembre 2026.** Le panneau a été ouvert puis fermé sans confirmer : le mode n'a pas été activé sur le poste de test.
+
+> **⚠️ À CONFIRMER : disponibilité avec Defender for Business.** La documentation Microsoft sur le mode de dépannage cite Defender for Endpoint Plan 1 et Plan 2, sans nommer Defender for Business. Elle précise aussi que l'option « Activer le mode de dépannage » s'affiche même pour un appareil qui ne remplit pas les prérequis : la voir dans le portail ne prouve pas que la fonction marche. Prérequis cités : rôle Administrateur de la sécurité (ou rôle personnalisé avec « Paramètres de sécurité de base (gérer) » et « Réglage de la détection (gérer) »), appareil actif dans Defender for Endpoint, plateforme antivirus récente. Ne pas promettre cette fonction au client avant de l'avoir testée sur son tenant.
+
+> **ℹ️ INFO : ce que le mode permet.** Les administrateurs locaux peuvent modifier des paramètres de l'antivirus normalement verrouillés par la stratégie et désactiver temporairement la protection contre les falsifications (Tamper Protection, appareil en ligne). Ils ne peuvent ni désactiver ni désinstaller l'antivirus. À la fin de la séance, les paramètres reviennent à leurs valeurs d'origine et la protection est réactivée ; les modifications de stratégie reçues pendant la séance ne s'appliquent qu'après.
 
 ---
 
@@ -571,6 +575,8 @@ Deux options, complémentaires. Le choix dépend de la licence du client et du b
 > **ℹ️ INFO : relevé du 8 novembre 2026.** Libellés relevés dans l'assistant, sans enregistrer de stratégie.
 
 > **ℹ️ INFO : délai de grâce, ce que montre le portail.** Après désactivation de BitLocker (`manage-bde -off C:`) et synchronisation, la page de l'appareil « Conformité de l'appareil » affiche aussitôt la stratégie en « Non conforme », alors que la fiche de l'appareil affiche le badge « En période de grâce » et la liste « Tous les appareils » la mention « Dans la période de grâce ». Le marquage définitif « Non conforme » intervient à l'issue du délai fixé dans « Actions en cas de non-conformité » (colonne « Planification (jours après la non-conformité) », 0 par défaut, 3 dans ce guide). Prévoir ce délai dans le calendrier de test de la §12.2 (CA-08).
+
+> **✅ CONSEIL : fin du délai de grâce, relevé terrain.** Avec un délai de 3 jours, l'appareil testé affichait le badge rouge « Non conforme » sur sa fiche (à côté de « Entreprise » et « Intune ») au quatrième jour, et le cadre « État de conformité de l'appareil » indiquait « Conforme : 2 » et « Non Conforme : 1 » pour trois stratégies. Le dernier échange de l'appareil affiché sur la fiche (« Dernier check-in ») datait du premier jour : le basculement s'est donc fait sans nouvelle synchronisation visible, à l'échéance du délai.
 
 > **ℹ️ INFO : appareil neuf non conforme au départ.** Un poste fraîchement provisionné peut apparaître « Non conforme » tant que les signatures Microsoft Defender ne sont pas à jour (critère « Veille de sécurité ... à jour »). Il passe « Conforme » après la mise à jour des signatures (`Update-MpSignature` sur le poste, ou « Mettre à jour les informations de Defender » dans le menu « Sécurisé » de l'appareil). Ne pas diagnostiquer une panne avant ce délai.
 
@@ -683,7 +689,9 @@ Deux options, complémentaires. Le choix dépend de la licence du client et du b
 
 > **✅ CONSEIL : test.** Limiter d'abord la stratégie à un compte de test (champ « Utilisateurs »). Envoyer un e-mail contenant une URL depuis un compte externe, puis le lire dans Outlook. Deux contrôles : survoler le lien (ou clic droit → « Copier le lien ») pour lire l'adresse réelle, et vérifier dans les en-têtes du message la ligne `X-MS-Exchange-AtpMessageProperties: SA|SL`, qui indique que le message a été traité par Safe Attachments et Safe Links. Attendu : adresse du type `https://[région].safelinks.protection.outlook.com/?url=…`.
 
-> **⚠️ À CONFIRMER : réécriture non observée sur le tenant de validation.** Avec une stratégie active, la case « Ne réécrivez pas les URLs… » décochée et l'en-tête `SA|SL` présent, l'adresse copiée depuis Outlook sur le web et Outlook pour Windows restait l'adresse d'origine, pour trois messages (deux expéditeurs, deux domaines de liens). La cause n'est pas établie. Le rapport « Protection des URL » (Rapports → E-mail et collaboration) est le contrôle à refaire après 24 heures. Ne pas promettre au client une URL visiblement réécrite avant d'avoir relevé ce comportement sur son tenant.
+> **✅ CONSEIL : réécriture constatée sur le tenant de validation.** Le lendemain de la création de la stratégie, les liens des e-mails d'un expéditeur du même domaine (notifications automatiques de la plateforme de supervision) arrivaient réécrits, sous la forme `https://che01.safelinks.protection.outlook.com/?url=[URL encodée]&data=…&sdata=…&reserved=0`. L'URL d'origine reste lisible dans le paramètre `url`, et le paramètre `data` contient l'adresse du destinataire et l'identifiant du tenant : ne jamais publier ni transmettre un tel lien tel quel.
+
+> **✅ CONSEIL : le test doit se faire avec un expéditeur externe qui n'est pas invité.** Un e-mail envoyé depuis une adresse externe ordinaire (une messagerie grand public) arrivait avec l'URL réécrite. En revanche, des messages envoyés depuis deux adresses qui sont des invités du tenant (comptes invités Entra) arrivaient avec l'adresse d'origine, y compris lors d'un nouvel essai le lendemain, alors que l'en-tête `SA|SL` était présent et la case « Ne réécrivez pas les URLs… » décochée. Le délai d'application de la stratégie est donc écarté pour ce cas. Le mécanisme exact n'est pas établi et n'a pas été trouvé dans la documentation Microsoft : à noter pour les clients dont les partenaires sont des invités, dont les liens peuvent ne pas être réécrits.
 
 > **ℹ️ INFO : suivi des clics.** La table `UrlClickEvents` d'Advanced hunting n'est pas disponible avec Defender for Office 365 Plan 1 (le portail indique l'absence de licence Plan 2) : le rapport « Protection des URL » et les « Détections en temps réel » sont les seuls moyens de suivi avec Business Premium.
 
@@ -806,12 +814,12 @@ CA-04 et CA-08 ont été créées en mode Rapport dans le guide Entra ID P1 (Par
 | **T3** | USB bloquée | Clé non autorisée : accès refusé. Clé autorisée : accès accordé. |
 | **T4** | Antivirus (EICAR) | Fichier de test bloqué, alerte visible dans Defender XDR. |
 | **T5** | Notification e-mail | L'alerte EICAR déclenche une notification sur le compte administrateur. |
-| **T6** | Safe Links | URL réécrite dans l'e-mail reçu (case « Ne réécrivez pas les URLs... » décochée, voir 10.1). Contrôler l'adresse réelle du lien et l'en-tête `X-MS-Exchange-AtpMessageProperties`. Réécriture non encore observée sur le tenant de validation. |
+| **T6** | Safe Links | URL réécrite dans l'e-mail reçu (case « Ne réécrivez pas les URLs... » décochée, voir 10.1). Contrôler l'adresse réelle du lien et l'en-tête `X-MS-Exchange-AtpMessageProperties`. Réécriture observée sur le tenant de validation le lendemain de la création de la stratégie (voir 10.1). |
 | **T7** | Safe Attachments | Pièce jointe EICAR bloquée, message en quarantaine (mode « Bloquer », voir 10.2). Si l'expéditeur refuse l'envoi (erreur `552 5.2.0`), le test n'est pas concluant. |
 | **T8** | AIR et Centre d'actions | Les actions automatisées apparaissent dans le Centre d'actions. Comportement exact relevé sur le tenant. |
 | **T9** | LAPS | Mot de passe administrateur local lisible dans Entra ID, accepté sur le poste. Après rotation manuelle, l'ancien est refusé. Consultation visible dans les journaux d'audit. |
 | **T10** | ASR | En mode Audit, un comportement ciblé (par exemple macro Office de test) apparaît dans le rapport sans être bloqué. Après passage en Blocage, il est bloqué. |
-| **T11** | Conformité Windows | Appareil conforme : statut « Conforme ». Après désactivation de BitLocker : « En période de grâce » aussitôt (stratégie en « Non conforme » dans la page de conformité de l'appareil), puis « Non conforme » à l'issue du délai de grâce. |
+| **T11** | Conformité Windows | Appareil conforme : statut « Conforme ». Après désactivation de BitLocker : « En période de grâce » aussitôt (stratégie en « Non conforme » dans la page de conformité de l'appareil), puis « Non conforme » à l'issue du délai de grâce (validé sur le tenant de validation avec 3 jours : badge rouge « Non conforme » sur la fiche de l'appareil). |
 | **T12** | Conformité mobile | iOS et Android inscrits : statut de conformité correct, affectés au bon groupe. Appareil non conforme : accès refusé après CA-08. |
 | **T13** | Remote Help | Si déployé : session établie, visible dans l'onglet « Séances d'Assistance à distance ». Mode sans utilisateur testé seulement s'il est disponible. |
 | **T14** | Mises à jour | Anneau Pilote reçoit les mises à jour avant l'anneau Production. |
