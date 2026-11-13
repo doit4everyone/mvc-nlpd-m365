@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Intune + Defender for Business : Appareils et menaces</h1>
-<h2>Minimum Viable de Conformité · nLPD RS 235.1 · v3.6</h2>
+<h2>Minimum Viable de Conformité · nLPD RS 235.1 · v3.7</h2>
 
 > [← Retour au bundle MVC nLPD](../index.html)
 
@@ -38,7 +38,7 @@ Ce guide déploie la couche **appareils et menaces** du bundle : inscription et 
 | **Portails** | `intune.microsoft.com` et `security.microsoft.com` |
 | **Durée** | 4 à 5 heures de travail technique (hors périodes d'observation) |
 | **Prérequis** | Étape 0 du guide Entra ID P1 (Parties 0 à 3) et CA-02 déployées |
-| **Version** | 3.6 |
+| **Version** | 3.7 |
 
 ---
 
@@ -80,8 +80,8 @@ Ce guide déploie la couche **appareils et menaces** du bundle : inscription et 
 
 | Format | Fichier |
 |--------|---------|
-| Word (.docx) | [MVC-nLPD_03-Intune-Defender_Procedure_v3.6.docx]({{ '/downloads/docx/MVC-nLPD_03-Intune-Defender_Procedure_v3.6.docx' | relative_url }}) |
-| PDF | [MVC-nLPD_03-Intune-Defender_Procedure_v3.6.pdf]({{ '/downloads/pdf/MVC-nLPD_03-Intune-Defender_Procedure_v3.6.pdf' | relative_url }}) |
+| Word (.docx) | [MVC-nLPD_03-Intune-Defender_Procedure_v3.7.docx]({{ '/downloads/docx/MVC-nLPD_03-Intune-Defender_Procedure_v3.7.docx' | relative_url }}) |
+| PDF | [MVC-nLPD_03-Intune-Defender_Procedure_v3.7.pdf]({{ '/downloads/pdf/MVC-nLPD_03-Intune-Defender_Procedure_v3.7.pdf' | relative_url }}) |
 
 ---
 

@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Intune + Defender for Business : Procédure de déploiement</h1>
-<h2>MVC nLPD · Appareils et menaces · v3.6</h2>
+<h2>MVC nLPD · Appareils et menaces · v3.7</h2>
 
 > [← Retour au guide Intune + Defender](index.html) · [← Retour au bundle MVC nLPD](../index.html)
 
@@ -184,12 +184,35 @@ Ces trois groupes ciblent les politiques de ce guide. Une politique Windows ne d
 
 | N° | Étape | Action |
 |----|-------|--------|
-| C1 | Cas d'usage | Client avec Active Directory et Entra Connect. Les postes joints au domaine sont aussi joints hybrides à Entra ID et inscrits dans Intune par GPO. |
-| 1 | GPO | Inscription MDM automatique par GPO (Configuration ordinateur → Modèles d'administration → Composants Windows → MDM). Libellé exact de la stratégie à relever sur un contrôleur de domaine. |
-| 2 | Vérification | entra.microsoft.com → Appareils → Tous les appareils. Faire défiler vers la droite jusqu'aux colonnes « Type de jointure », « Propriétaire » et « GPM » (traduction du portail pour MDM). Le type de jointure d'un poste hybride commence par « Microsoft Entra hy… » ; les autres valeurs vues commencent par « Microsoft Entra joi… » (joint) et « Microsoft Entra reg… » (inscrit). |
-| 3 | Contrôle Intune | Colonne « GPM » : le nom de l'application de gestion (Microsoft Intune) doit apparaître pour le poste. Valeur « Aucun » = poste non inscrit dans Intune. |
+| C1 | Cas d'usage | Client avec Active Directory et Entra Connect. Les postes joints au domaine sont aussi joints hybrides à Entra ID, puis inscrits dans Intune par GPO. |
+| C2 | Prérequis | Poste en jonction hybride (`dsregcmd /status` : `AzureAdJoined : YES`, `DomainJoined : YES`, `AzureAdPrt : YES`). Licence Intune sur l'utilisateur qui ouvre la session. Étendue MDM incluant cet utilisateur (étape 1). Étendue WIP sur Aucun. |
+| 1 | Étendue MDM | entra.microsoft.com → Appareils → Tous les appareils → Mobilité (GPM et WIP) → Microsoft Intune. Champ « Étendue de l'utilisateur Gestion des données de référence » sur Tout, ou sur Partiel avec le groupe de pilotage `[Nom du groupe pilote]`. Champ « Étendue de l'utilisateur Protection des informations Windows (WIP) » sur Aucun. |
+| 2 | OU dédiée | Créer une unité d'organisation de test `[Nom de l'OU]` et y placer le poste. Vérifier que cette OU est dans le périmètre de synchronisation d'Entra Connect (étape 5). |
+| 3 | Créer la GPO | Console de gestion des stratégies de groupe : créer la GPO `[Nom de la GPO]` et la lier à `[Nom de l'OU]` uniquement (jamais à la stratégie par défaut du domaine). |
+| 4 | Stratégie | Modifier la GPO → Configuration ordinateur → Stratégies → Modèles d'administration → Composants Windows → GPM (« MDM » dans les modèles en anglais). Stratégie « Activer l'inscription MDM automatique en utilisant les informations d'identification Azure AD par défaut » : état **Activé**, « Sélectionnez le type d'informations d'identification à utiliser » sur **Informations d'identification de l'utilisateur**, « ID de l'application MDM » vide (facultatif). Laisser « Désactiver l'inscription GPM » non configurée. |
+| 5 | Synchronisation | Sur le serveur Entra Connect : Synchronization Service Manager → Connectors → connecteur de l'annuaire AD → Search Connector Space → Scope Sub-Tree → saisir le nom distinctif de l'OU. Un objet de type computer avec Connector = True confirme que l'OU est synchronisée. Ne rien modifier dans cette fenêtre. |
+| 6 | Sur le poste | Session ouverte avec l'utilisateur licencié, puis `gpupdate /force` dans une invite de commandes administrateur. `gpresult /r /scope:computer` doit lister `[Nom de la GPO]`. |
+| 7 | Tâche planifiée | Planificateur de tâches → Bibliothèque → Microsoft → Windows → EnterpriseMgmt. La tâche « Schedule created by enrollment client for automatically enrolling in MDM from AAD » est créée, exécutée en Système, avec un déclencheur toutes les 5 minutes pendant 1 jour. |
+| 8 | Journal | Observateur d'événements → Journaux des applications et des services → Microsoft → Windows → DeviceManagement-Enterprise-Diagnostics-Provider → Admin. Une réussite apparaît comme un événement d'information, un échec comme un événement d'erreur avec un code. |
+| 9 | Vérification Entra | entra.microsoft.com → Appareils → Tous les appareils. Faire défiler vers la droite jusqu'aux colonnes « Type de jointure », « Propriétaire » et « GPM » (traduction du portail pour MDM). Le type de jointure d'un poste hybride commence par « Microsoft Entra hy… ». |
+| 10 | Contrôle Intune | Colonne « GPM » : le nom de l'application de gestion (Microsoft Intune) doit apparaître pour le poste. Valeur « Aucun » = poste non inscrit dans Intune. Vérifier aussi intune.microsoft.com → Appareils → Tous les appareils. |
 
-> **⚠️ ATTENTION** : Entra Connect doit synchroniser les objets ordinateurs avant toute tentative de jonction hybride.
+> **⚠️ ATTENTION** : Entra Connect doit synchroniser les objets ordinateurs avant toute tentative de jonction hybride. Déplacer un ordinateur vers une OU hors du périmètre de synchronisation peut faire supprimer son objet dans Entra ID.
+
+> **⚠️ ATTENTION : limite de 5 appareils par utilisateur.** Intune limite par défaut le nombre d'appareils inscrits par utilisateur à 5. Un poste de test inscrit sous le compte d'un administrateur déjà utilisé pour d'autres appareils peut atteindre cette limite. Le plafond se règle dans les restrictions de limite d'appareil (chemin exact à confirmer).
+
+> **⚠️ ATTENTION : comptes administrateurs et MFA.** Sur le tenant de validation, la tâche d'inscription automatique a échoué avec l'erreur « AADSTS50076 : vous devez utiliser l'authentification multifacteur » pour la ressource `enrollment.manage.microsoft.com`, relevée dans le journal du poste. Le compte utilisé était administrateur général et visé par une politique d'accès conditionnel exigeant le MFA sur toutes les ressources. La tâche s'exécute en arrière-plan : elle ne peut pas afficher d'invite MFA ni de clé de sécurité. Tester et déployer avec un utilisateur standard sans MFA imposé pour cette ressource.
+
+> **💡 CONSEIL : voies possibles quand le MFA est exigé pour tous les utilisateurs.** La tâche d'inscription automatique tourne sans fenêtre : elle ne peut pas valider d'invite MFA. Quatre voies sont envisageables. Aucune n'a été validée sur le tenant de validation.
+>
+> 1. **Ouverture de session avec Windows Hello Entreprise ou une clé FIDO2.** À notre connaissance, la session ouverte avec une méthode forte porte déjà la preuve du MFA : la tâche peut alors obtenir son jeton sans invite. Sur un poste en jonction hybride, Windows Hello Entreprise suppose une stratégie qui l'active (GPO « Utiliser Windows Hello Entreprise », Configuration ordinateur → Modèles d'administration → Composants Windows → Windows Hello Entreprise, état Activé, option « Ne pas démarrer l'approvisionnement de Windows Hello après la connexion » décochée) : sans elle, `dsregcmd /status` indique `PolicyEnabled : NO` et `PreReqResult : WillNotProvision` dans la section « Ngc Prerequisite Check ». Avec la stratégie, le PIN a pu être créé (`NgcSet : YES`) après une validation MFA, mais la connexion avec ce PIN a échoué sur le tenant de validation (« Cette option est momentanément indisponible »), sans diagnostic : le modèle de confiance de Windows Hello en environnement hybride (synchronisation de la clé par Entra Connect, certificats ou approbation Kerberos dans le cloud) n'a pas été déployé. Voie non validée. À CONFIRMER.
+> 2. **Exclure l'application d'inscription Intune de la politique MFA** (accès conditionnel → la politique concernée → Ressources cibles → Exclure → Sélectionner des ressources). Exception ciblée, à justifier et à documenter. Le nom exact de l'application à exclure varie selon le tenant : « Microsoft Intune Enrollment » n'était pas proposée sur le tenant de validation, et l'exclusion de « Microsoft Intune » n'a pas suffi. À CONFIRMER.
+> 3. **Inscription interactive** : Autopilot, ou Paramètres → Comptes → Accès professionnel ou scolaire (§1.1 et §1.2). L'utilisateur valide l'invite MFA à l'écran. C'est la voie à privilégier quand le MFA est imposé à tous.
+> 4. **Mode « appareil » de la GPO** : réservé, selon des sources communautaires, à la cogestion et aux pools multi-session Azure Virtual Desktop. Non recommandé.
+
+> **ℹ️ INFO : type d'identifiants.** Choisir « Informations d'identification de l'utilisateur ». Des sources communautaires indiquent que « l'appareil » n'est prévu que pour la cogestion et les pools multi-session Azure Virtual Desktop. Ce point n'a pas été validé auprès de la documentation Microsoft.
+
+> **⚠️ À CONFIRMER : inscription par GPO non aboutie sur le tenant de validation.** La jonction hybride, l'application de la GPO, la création de la tâche et le périmètre de synchronisation ont été vérifiés. L'inscription elle-même n'a pas abouti : la colonne « GPM » est restée sur « Aucun ». Seul le compte administrateur, soumis au MFA, était licencié. Le résultat avec un utilisateur standard, et la possibilité d'exclure l'application d'inscription Intune de la politique MFA, restent à valider. Le profil Autopilot du §1.1 est un profil « Joint à Microsoft Entra » : il ne couvre pas la variante Autopilot en jonction hybride, non décrite dans ce guide.
 
 ---
 
@@ -578,6 +601,8 @@ Deux options, complémentaires. Le choix dépend de la licence du client et du b
 
 > **✅ CONSEIL : fin du délai de grâce, relevé terrain.** Avec un délai de 3 jours, l'appareil testé affichait le badge rouge « Non conforme » sur sa fiche (à côté de « Entreprise » et « Intune ») au quatrième jour, et le cadre « État de conformité de l'appareil » indiquait « Conforme : 2 » et « Non Conforme : 1 » pour trois stratégies. Le dernier échange de l'appareil affiché sur la fiche (« Dernier check-in ») datait du premier jour : le basculement s'est donc fait sans nouvelle synchronisation visible, à l'échéance du délai.
 
+> **✅ CONSEIL : retour en conformité, relevé terrain.** Après réaffectation de la stratégie BitLocker au groupe du poste, le chiffrement a démarré, puis s'est terminé en moins de 15 minutes sur un disque de 99 Go, avec « Protection activée » (`manage-bde -status C:`). Trois synchronisations lancées depuis Intune après la fin du chiffrement n'ont pas fait changer l'état « Non conforme ». La fiche de l'appareil est repassée à « Conforme » au check-in suivant le redémarrage du poste : prévoir un redémarrage après le chiffrement, une synchronisation seule ne suffit pas à rétablir la conformité (constaté sur un poste, la cause exacte n'est pas établie). La page « Conformité de l'appareil » a continué d'afficher l'ancien état « Non conforme » de la stratégie un moment après que la fiche indiquait « Conforme » : se fier au badge de la fiche et actualiser la page avant de conclure.
+
 > **ℹ️ INFO : appareil neuf non conforme au départ.** Un poste fraîchement provisionné peut apparaître « Non conforme » tant que les signatures Microsoft Defender ne sont pas à jour (critère « Veille de sécurité ... à jour »). Il passe « Conforme » après la mise à jour des signatures (`Update-MpSignature` sur le poste, ou « Mettre à jour les informations de Defender » dans le menu « Sécurisé » de l'appareil). Ne pas diagnostiquer une panne avant ce délai.
 
 ### 8.2 Conformité iOS
@@ -819,7 +844,7 @@ CA-04 et CA-08 ont été créées en mode Rapport dans le guide Entra ID P1 (Par
 | **T8** | AIR et Centre d'actions | Les actions automatisées apparaissent dans le Centre d'actions. Comportement exact relevé sur le tenant. |
 | **T9** | LAPS | Mot de passe administrateur local lisible dans Entra ID, accepté sur le poste. Après rotation manuelle, l'ancien est refusé. Consultation visible dans les journaux d'audit. |
 | **T10** | ASR | En mode Audit, un comportement ciblé (par exemple macro Office de test) apparaît dans le rapport sans être bloqué. Après passage en Blocage, il est bloqué. |
-| **T11** | Conformité Windows | Appareil conforme : statut « Conforme ». Après désactivation de BitLocker : « En période de grâce » aussitôt (stratégie en « Non conforme » dans la page de conformité de l'appareil), puis « Non conforme » à l'issue du délai de grâce (validé sur le tenant de validation avec 3 jours : badge rouge « Non conforme » sur la fiche de l'appareil). |
+| **T11** | Conformité Windows | Appareil conforme : statut « Conforme ». Après désactivation de BitLocker : « En période de grâce » aussitôt (stratégie en « Non conforme » dans la page de conformité de l'appareil), puis « Non conforme » à l'issue du délai de grâce (validé sur le tenant de validation avec 3 jours : badge rouge « Non conforme » sur la fiche de l'appareil). Retour à « Conforme » validé après rechiffrement et redémarrage (la synchronisation seule n'a pas suffi, voir 8.1). |
 | **T12** | Conformité mobile | iOS et Android inscrits : statut de conformité correct, affectés au bon groupe. Appareil non conforme : accès refusé après CA-08. |
 | **T13** | Remote Help | Si déployé : session établie, visible dans l'onglet « Séances d'Assistance à distance ». Mode sans utilisateur testé seulement s'il est disponible. |
 | **T14** | Mises à jour | Anneau Pilote reçoit les mises à jour avant l'anneau Production. |
