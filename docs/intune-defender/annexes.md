@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Intune + Defender for Business : Annexes</h1>
-<h2>MVC nLPD · Appareils et menaces · v3.6</h2>
+<h2>MVC nLPD · Appareils et menaces · v3.7</h2>
 
 > [← Retour au guide Intune + Defender](index.html) · [← Retour à la procédure de déploiement](procedure-deploiement.html)
 
