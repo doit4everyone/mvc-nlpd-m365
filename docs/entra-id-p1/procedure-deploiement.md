@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Entra ID P1 : Procédure de déploiement</h1>
-<h2>MVC nLPD · Identité et accès · v3.6</h2>
+<h2>MVC nLPD · Identité et accès · v3.7</h2>
 
 > [← Retour au guide Entra ID P1](index.html) · [← Retour au bundle MVC nLPD](../index.html)
 
@@ -168,7 +168,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | 3 | Usage unique | Onglet « Configurer » → Une seule fois : Oui (recommandé pour l'onboarding). La valeur par défaut est Non. Longueur : 8 caractères (par défaut). |
 | 4 | Enregistrer | Cliquer Enregistrer. |
 
-> **ℹ️ INFO** : le TAP est le moyen recommandé pour enregistrer le premier facteur MFA (passkey ou FIDO2) lors de l'onboarding. Émission : entra.microsoft.com → Utilisateurs → [utilisateur] → Méthodes d'authentification → + Ajouter une méthode d'authentification → Passe d'accès temporaire (chemin à confirmer sur le portail).
+> **ℹ️ INFO** : le TAP est le moyen recommandé pour enregistrer le premier facteur MFA (passkey ou FIDO2) lors de l'onboarding. Émission : entra.microsoft.com → Entra ID → Utilisateurs → [utilisateur] → Méthodes d'authentification → Ajouter une méthode d'authentification → Passe d'accès temporaire → définir la durée d'activation → Ajouter. Le rôle minimum est Administrateur de l'authentification, et l'on ne peut pas créer un TAP pour son propre compte. La valeur du TAP n'est affichée qu'une seule fois : la noter avant de valider (chemin d'après la [documentation Microsoft](https://learn.microsoft.com/entra/identity/authentication/howto-authentication-temporary-access-pass)).
 
 ### 1.3 Points forts d'authentification (Authentication Strength)
 
@@ -258,7 +258,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 | N° | Étape | Action |
 |----|-------|--------|
 | 1 | Nom | `CA-09-MFA-Phishing-Resistant-Administrateurs` |
-| 2 | Utilisateurs → Inclure | Sélectionner les utilisateurs et groupes → Rôles d'annuaire (libellé à confirmer sur le portail) → au minimum : Administrateur général, Administrateur de la sécurité, Administrateur de l'authentification, Administrateur de stratégie d'authentification, Administrateur de l'accès conditionnel, ainsi que les rôles d'administration Exchange, SharePoint et Intune réellement utilisés. |
+| 2 | Utilisateurs → Inclure | Sélectionner des utilisateurs et des groupes → cocher « Rôles d'annuaire » → au minimum : Administrateur général, Administrateur de la sécurité, Administrateur de l'authentification, Administrateur de stratégie d'authentification, Administrateur de l'accès conditionnel, ainsi que les rôles d'administration Exchange, SharePoint et Intune réellement utilisés. |
 | 3 | Utilisateurs → Exclure | `GRP-CA-BreakGlass`. |
 | 4 | Ressources cibles | Toutes les ressources. |
 | 5 | Contrôles d'accès → Octroyer | Accorder l'accès → cocher « Exiger la force de l'authentification » → choisir « MFA anti-hameçonnage » (Phishing-resistant MFA) → Sélectionner. |
@@ -342,7 +342,7 @@ La nLPD art. 8 exige des mesures techniques de protection adaptées au risque. L
 
 | N° | Étape | Action |
 |----|-------|--------|
-| C1 | Prérequis SharePoint : accès limité | Centre d'administration SharePoint → Stratégies → Contrôle d'accès → Appareils non gérés → Autoriser un accès limité au web uniquement (libellé exact à confirmer sur le portail). Ce paramètre doit être actif pour que CA-05 soit efficace. Il bloque téléchargement, impression, synchronisation et applications de bureau, mais **autorise par défaut la consultation et la modification dans le navigateur**. |
+| C1 | Prérequis SharePoint : accès limité | Centre d'administration SharePoint → Stratégies → Contrôle d'accès → Appareils non gérés → option « Autoriser un accès limité via le web uniquement » (les deux autres choix sont « Autoriser l'accès complet à partir des applications de bureau, des applications mobiles et le web » et « Bloquer l'accès »). Ce paramètre doit être actif pour que CA-05 soit efficace. Il bloque téléchargement, impression, synchronisation et applications de bureau, mais **autorise par défaut la consultation et la modification dans le navigateur**. |
 | C2 | Prérequis SharePoint : lecture seule (obligatoire) | L'objectif de CA-05 est la lecture seule : interdisez la modification dans le navigateur avec PowerShell (SharePoint Online Management Shell) : `Set-SPOTenant -ConditionalAccessPolicy AllowLimitedAccess -AllowEditing $false`. Pour rendre en plus un site entièrement non modifiable, paramètre `-ReadOnlyForUnmanagedDevices $true` (documenté par Microsoft pour un site avec `Set-SPOSite` ; vérifier la portée dans le tenant). |
 | C3 | Précautions | Activer l'option depuis le centre d'administration SharePoint désactive les politiques créées auparavant depuis cette page et crée une politique pour tous les utilisateurs ; les personnalisations ne sont pas reprises. Délai d'effet : jusqu'à 24 heures. Les liens « Anyone » ne sont pas concernés. |
 | 1 | Nom | `CA-05-Session-Limitee-Appareils-Non-Geres` |
