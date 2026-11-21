@@ -24,7 +24,7 @@ lang: fr
 </style>
 
 <h1>Entra ID P1 : Annexes</h1>
-<h2>MVC nLPD · Identité et accès · v3.6</h2>
+<h2>MVC nLPD · Identité et accès · v3.7</h2>
 
 > [← Retour au guide Entra ID P1](index.html) · [← Procédure de déploiement](procedure-deploiement.html)
 
