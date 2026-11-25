@@ -38,7 +38,7 @@ Ce bundle change ça. Il est conçu pour **Microsoft 365 Business Premium + Purv
 
 | # | Guide | Objet principal | Portail | Statut |
 |---|-------|-----------------|---------|--------|
-| 1 | [Microsoft Purview](purview/index.html) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.2, publié |
+| 1 | [Microsoft Purview](purview/index.html) | Classification, étiquetage, DLP, rétention | `purview.microsoft.com` | v1.3, publié |
 | 2 | [Entra ID P1](entra-id-p1/index.html) | Accès conditionnel, MFA, SSPR, break-glass (Parties 0 à 3 = étape 0, avant Purview) | `entra.microsoft.com` | v3.7 |
 | 3 | [Intune + Defender for Business](intune-defender/index.html) | Conformité des appareils, durcissement ASR | `intune.microsoft.com` | v3.11, libellés relevés sur le portail, validation terrain en cours |
 | 4 | [Copilot Governance](copilot-governance/index.html) | Gouvernance Copilot, DSPM for AI (dashboard), DLP-Protection-Copilot | `purview.microsoft.com` | v1.0 |
@@ -102,7 +102,7 @@ Les noms de groupes de sécurité et de stratégies d'accès conditionnel sont *
 | Article | Exigence | Mesure MVC |
 |---------|----------|------------|
 | Art. 8 | Mesures techniques et organisationnelles | Chiffrement RMS, DLP, MFA, conformité appareils |
-| Art. 12 | Registre des activités de traitement (modèle à utiliser lorsque légalement requis ou adopté volontairement ; les entreprises de moins de 250 collaborateurs bénéficient d'une exception, sous réserve notamment du traitement à grande échelle de données sensibles ou du profilage à risque élevé) | Modèle pré-rempli, Annexe I du guide Purview |
+| Art. 12 | Registre des activités de traitement (modèle à utiliser lorsque légalement requis ou adopté volontairement ; les entreprises de moins de 250 collaborateurs bénéficient d'une exception, sous réserve notamment du traitement à grande échelle de données sensibles ou du profilage à risque élevé) | Modèle pré-rempli, Annexe H du guide Purview |
 | Art. 24 | Annonce des violations de la sécurité des données | Journaux d'audit et alertes qui facilitent la détection et la documentation d'un incident ; l'annonce au PFPDT reste une démarche organisationnelle |
 
 ---
