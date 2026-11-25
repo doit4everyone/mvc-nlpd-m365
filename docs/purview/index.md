@@ -47,11 +47,11 @@ Ce guide couvre le déploiement et l'exploitation du socle Purview dans le péri
 |--------|------------------|
 | MFA (tous les comptes) | Première barrière contre la compromission de compte |
 | Blocage partage externe SharePoint | Fermeture du vecteur de fuite via liens SharePoint |
-| Audit (traçabilité PFPDT) | Journal de toutes les actions sur les données, 1 an |
-| 2 étiquettes (Interne + Confidentiel) | Classification + chiffrement AES-256 des données sensibles |
+| Audit (traçabilité PFPDT) | Journal des actions sur les données : 180 jours par défaut, 1 an pour Entra ID, Exchange, OneDrive et SharePoint avec Audit Premium |
+| 3 étiquettes (Interne, Confidentiel, Confidentiel-Externe) | Classification + chiffrement AES-256 des données sensibles, accès interne seul pour les données confidentielles |
 | Auto-labelling service | Détection et étiquetage automatique des fichiers SharePoint existants |
-| DLP Exchange | Détection et traçabilité des envois de données sensibles |
-| Rétention automatique | Conservation 10 ans RH + Finances (CO art. 958f) |
+| DLP Exchange | Envoi externe de données AVS ou médicales soumis à justification, simple avertissement pour l'IBAN |
+| Rétention automatique | Pièces comptables conservées 10 ans (CO art. 958f), dossiers RH protégés 10 ans contre la suppression (CO art. 127, 128 ch. 3 et 328b) |
 | Break-glass RMS | Accès de secours aux fichiers chiffrés en cas d'urgence |
 
 ---
@@ -61,17 +61,17 @@ Ce guide couvre le déploiement et l'exploitation du socle Purview dans le péri
 | Article | Exigence | Mesure MVC incluse |
 |---------|----------|--------------------|
 | Art. 8 | Mesures techniques et organisationnelles | Chiffrement RMS + DLP + audit + rétention + blocage SharePoint |
-| Art. 12 | Registre des activités de traitement | Modèle pré-rempli en Annexe I |
-| Art. 24 | Traçabilité et notification des violations | Journaux exportables, incidents DLP horodatés, révocation RMS |
+| Art. 12 | Registre des activités de traitement | Modèle pré-rempli en Annexe H |
+| Art. 24 | Traçabilité et notification des violations | Journaux exportables, incidents DLP horodatés, révocation RMS, fiche réflexe rançongiciel (Annexe G) |
 
 ---
 
 ## 📥 Téléchargements
 
-- [Procédure de déploiement, Word (.docx)]({{ '/downloads/docx/MVC-nLPD_01-Purview_Procedure_v1.2.docx' | relative_url }})
-- [Guide d'exploitation client, Word (.docx)]({{ '/downloads/docx/MVC-nLPD_01-Purview_Exploitation_v1.2.docx' | relative_url }})
-- [Procédure de déploiement, PDF]({{ '/downloads/pdf/MVC-nLPD_01-Purview_Procedure_v1.2.pdf' | relative_url }})
-- [Guide d'exploitation client, PDF]({{ '/downloads/pdf/MVC-nLPD_01-Purview_Exploitation_v1.2.pdf' | relative_url }})
+- [Procédure de déploiement, Word (.docx)]({{ '/downloads/docx/MVC-nLPD_01-Purview_Procedure_v1.3.docx' | relative_url }})
+- [Guide d'exploitation client, Word (.docx)]({{ '/downloads/docx/MVC-nLPD_01-Purview_Exploitation_v1.3.docx' | relative_url }})
+- [Procédure de déploiement, PDF]({{ '/downloads/pdf/MVC-nLPD_01-Purview_Procedure_v1.3.pdf' | relative_url }})
+- [Guide d'exploitation client, PDF]({{ '/downloads/pdf/MVC-nLPD_01-Purview_Exploitation_v1.3.pdf' | relative_url }})
 
 ---
 
@@ -79,7 +79,7 @@ Ce guide couvre le déploiement et l'exploitation du socle Purview dans le péri
 
 Fiduciaires et comptabilités · Cabinets d'architectes et ingénieurs civils · Études d'avocats et notaires · Agences de communication et marketing · Cabinets médicaux et paramédicaux
 
-Voir [Procédure de déploiement, Annexe F](procedure-deploiement.html#annexe-f--adaptations-sectorielles).
+Voir [Procédure de déploiement, Annexe E](procedure-deploiement.html#annexe-e--adaptations-sectorielles).
 
 ---
 

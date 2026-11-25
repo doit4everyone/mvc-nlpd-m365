@@ -8,8 +8,8 @@ Format : `MVC-nLPD_<NN>-<Sujet>_<Type>_v<version>.<ext>`
 
 | Guide | Fichier (dans `docx/` et `pdf/`) |
 |-------|-----------------------------------|
-| Purview, procédure | `MVC-nLPD_01-Purview_Procedure_v1.2` |
-| Purview, exploitation | `MVC-nLPD_01-Purview_Exploitation_v1.2` |
+| Purview, procédure | `MVC-nLPD_01-Purview_Procedure_v1.3` |
+| Purview, exploitation | `MVC-nLPD_01-Purview_Exploitation_v1.3` |
 | Entra ID P1, procédure | `MVC-nLPD_02-Entra-ID-P1_Procedure_v3.7` |
 | Intune + Defender, procédure | `MVC-nLPD_03-Intune-Defender_Procedure_v3.11` |
 | Annexe AiTM | `MVC-nLPD_Annexe-AiTM_v1.1` (docx seulement) |
